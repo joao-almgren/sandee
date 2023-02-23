@@ -1,5 +1,10 @@
+#pragma comment(lib, "d3d11.lib")
+
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <d3d11.h>
+
+#include "graphics.h"
 
 constexpr int WINDOW_WIDTH = 800;
 constexpr int WINDOW_HEIGHT = 600;
@@ -35,11 +40,13 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		.hInstance = hInstance,
 		.lpszClassName = windowTitle,
 	};
+
 	if (!RegisterClassEx(&wc))
 		return 0;
 
 	RECT windowRect{ .right = WINDOW_WIDTH, .bottom = WINDOW_HEIGHT };
 	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, FALSE, WS_EX_OVERLAPPEDWINDOW);
+
 	const auto windowWidth{ windowRect.right - windowRect.left };
 	const auto windowHeight{ windowRect.bottom - windowRect.top };
 	const auto windowLeft{ (GetSystemMetrics(SM_CXSCREEN) - windowWidth) / 2 };
@@ -60,12 +67,17 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		hInstance,
 		nullptr
 	);
+
 	if (!hWnd)
 		return 0;
 
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
 	SetFocus(hWnd);
+
+	Graphics g;
+	if (!g.initialize(hWnd))
+		return 0;
 
 	MSG msg{};
 	while (msg.message != WM_QUIT)
@@ -77,7 +89,9 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		}
 		else
 		{
-			// tick
+			constexpr float colour[4]{ 0.5f, 0.f, 0.5f, 1.f };
+			g.cls(colour);
+			g.swap()->Present(1u, 0u);
 		}
 	}
 
