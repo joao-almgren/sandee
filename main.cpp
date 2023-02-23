@@ -6,8 +6,8 @@
 
 #include "graphics.h"
 
-constexpr int WINDOW_WIDTH = 800;
-constexpr int WINDOW_HEIGHT = 600;
+constexpr int WINDOW_WIDTH{ 800 };
+constexpr int WINDOW_HEIGHT{ 600 };
 
 int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*hPrevInstance*/, _In_ const LPWSTR /*lpCmdLine*/, _In_ const int /*nShowCmd*/)
 {
@@ -15,8 +15,8 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 
 	const WNDCLASSEX wc
 	{
-		.cbSize = sizeof(WNDCLASSEX),
-		.lpfnWndProc = [](const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam) -> LRESULT
+		.cbSize{ sizeof(WNDCLASSEX) },
+		.lpfnWndProc{ [](const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam) -> LRESULT
 		{
 			switch (message)
 			{
@@ -36,9 +36,9 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 			}
 
 			return DefWindowProc(hWnd, message, wParam, lParam);
-		},
-		.hInstance = hInstance,
-		.lpszClassName = windowTitle,
+		}},
+		.hInstance{ hInstance },
+		.lpszClassName{ windowTitle },
 	};
 
 	if (!RegisterClassEx(&wc))
@@ -52,7 +52,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 	const auto windowLeft{ (GetSystemMetrics(SM_CXSCREEN) - windowWidth) / 2 };
 	const auto windowTop{ (GetSystemMetrics(SM_CYSCREEN) - windowHeight) / 2 };
 
-	const auto hWnd = CreateWindowEx
+	const auto hWnd{ CreateWindowEx
 	(
 		WS_EX_OVERLAPPEDWINDOW,
 		windowTitle,
@@ -66,7 +66,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		nullptr,
 		hInstance,
 		nullptr
-	);
+	)};
 
 	if (!hWnd)
 		return 0;
@@ -89,9 +89,9 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		}
 		else
 		{
-			constexpr float colour[4]{ 0.5f, 0.f, 0.5f, 1.f };
-			g.cls(colour);
-			g.swap()->Present(1u, 0u);
+			constexpr float color[4]{ 0.5, 0, 0.5, 0 };
+			g.clearScreen(color);
+			g.present();
 		}
 	}
 

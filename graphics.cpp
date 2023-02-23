@@ -2,14 +2,14 @@
 
 Graphics::~Graphics()
 {
-	if (pContext)
+	if (pDeviceContext)
 	{
-		pContext->Release();
+		pDeviceContext->Release();
 	}
 
-	if (pSwap)
+	if (pSwapChain)
 	{
-		pSwap->Release();
+		pSwapChain->Release();
 	}
 
 	if (pDevice)
@@ -20,35 +20,35 @@ Graphics::~Graphics()
 
 bool Graphics::initialize(const HWND hWnd)
 {
-	const DXGI_SWAP_CHAIN_DESC sd
+	const DXGI_SWAP_CHAIN_DESC swapChainDesc
 	{
 		.BufferDesc
 		{
-			.Width = 0,
-			.Height = 0,
+			.Width{ 0 },
+			.Height{ 0 },
 			.RefreshRate
 			{
-				.Numerator = 0,
-				.Denominator = 0,
+				.Numerator{ 0 },
+				.Denominator{ 0 },
 			},
-			.Format = DXGI_FORMAT_B8G8R8A8_UNORM,
-			.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED,
-			.Scaling = DXGI_MODE_SCALING_UNSPECIFIED,
+			.Format{ DXGI_FORMAT_B8G8R8A8_UNORM },
+			.ScanlineOrdering{ DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED },
+			.Scaling{ DXGI_MODE_SCALING_UNSPECIFIED },
 		},
 		.SampleDesc
 		{
-			.Count = 1,
-			.Quality = 0,
+			.Count{ 1 },
+			.Quality{ 0 },
 		},
-		.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT,
-		.BufferCount = 1,
-		.OutputWindow = hWnd,
-		.Windowed = TRUE,
-		.SwapEffect = DXGI_SWAP_EFFECT_DISCARD,
-		.Flags = 0,
+		.BufferUsage{ DXGI_USAGE_RENDER_TARGET_OUTPUT },
+		.BufferCount{ 1 },
+		.OutputWindow{ hWnd },
+		.Windowed{ TRUE },
+		.SwapEffect{ DXGI_SWAP_EFFECT_DISCARD },
+		.Flags{ 0 },
 	};
 
-	const HRESULT hr = D3D11CreateDeviceAndSwapChain(
+	if (FAILED(D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
@@ -56,14 +56,12 @@ bool Graphics::initialize(const HWND hWnd)
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
-		&sd,
-		&pSwap,
+		&swapChainDesc,
+		&pSwapChain,
 		&pDevice,
 		nullptr,
-		&pContext
-	);
-
-	if (FAILED(hr))
+		&pDeviceContext
+	)))
 	{
 		return false;
 	}
@@ -71,22 +69,28 @@ bool Graphics::initialize(const HWND hWnd)
 	return true;
 }
 
-void Graphics::cls(const float colour[4]) const
+void Graphics::clearScreen() const
+{
+	constexpr float color[4]{ 0, 0, 0, 0 };
+	clearScreen(color);
+}
+
+void Graphics::clearScreen(const float color[4]) const
 {
 	ID3D11Resource* pBuffer{ nullptr };
-	if (SUCCEEDED(pSwap->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBuffer))))
+	if (SUCCEEDED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBuffer))))
 	{
 		ID3D11RenderTargetView* pTarget{ nullptr };
 		if (SUCCEEDED(pDevice->CreateRenderTargetView(pBuffer, nullptr, &pTarget)))
 		{
-			pContext->ClearRenderTargetView(pTarget, colour);
+			pDeviceContext->ClearRenderTargetView(pTarget, color);
 			pTarget->Release();
 		}
 		pBuffer->Release();
 	}
 }
 
-[[nodiscard]] IDXGISwapChain* Graphics::swap() const
+void Graphics::present() const
 {
-	return pSwap;
+	pSwapChain->Present(1, 0);
 }

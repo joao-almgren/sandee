@@ -12,12 +12,14 @@ public:
 	~Graphics();
 
 	[[nodiscard]] bool initialize(HWND hWnd);
-	void cls(const float colour[4]) const;
 
-	[[nodiscard]] IDXGISwapChain* swap() const;
+	void clearScreen() const;
+	void clearScreen(const float color[4]) const;
+
+	void present() const;
 
 protected:
 	ID3D11Device* pDevice{ nullptr };
-	ID3D11DeviceContext* pContext{ nullptr };
-	IDXGISwapChain* pSwap{ nullptr };
+	ID3D11DeviceContext* pDeviceContext{ nullptr };
+	IDXGISwapChain* pSwapChain{ nullptr };
 };
