@@ -12,11 +12,9 @@ public:
 	~Graphics();
 
 	[[nodiscard]] bool initialize(HWND hWnd);
-
-	void clearScreen() const;
-	void clearScreen(const float color[4]) const;
-
 	void present() const;
+
+	void clearScreen(const float (&color)[4] = {}) const;
 
 protected:
 	ID3D11Device* pDevice{ nullptr };

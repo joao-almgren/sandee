@@ -9,7 +9,11 @@
 constexpr int WINDOW_WIDTH{ 800 };
 constexpr int WINDOW_HEIGHT{ 600 };
 
-int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*hPrevInstance*/, _In_ const LPWSTR /*lpCmdLine*/, _In_ const int /*nShowCmd*/)
+int WINAPI wWinMain(
+	_In_ const HINSTANCE hInstance,
+	_In_opt_ const HINSTANCE /*hPrevInstance*/,
+	_In_ const LPWSTR /*lpCmdLine*/,
+	_In_ const int /*nShowCmd*/)
 {
 	const auto windowTitle{ L"D3D11Test" };
 
@@ -89,8 +93,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		}
 		else
 		{
-			constexpr float color[4]{ 0.5, 0, 0.5, 0 };
-			g.clearScreen(color);
+			g.clearScreen({ 0.5, 0, 0.5, 0 });
 			g.present();
 		}
 	}

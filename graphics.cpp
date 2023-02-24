@@ -69,13 +69,12 @@ bool Graphics::initialize(const HWND hWnd)
 	return true;
 }
 
-void Graphics::clearScreen() const
+void Graphics::present() const
 {
-	constexpr float color[4]{ 0, 0, 0, 0 };
-	clearScreen(color);
+	pSwapChain->Present(1, 0);
 }
 
-void Graphics::clearScreen(const float color[4]) const
+void Graphics::clearScreen(const float (&color)[4]) const
 {
 	ID3D11Resource* pBuffer{ nullptr };
 	if (SUCCEEDED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBuffer))))
@@ -88,9 +87,4 @@ void Graphics::clearScreen(const float color[4]) const
 		}
 		pBuffer->Release();
 	}
-}
-
-void Graphics::present() const
-{
-	pSwapChain->Present(1, 0);
 }
