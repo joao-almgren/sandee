@@ -78,6 +78,7 @@ int WINAPI wWinMain(
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
 	SetFocus(hWnd);
+	ShowCursor(FALSE);
 
 	Graphics g;
 	if (!g.initialize(hWnd))

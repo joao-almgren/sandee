@@ -1,23 +1,5 @@
 #include "graphics.h"
 
-Graphics::~Graphics()
-{
-	if (pDeviceContext)
-	{
-		pDeviceContext->Release();
-	}
-
-	if (pSwapChain)
-	{
-		pSwapChain->Release();
-	}
-
-	if (pDevice)
-	{
-		pDevice->Release();
-	}
-}
-
 bool Graphics::initialize(const HWND hWnd)
 {
 	const DXGI_SWAP_CHAIN_DESC swapChainDesc
@@ -57,10 +39,10 @@ bool Graphics::initialize(const HWND hWnd)
 		0,
 		D3D11_SDK_VERSION,
 		&swapChainDesc,
-		&pSwapChain,
-		&pDevice,
+		pSwapChain.put(),
+		pDevice.put(),
 		nullptr,
-		&pDeviceContext
+		pDeviceContext.put()
 	)))
 	{
 		return false;
@@ -71,20 +53,25 @@ bool Graphics::initialize(const HWND hWnd)
 
 void Graphics::present() const
 {
-	pSwapChain->Present(1, 0);
+	HRESULT hr;
+	if (FAILED(hr = pSwapChain->Present(1, 0)))
+	{
+		if (hr == DXGI_ERROR_DEVICE_REMOVED)
+		{
+			throw GraphicsDeviceRemovedException();
+		}
+	}
 }
 
 void Graphics::clearScreen(const float (&color)[4]) const
 {
-	ID3D11Resource* pBuffer{ nullptr };
-	if (SUCCEEDED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBuffer))))
+	winrt::com_ptr<ID3D11Resource> pBuffer;
+	if (SUCCEEDED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBuffer.put_void())))
 	{
-		ID3D11RenderTargetView* pTarget{ nullptr };
-		if (SUCCEEDED(pDevice->CreateRenderTargetView(pBuffer, nullptr, &pTarget)))
+		winrt::com_ptr<ID3D11RenderTargetView> pTarget;
+		if (SUCCEEDED(pDevice->CreateRenderTargetView(pBuffer.get(), nullptr, pTarget.put())))
 		{
-			pDeviceContext->ClearRenderTargetView(pTarget, color);
-			pTarget->Release();
+			pDeviceContext->ClearRenderTargetView(pTarget.get(), color);
 		}
-		pBuffer->Release();
 	}
 }
