@@ -1,5 +1,6 @@
 #pragma once
 #include <d3d11.h>
+#include <d3dcompiler.h>
 #include "winrt/base.h"
 
 class GraphicsDeviceRemovedException
@@ -22,6 +23,7 @@ public:
 	void present() const;
 
 	void clearScreen(const float (&color)[4] = {}) const;
+	void drawTest();
 
 protected:
 	winrt::com_ptr<ID3D11Device> pDevice;

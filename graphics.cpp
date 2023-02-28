@@ -65,13 +65,93 @@ void Graphics::present() const
 
 void Graphics::clearScreen(const float (&color)[4]) const
 {
-	winrt::com_ptr<ID3D11Resource> pBuffer;
-	if (SUCCEEDED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBuffer.put_void())))
+	winrt::com_ptr<ID3D11Resource> pBackBuffer;
+	if (SUCCEEDED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void())))
 	{
-		winrt::com_ptr<ID3D11RenderTargetView> pTarget;
-		if (SUCCEEDED(pDevice->CreateRenderTargetView(pBuffer.get(), nullptr, pTarget.put())))
+		winrt::com_ptr<ID3D11RenderTargetView> pRenderTarget;
+		if (SUCCEEDED(pDevice->CreateRenderTargetView(pBackBuffer.get(), nullptr, pRenderTarget.put())))
 		{
-			pDeviceContext->ClearRenderTargetView(pTarget.get(), color);
+			pDeviceContext->ClearRenderTargetView(pRenderTarget.get(), color);
 		}
 	}
+}
+
+void Graphics::drawTest()
+{
+	struct Vertex
+	{
+		float x, y;
+	} const vertices[]
+	{
+		{   0,  0.5},
+		{ 0.5, -0.5},
+		{-0.5, -0.5},
+	};
+
+	const D3D11_BUFFER_DESC bufferDesc
+	{
+		.ByteWidth{ sizeof(vertices) },
+		.Usage{ D3D11_USAGE_DEFAULT },
+		.BindFlags{ D3D11_BIND_VERTEX_BUFFER },
+		.CPUAccessFlags{ 0 },
+		.MiscFlags{ 0 },
+		.StructureByteStride { sizeof (Vertex) },
+	};
+
+	const D3D11_SUBRESOURCE_DATA subresourceData
+	{
+		.pSysMem{ vertices }
+	};
+
+	winrt::com_ptr<ID3D11Buffer> pVertexBuffer;
+	HRESULT hr = pDevice->CreateBuffer(&bufferDesc, &subresourceData, pVertexBuffer.put());
+	if (FAILED(hr))
+		return;
+
+	ID3D11Buffer* pVertex{ pVertexBuffer.get() };
+	const UINT stride = sizeof(Vertex);
+	pDeviceContext->IASetVertexBuffers(0, 1, &pVertex, &stride, nullptr);
+
+	winrt::com_ptr<ID3DBlob> pBlob;
+	hr = D3DReadFileToBlob(L"VertexShader.cso", pBlob.put());
+	winrt::com_ptr<ID3D11VertexShader> pVertexShader;
+	hr = pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, pVertexShader.put());
+	pDeviceContext->VSSetShader(pVertexShader.get(), nullptr, 0);
+
+	const D3D11_INPUT_ELEMENT_DESC inputElementDesc[]
+	{
+		{ "Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	winrt::com_ptr<ID3D11InputLayout> pInputLayout;
+	hr = pDevice->CreateInputLayout(inputElementDesc, std::size(inputElementDesc), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), pInputLayout.put());
+
+	pBlob = nullptr;
+	hr = D3DReadFileToBlob(L"PixelShader.cso", pBlob.put());
+	winrt::com_ptr<ID3D11PixelShader> pPixelShader;
+	hr = pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, pPixelShader.put());
+	pDeviceContext->PSSetShader(pPixelShader.get(), nullptr, 0);
+
+	winrt::com_ptr<ID3D11Resource> pBackBuffer;
+	hr = pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void());
+	winrt::com_ptr<ID3D11RenderTargetView> pRenderTarget;
+	hr = pDevice->CreateRenderTargetView(pBackBuffer.get(), nullptr, pRenderTarget.put());
+
+	ID3D11RenderTargetView* pTarget{ pRenderTarget.get() };
+	pDeviceContext->OMSetRenderTargets(1, &pTarget, nullptr);
+
+	pDeviceContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	D3D11_VIEWPORT viewport
+	{
+		.TopLeftX{ 0 },
+		.TopLeftY{ 0 },
+		.Width{ 800 },
+		.Height{ 600 },
+		.MinDepth{ 0 },
+		.MaxDepth{ 1 },
+	};
+	pDeviceContext->RSSetViewports(1, &viewport);
+
+	pDeviceContext->Draw(std::size(vertices), 0);
 }
