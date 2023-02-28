@@ -22,7 +22,7 @@ public:
 	[[nodiscard]] bool initialize(HWND hWnd);
 	void present() const;
 
-	void clearScreen(const float (&color)[4] = {}) const;
+	void clearScreen(const float (&color)[4] = { 0, 0, 0, 0 }) const;
 	void drawTest();
 
 protected:

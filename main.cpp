@@ -7,8 +7,8 @@
 #include <d3dcompiler.h>
 #include "graphics.h"
 
-constexpr int WINDOW_WIDTH{ 800 };
-constexpr int WINDOW_HEIGHT{ 600 };
+constexpr int WINDOW_WIDTH = 800;
+constexpr int WINDOW_HEIGHT = 600;
 
 int WINAPI wWinMain(
 	_In_ const HINSTANCE hInstance,
@@ -20,7 +20,7 @@ int WINAPI wWinMain(
 
 	const WNDCLASSEX wc
 	{
-		.cbSize{ sizeof(WNDCLASSEX) },
+		.cbSize = sizeof(WNDCLASSEX),
 		.lpfnWndProc{ [](const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam) -> LRESULT
 		{
 			switch (message)
@@ -42,8 +42,8 @@ int WINAPI wWinMain(
 
 			return DefWindowProc(hWnd, message, wParam, lParam);
 		}},
-		.hInstance{ hInstance },
-		.lpszClassName{ windowTitle },
+		.hInstance = hInstance,
+		.lpszClassName = windowTitle,
 	};
 
 	if (!RegisterClassEx(&wc))
@@ -52,10 +52,10 @@ int WINAPI wWinMain(
 	RECT windowRect{ .right = WINDOW_WIDTH, .bottom = WINDOW_HEIGHT };
 	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, FALSE, WS_EX_OVERLAPPEDWINDOW);
 
-	const auto windowWidth{ windowRect.right - windowRect.left };
-	const auto windowHeight{ windowRect.bottom - windowRect.top };
-	const auto windowLeft{ (GetSystemMetrics(SM_CXSCREEN) - windowWidth) / 2 };
-	const auto windowTop{ (GetSystemMetrics(SM_CYSCREEN) - windowHeight) / 2 };
+	const auto windowWidth = windowRect.right - windowRect.left;
+	const auto windowHeight = windowRect.bottom - windowRect.top;
+	const auto windowLeft = (GetSystemMetrics(SM_CXSCREEN) - windowWidth) / 2;
+	const auto windowTop = (GetSystemMetrics(SM_CYSCREEN) - windowHeight) / 2;
 
 	const auto hWnd{ CreateWindowEx
 	(
@@ -96,7 +96,7 @@ int WINAPI wWinMain(
 		else
 		{
 			g.clearScreen({ 0.5, 0, 0.5, 0 });
-			//g.drawTest();
+			g.drawTest();
 			g.present();
 		}
 	}
