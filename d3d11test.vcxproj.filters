@@ -24,17 +24,23 @@
     <ClCompile Include="graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="graphicstest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="graphicstest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl">
+    <FxCompile Include="vertextest.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
+    <FxCompile Include="pixeltest.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
   </ItemGroup>

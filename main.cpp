@@ -1,7 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <d3d11.h>
 #include "graphics.h"
+#include "graphicstest.h"
 
 constexpr int WINDOW_WIDTH = 800;
 constexpr int WINDOW_HEIGHT = 600;
@@ -12,7 +12,7 @@ int WINAPI wWinMain(
 	_In_ const LPWSTR /*lpCmdLine*/,
 	_In_ const int /*nShowCmd*/)
 {
-	const auto windowTitle{ L"D3D11Test" };
+	const auto windowTitle = L"D3D11Test";
 
 	const WNDCLASSEX wc
 	{
@@ -77,8 +77,12 @@ int WINAPI wWinMain(
 	SetFocus(hWnd);
 	ShowCursor(FALSE);
 
-	Graphics g;
-	if (!g.initialize(hWnd))
+	Graphics graphics;
+	if (!graphics.initialize(hWnd, WINDOW_WIDTH, WINDOW_HEIGHT))
+		return 0;
+
+	GraphicsTest graphicsTest;
+	if (!graphicsTest.load(graphics.getDevice()))
 		return 0;
 
 	MSG msg{};
@@ -91,9 +95,10 @@ int WINAPI wWinMain(
 		}
 		else
 		{
-			g.clearScreen({ 0.5, 0, 0.5, 0 });
-			g.drawTest();
-			g.present();
+			graphics.resetRenderTarget();
+			graphics.clearScreen({ 0.5, 0, 0.5, 0 });
+			graphicsTest.draw(graphics.getDeviceContext());
+			graphics.present();
 		}
 	}
 

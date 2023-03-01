@@ -2,10 +2,9 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 #include "graphics.h"
-#include <d3dcompiler.h>
 #include <cassert>
 
-bool Graphics::initialize(const HWND hWnd)
+bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int windowHeight)
 {
 	const DXGI_SWAP_CHAIN_DESC swapChainDesc
 	{
@@ -53,6 +52,18 @@ bool Graphics::initialize(const HWND hWnd)
 		return false;
 	}
 
+	const D3D11_VIEWPORT viewport
+	{
+		.TopLeftX = 0,
+		.TopLeftY = 0,
+		.Width = static_cast<float>(windowWidth),
+		.Height = static_cast<float>(windowHeight),
+		.MinDepth = 0,
+		.MaxDepth = 1,
+	};
+
+	pDeviceContext->RSSetViewports(1, &viewport);
+
 	return true;
 }
 
@@ -66,101 +77,29 @@ void Graphics::present() const
 	assert(SUCCEEDED(hr));
 }
 
+void Graphics::resetRenderTarget() const
+{
+	winrt::com_ptr<ID3D11Resource> pBackBuffer;
+	if (SUCCEEDED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void())))
+	{
+		winrt::com_ptr<ID3D11RenderTargetView> pRenderTarget;
+		if (SUCCEEDED(pDevice->CreateRenderTargetView(pBackBuffer.get(), nullptr, pRenderTarget.put())))
+		{
+			ID3D11RenderTargetView* pTarget[]{ pRenderTarget.get() };
+			pDeviceContext->OMSetRenderTargets(1, pTarget, nullptr);
+		}
+	}
+}
+
 void Graphics::clearScreen(const float (&color)[4]) const
 {
 	winrt::com_ptr<ID3D11Resource> pBackBuffer;
-	HRESULT hr = pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void());
-	assert(SUCCEEDED(hr));
-	winrt::com_ptr<ID3D11RenderTargetView> pRenderTarget;
-	hr = pDevice->CreateRenderTargetView(pBackBuffer.get(), nullptr, pRenderTarget.put());
-	assert(SUCCEEDED(hr));
-	pDeviceContext->ClearRenderTargetView(pRenderTarget.get(), color);
-}
-
-void Graphics::drawTest()
-{
-	struct Vertex
+	if (SUCCEEDED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void())))
 	{
-		float x, y;
-	} const vertices[]
-	{
-		{  0.0f,  0.5f },
-		{  0.5f, -0.5f },
-		{ -0.5f, -0.5f },
-	};
-
-	const D3D11_BUFFER_DESC bufferDesc
-	{
-		.ByteWidth = sizeof(vertices),
-		.Usage = D3D11_USAGE_DEFAULT,
-		.BindFlags = D3D11_BIND_VERTEX_BUFFER,
-		.CPUAccessFlags = 0,
-		.MiscFlags = 0,
-		.StructureByteStride = sizeof (Vertex),
-	};
-
-	const D3D11_SUBRESOURCE_DATA subresourceData
-	{
-		.pSysMem = vertices
-	};
-
-	winrt::com_ptr<ID3D11Buffer> pVertexBuffer;
-	HRESULT hr = pDevice->CreateBuffer(&bufferDesc, &subresourceData, pVertexBuffer.put());
-	assert(SUCCEEDED(hr));
-
-	ID3D11Buffer* pVertex = pVertexBuffer.get();
-	const UINT stride = sizeof(Vertex);
-	const UINT offsets = 0;
-	pDeviceContext->IASetVertexBuffers(0, 1, &pVertex, &stride, &offsets);
-
-	winrt::com_ptr<ID3DBlob> pBlob;
-	hr = D3DReadFileToBlob(L"VertexShader.cso", pBlob.put());
-	assert(SUCCEEDED(hr));
-	winrt::com_ptr<ID3D11VertexShader> pVertexShader;
-	hr = pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, pVertexShader.put());
-	assert(SUCCEEDED(hr));
-	pDeviceContext->VSSetShader(pVertexShader.get(), nullptr, 0);
-
-	const D3D11_INPUT_ELEMENT_DESC inputElementDesc[]
-	{
-		{ "Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
-	winrt::com_ptr<ID3D11InputLayout> pInputLayout;
-	hr = pDevice->CreateInputLayout(inputElementDesc, static_cast<unsigned>(std::size(inputElementDesc)), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), pInputLayout.put());
-	assert(SUCCEEDED(hr));
-	pDeviceContext->IASetInputLayout(pInputLayout.get());
-
-	pBlob = nullptr;
-	hr = D3DReadFileToBlob(L"PixelShader.cso", pBlob.put());
-	assert(SUCCEEDED(hr));
-	winrt::com_ptr<ID3D11PixelShader> pPixelShader;
-	hr = pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, pPixelShader.put());
-	assert(SUCCEEDED(hr));
-	pDeviceContext->PSSetShader(pPixelShader.get(), nullptr, 0);
-
-	winrt::com_ptr<ID3D11Resource> pBackBuffer;
-	hr = pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void());
-	assert(SUCCEEDED(hr));
-	winrt::com_ptr<ID3D11RenderTargetView> pRenderTarget;
-	hr = pDevice->CreateRenderTargetView(pBackBuffer.get(), nullptr, pRenderTarget.put());
-	assert(SUCCEEDED(hr));
-
-	ID3D11RenderTargetView* pTarget = pRenderTarget.get();
-	pDeviceContext->OMSetRenderTargets(1, &pTarget, nullptr);
-
-	pDeviceContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	const D3D11_VIEWPORT viewport
-	{
-		.TopLeftX = 0,
-		.TopLeftY = 0,
-		.Width = 800,
-		.Height = 600,
-		.MinDepth = 0,
-		.MaxDepth = 1,
-	};
-	pDeviceContext->RSSetViewports(1, &viewport);
-
-	pDeviceContext->Draw(static_cast<unsigned>(std::size(vertices)), 0);
+		winrt::com_ptr<ID3D11RenderTargetView> pRenderTarget;
+		if (SUCCEEDED(pDevice->CreateRenderTargetView(pBackBuffer.get(), nullptr, pRenderTarget.put())))
+		{
+			pDeviceContext->ClearRenderTargetView(pRenderTarget.get(), color);
+		}
+	}
 }
