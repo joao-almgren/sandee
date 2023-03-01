@@ -1,13 +1,6 @@
 #pragma once
 #include <d3d11.h>
 #include "winrt/base.h"
-#include <exception>
-
-class GraphicsDeviceRemovedException : public std::runtime_error
-{
-public:
-	explicit GraphicsDeviceRemovedException(const char* message) : runtime_error(message) {}
-};
 
 class Graphics
 {

@@ -2,7 +2,6 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 #include "graphics.h"
-#include <cassert>
 
 bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int windowHeight)
 {
@@ -27,10 +26,10 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 			.Quality = 0,
 		},
 		.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT,
-		.BufferCount = 1,
+		.BufferCount = 2,
 		.OutputWindow = hWnd,
 		.Windowed = TRUE,
-		.SwapEffect = DXGI_SWAP_EFFECT_DISCARD,
+		.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL,
 		.Flags = 0,
 	};
 
@@ -38,7 +37,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		0,
+		D3D11_CREATE_DEVICE_SINGLETHREADED | D3D11_CREATE_DEVICE_BGRA_SUPPORT,
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
@@ -52,7 +51,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		return false;
 	}
 
-	const D3D11_VIEWPORT viewport
+	const D3D11_VIEWPORT viewport[] {
 	{
 		.TopLeftX = 0,
 		.TopLeftY = 0,
@@ -60,21 +59,16 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		.Height = static_cast<float>(windowHeight),
 		.MinDepth = 0,
 		.MaxDepth = 1,
-	};
+	}};
 
-	pDeviceContext->RSSetViewports(1, &viewport);
+	pDeviceContext->RSSetViewports(1, viewport);
 
 	return true;
 }
 
 void Graphics::present() const
 {
-	const HRESULT hr = pSwapChain->Present(1, 0);
-	if (hr == DXGI_ERROR_DEVICE_REMOVED)
-	{
-		throw GraphicsDeviceRemovedException("DXGI_ERROR_DEVICE_REMOVED");
-	}
-	assert(SUCCEEDED(hr));
+	pSwapChain->Present(1, 0);
 }
 
 void Graphics::resetRenderTarget() const

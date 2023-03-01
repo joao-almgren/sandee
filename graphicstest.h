@@ -17,6 +17,7 @@ public:
 
 protected:
 	winrt::com_ptr<ID3D11Buffer> pVertexBuffer;
+	winrt::com_ptr<ID3D11Buffer> pIndexBuffer;
 	winrt::com_ptr<ID3D11VertexShader> pVertexShader;
 	winrt::com_ptr<ID3D11PixelShader> pPixelShader;
 	winrt::com_ptr<ID3D11InputLayout> pInputLayout;
