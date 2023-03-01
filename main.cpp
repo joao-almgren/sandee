@@ -1,10 +1,6 @@
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "d3dcompiler.lib")
-
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <d3d11.h>
-#include <d3dcompiler.h>
 #include "graphics.h"
 
 constexpr int WINDOW_WIDTH = 800;

@@ -1,5 +1,9 @@
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+
 #include "graphics.h"
-#include <assert.h>
+#include <d3dcompiler.h>
+#include <cassert>
 
 bool Graphics::initialize(const HWND hWnd)
 {
@@ -54,10 +58,10 @@ bool Graphics::initialize(const HWND hWnd)
 
 void Graphics::present() const
 {
-	HRESULT hr = pSwapChain->Present(1, 0);
+	const HRESULT hr = pSwapChain->Present(1, 0);
 	if (hr == DXGI_ERROR_DEVICE_REMOVED)
 	{
-		throw GraphicsDeviceRemovedException();
+		throw GraphicsDeviceRemovedException("DXGI_ERROR_DEVICE_REMOVED");
 	}
 	assert(SUCCEEDED(hr));
 }
@@ -123,7 +127,7 @@ void Graphics::drawTest()
 	};
 
 	winrt::com_ptr<ID3D11InputLayout> pInputLayout;
-	hr = pDevice->CreateInputLayout(inputElementDesc, std::size(inputElementDesc), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), pInputLayout.put());
+	hr = pDevice->CreateInputLayout(inputElementDesc, static_cast<unsigned>(std::size(inputElementDesc)), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), pInputLayout.put());
 	assert(SUCCEEDED(hr));
 	pDeviceContext->IASetInputLayout(pInputLayout.get());
 
@@ -147,7 +151,7 @@ void Graphics::drawTest()
 
 	pDeviceContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	D3D11_VIEWPORT viewport
+	const D3D11_VIEWPORT viewport
 	{
 		.TopLeftX = 0,
 		.TopLeftY = 0,
@@ -158,5 +162,5 @@ void Graphics::drawTest()
 	};
 	pDeviceContext->RSSetViewports(1, &viewport);
 
-	pDeviceContext->Draw(std::size(vertices), 0);
+	pDeviceContext->Draw(static_cast<unsigned>(std::size(vertices)), 0);
 }
