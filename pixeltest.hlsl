@@ -1,4 +1,5 @@
-float4 main() : SV_Target
+
+float4 ps_main(float4 col : COLOR) : SV_TARGET
 {
-	return float4(1, 1, 1, 1);
+	return col;
 }
