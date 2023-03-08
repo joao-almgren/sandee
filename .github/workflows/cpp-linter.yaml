@@ -12,10 +12,10 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout code
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
       
       - name: Linter
-      - uses: cpp-linter/cpp-linter-action@v2
+        uses: cpp-linter/cpp-linter-action@v2
         id: linter
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -24,7 +24,7 @@ jobs:
           files-changed-only: false
 
       - name: Comment on PR
-      - uses: mshick/add-pr-comment@v2
+        uses: mshick/add-pr-comment@v2
         if: steps.linter.outputs.checks-failed > 0
         with:
           message: |
