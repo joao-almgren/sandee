@@ -43,9 +43,6 @@
     <FxCompile Include="pixeltest.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
-    <FxCompile Include="graphicstest.hlsl">
-      <Filter>Shader Files</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,5 +1,5 @@
 
-float4 ps_main(float4 col : COLOR) : SV_TARGET
+float4 ps_main(float4 col : COLOR0) : SV_TARGET
 {
 	return col;
 }

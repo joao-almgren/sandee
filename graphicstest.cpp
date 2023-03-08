@@ -1,27 +1,27 @@
 #include "graphicstest.h"
 #include <d3dcompiler.h>
-#include <SimpleMath.h>
-using namespace DirectX::SimpleMath;
+#include <directxmath.h>
+using namespace DirectX;
 
 namespace
 {
 	const D3D11_INPUT_ELEMENT_DESC inputElementDesc[]
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	struct Vertex
 	{
-		float x, y, z;
-		float r, g, b;
+		XMFLOAT3 position;
+		XMFLOAT4 color;
 	};
 	
 	const Vertex vertices[]
 	{
-		{  0.0f,  0.5f, 0.0f, 1, 0, 0 },
-		{  0.5f, -0.5f, 0.0f, 0, 1, 0 },
-		{ -0.5f, -0.5f, 0.0f, 0, 0, 1 },
+		{ .position = {  0.0f,  0.5f, 0 }, .color = { 1, 1, 0, 1 } },
+		{ .position = {  0.5f, -0.5f, 0 }, .color = { 1, 0, 1, 1 } },
+		{ .position = { -0.5f, -0.5f, 0 }, .color = { 0, 1, 1, 1 } },
 	};
 
 	const unsigned int indices[]
@@ -109,6 +109,6 @@ void GraphicsTest::draw(winrt::com_ptr<ID3D11DeviceContext> pDeviceContext) cons
 	pDeviceContext->VSSetShader(pVertexShader.get(), nullptr, 0);
 	pDeviceContext->IASetInputLayout(pInputLayout.get());
 	pDeviceContext->PSSetShader(pPixelShader.get(), nullptr, 0);
-	pDeviceContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	pDeviceContext->DrawIndexed(static_cast<unsigned>(std::size(indices)), 0, 0);
 }
