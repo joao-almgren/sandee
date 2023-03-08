@@ -1,0 +1,5 @@
+main.cpp:9:0: style: The function 'wWinMain' is never used. [unusedFunction]
+
+^
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingInclude]
+
