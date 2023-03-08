@@ -2,6 +2,7 @@
 #include <d3d11.h>
 #include "winrt/base.h"
 
+
 class Graphics
 {
 public:

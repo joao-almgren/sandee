@@ -1,7 +1,6 @@
 name: cpp-linter
 
 on:
-  workflow_dispatch:
   pull_request:
     branches: [ "main" ]
 
@@ -21,7 +20,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           style: ''
-          files-changed-only: false
+          files-changed-only: true
+          thread-comments: true
 
       - name: Comment on PR
         uses: mshick/add-pr-comment@v2
