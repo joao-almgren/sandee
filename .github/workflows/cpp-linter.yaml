@@ -28,7 +28,8 @@ jobs:
         if: steps.linter.outputs.checks-failed > 0
         with:
           message: |
-            **Linting failed**
+            **Linting failed 💀**
+            Please check the linter output in thread comments before merging.
 
       - name: Fail fast
         if: steps.linter.outputs.checks-failed > 0
