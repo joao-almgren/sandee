@@ -3,21 +3,35 @@ name: cpp-linter
 on:
   workflow_dispatch:
   pull_request:
+    branches: [ "main" ]
 
 jobs:
   cpp-linter:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
+      - name: Checkout code
       - uses: actions/checkout@v3
+      
+      - name: Linter
       - uses: cpp-linter/cpp-linter-action@v2
         id: linter
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          style: ''
           files-changed-only: false
 
-      - name: Fail fast?!
+      - name: Comment on PR
+      - uses: mshick/add-pr-comment@v2
         if: steps.linter.outputs.checks-failed > 0
-        run: echo "Some files failed the linting checks!"
-        # for actual deployment
-        # run: exit 1
+        with:
+          message: |
+            **Linting failed**
+
+      - name: Fail fast
+        if: steps.linter.outputs.checks-failed > 0
+        run: |
+          echo "Some files failed the linting checks!"
+          exit 1
