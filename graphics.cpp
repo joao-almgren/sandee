@@ -1,6 +1,5 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
-
 #include "graphics.h"
 
 bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int windowHeight)

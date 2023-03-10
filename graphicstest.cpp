@@ -1,10 +1,11 @@
 #include "graphicstest.h"
 #include <d3dcompiler.h>
 #include <directxmath.h>
-using namespace DirectX;
 
 namespace
 {
+	using namespace DirectX;
+
 	const D3D11_INPUT_ELEMENT_DESC inputElementDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -15,8 +16,8 @@ namespace
 
 	struct Vertex
 	{
-		XMFLOAT3 position;
-		XMFLOAT4 color;
+		[[maybe_unused]] XMFLOAT3 position;
+		[[maybe_unused]] XMFLOAT4 color;
 	};
 	
 	const Vertex vertices[]
