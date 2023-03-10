@@ -76,8 +76,11 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 	if (FAILED(hr))
 		return false;
 
+	const UINT hlslFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+
 	winrt::com_ptr<ID3DBlob> pVertexBlob = nullptr;
-	hr = D3DReadFileToBlob(L"vertextest.cso", pVertexBlob.put());
+	//hr = D3DReadFileToBlob(L"vertextest.cso", pVertexBlob.put());
+	hr = D3DCompileFromFile(L"vertextest.hlsl", nullptr, nullptr, "vs_main", "vs_5_0", hlslFlags, 0, pVertexBlob.put(), nullptr);
 	if (FAILED(hr))
 		return false;
 
@@ -90,7 +93,8 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 		return false;
 
 	winrt::com_ptr<ID3DBlob> pPixelBlob = nullptr;
-	hr = D3DReadFileToBlob(L"pixeltest.cso", pPixelBlob.put());
+	//hr = D3DReadFileToBlob(L"pixeltest.cso", pPixelBlob.put());
+	hr = D3DCompileFromFile(L"pixeltest.hlsl", nullptr, nullptr, "ps_main", "ps_5_0", hlslFlags, 0, pPixelBlob.put(), nullptr);
 	if (FAILED(hr))
 		return false;
 
