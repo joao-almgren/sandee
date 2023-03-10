@@ -3,9 +3,6 @@
 #include "graphics.h"
 #include "graphicstest.h"
 
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 600;
-
 int WINAPI wWinMain(
 	_In_ const HINSTANCE hInstance,
 	_In_opt_ const HINSTANCE /*hPrevInstance*/,
@@ -45,13 +42,16 @@ int WINAPI wWinMain(
 	if (!RegisterClassEx(&wc))
 		return 0;
 
-	RECT windowRect{ .right = WINDOW_WIDTH, .bottom = WINDOW_HEIGHT };
+	const int windowWidth = 800;
+	const int windowHeight = 600;
+
+	RECT windowRect{ .right = windowWidth, .bottom = windowHeight };
 	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, FALSE, WS_EX_OVERLAPPEDWINDOW);
 
-	const auto windowWidth = windowRect.right - windowRect.left;
-	const auto windowHeight = windowRect.bottom - windowRect.top;
-	const auto windowLeft = (GetSystemMetrics(SM_CXSCREEN) - windowWidth) / 2;
-	const auto windowTop = (GetSystemMetrics(SM_CYSCREEN) - windowHeight) / 2;
+	const auto adjustedWindowWidth = windowRect.right - windowRect.left;
+	const auto adjustedWindowHeight = windowRect.bottom - windowRect.top;
+	const auto windowOriginLeft = (GetSystemMetrics(SM_CXSCREEN) - adjustedWindowWidth) / 2;
+	const auto windowOriginTop = (GetSystemMetrics(SM_CYSCREEN) - adjustedWindowHeight) / 2;
 
 	const auto hWnd{ CreateWindowEx
 	(
@@ -59,10 +59,10 @@ int WINAPI wWinMain(
 		windowTitle,
 		windowTitle,
 		WS_OVERLAPPEDWINDOW,
-		windowLeft,
-		windowTop,
-		windowWidth,
-		windowHeight,
+		windowOriginLeft,
+		windowOriginTop,
+		adjustedWindowWidth,
+		adjustedWindowHeight,
 		nullptr,
 		nullptr,
 		hInstance,
@@ -78,7 +78,7 @@ int WINAPI wWinMain(
 	ShowCursor(FALSE);
 
 	Graphics graphics;
-	if (!graphics.initialize(hWnd, WINDOW_WIDTH, WINDOW_HEIGHT))
+	if (!graphics.initialize(hWnd, windowWidth, windowHeight))
 		return 0;
 
 	GraphicsTest graphicsTest;

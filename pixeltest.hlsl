@@ -1,11 +1,11 @@
 
-struct VS_OUTPUT
+struct VsOutput
 {
     float4 pos : SV_POSITION;
     float4 col : COLOR0;
 };
 
-float4 ps_main(VS_OUTPUT input) : SV_Target
+float4 main(const VsOutput input) : SV_Target
 {
 	return input.col;
 }

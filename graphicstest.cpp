@@ -6,13 +6,13 @@ namespace
 {
 	using namespace DirectX;
 
-	const D3D11_INPUT_ELEMENT_DESC inputElementDesc[] =
+	const D3D11_INPUT_ELEMENT_DESC g_inputElementDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-	const UINT numInputElements = static_cast<unsigned>(std::size(inputElementDesc));
+	const UINT g_numInputElements = static_cast<unsigned>(std::size(g_inputElementDesc));
 
 	struct Vertex
 	{
@@ -20,14 +20,14 @@ namespace
 		[[maybe_unused]] XMFLOAT4 color;
 	};
 	
-	const Vertex vertices[]
+	const Vertex g_vertices[]
 	{
 		{ .position = XMFLOAT3(  0.0f,  0.5f, 0 ), .color = XMFLOAT4( 1, 1, 0, 1 ) },
 		{ .position = XMFLOAT3(  0.5f, -0.5f, 0 ), .color = XMFLOAT4( 1, 0, 1, 1 ) },
 		{ .position = XMFLOAT3( -0.5f, -0.5f, 0 ), .color = XMFLOAT4( 0, 1, 1, 1 ) },
 	};
 
-	const WORD indices[]
+	const WORD g_indices[]
 	{
 		0, 1, 2,
 	};
@@ -37,7 +37,7 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 {
 	const D3D11_BUFFER_DESC vertexBufferDesc
 	{
-		.ByteWidth = sizeof(vertices),
+		.ByteWidth = sizeof(g_vertices),
 		.Usage = D3D11_USAGE_DEFAULT,
 		.BindFlags = D3D11_BIND_VERTEX_BUFFER,
 		.CPUAccessFlags = 0,
@@ -47,7 +47,7 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 
 	const D3D11_SUBRESOURCE_DATA vertexSubresourceData
 	{
-		.pSysMem = vertices,
+		.pSysMem = g_vertices,
 		.SysMemPitch = 0,
 		.SysMemSlicePitch = 0,
 	};
@@ -58,7 +58,7 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 
 	const D3D11_BUFFER_DESC indexBufferDesc
 	{
-		.ByteWidth = sizeof(indices),
+		.ByteWidth = sizeof(g_indices),
 		.Usage = D3D11_USAGE_DEFAULT,
 		.BindFlags = D3D11_BIND_INDEX_BUFFER,
 		.CPUAccessFlags = 0,
@@ -68,7 +68,7 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 
 	const D3D11_SUBRESOURCE_DATA indexSubresourceData
 	{
-		.pSysMem = indices,
+		.pSysMem = g_indices,
 		.SysMemPitch = 0,
 		.SysMemSlicePitch = 0,
 	};
@@ -77,11 +77,11 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 	if (FAILED(hr))
 		return false;
 
-	const UINT hlslFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL3;
+	//const UINT hlslFlags = D3DCOMPILE_ENABLE_STRICTNESS | D3DCOMPILE_PACK_MATRIX_COLUMN_MAJOR | D3DCOMPILE_OPTIMIZATION_LEVEL3;
 
 	winrt::com_ptr<ID3DBlob> pVertexBlob = nullptr;
-	//hr = D3DReadFileToBlob(L"vertextest.cso", pVertexBlob.put());
-	hr = D3DCompileFromFile(L"vertextest.hlsl", nullptr, nullptr, "vs_main", "vs_5_0", hlslFlags, 0, pVertexBlob.put(), nullptr);
+	hr = D3DReadFileToBlob(L"vertextest.cso", pVertexBlob.put());
+	//hr = D3DCompileFromFile(L"vertextest.hlsl", nullptr, nullptr, "main", "vs_5_0", hlslFlags, 0, pVertexBlob.put(), nullptr);
 	if (FAILED(hr))
 		return false;
 
@@ -89,13 +89,13 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 	if (FAILED(hr))
 		return false;
 
-	hr = pDevice->CreateInputLayout(inputElementDesc, numInputElements, pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), pInputLayout.put());
+	hr = pDevice->CreateInputLayout(g_inputElementDesc, g_numInputElements, pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), pInputLayout.put());
 	if (FAILED(hr))
 		return false;
 
 	winrt::com_ptr<ID3DBlob> pPixelBlob = nullptr;
-	//hr = D3DReadFileToBlob(L"pixeltest.cso", pPixelBlob.put());
-	hr = D3DCompileFromFile(L"pixeltest.hlsl", nullptr, nullptr, "ps_main", "ps_5_0", hlslFlags, 0, pPixelBlob.put(), nullptr);
+	hr = D3DReadFileToBlob(L"pixeltest.cso", pPixelBlob.put());
+	//hr = D3DCompileFromFile(L"pixeltest.hlsl", nullptr, nullptr, "main", "ps_5_0", hlslFlags, 0, pPixelBlob.put(), nullptr);
 	if (FAILED(hr))
 		return false;
 
@@ -118,5 +118,5 @@ void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext
 	pDeviceContext->IASetInputLayout(pInputLayout.get());
 	pDeviceContext->VSSetShader(pVertexShader.get(), nullptr, 0);
 	pDeviceContext->PSSetShader(pPixelShader.get(), nullptr, 0);
-	pDeviceContext->DrawIndexed(static_cast<unsigned>(std::size(indices)), 0, 0);
+	pDeviceContext->DrawIndexed(static_cast<unsigned>(std::size(g_indices)), 0, 0);
 }
