@@ -16,9 +16,9 @@ public:
 	void draw(winrt::com_ptr<ID3D11DeviceContext> pDeviceContext) const;
 
 protected:
-	winrt::com_ptr<ID3D11Buffer> pVertexBuffer;
-	winrt::com_ptr<ID3D11Buffer> pIndexBuffer;
-	winrt::com_ptr<ID3D11VertexShader> pVertexShader;
-	winrt::com_ptr<ID3D11PixelShader> pPixelShader;
-	winrt::com_ptr<ID3D11InputLayout> pInputLayout;
+	winrt::com_ptr<ID3D11Buffer> pVertexBuffer{ nullptr };
+	winrt::com_ptr<ID3D11Buffer> pIndexBuffer{ nullptr };
+	winrt::com_ptr<ID3D11VertexShader> pVertexShader{ nullptr };
+	winrt::com_ptr<ID3D11InputLayout> pInputLayout{ nullptr };
+	winrt::com_ptr<ID3D11PixelShader> pPixelShader{ nullptr };
 };

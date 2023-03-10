@@ -3,8 +3,8 @@
 #include "graphics.h"
 #include "graphicstest.h"
 
-constexpr int WINDOW_WIDTH = 800;
-constexpr int WINDOW_HEIGHT = 600;
+const int WINDOW_WIDTH = 800;
+const int WINDOW_HEIGHT = 600;
 
 int WINAPI wWinMain(
 	_In_ const HINSTANCE hInstance,

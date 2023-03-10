@@ -5,11 +5,13 @@ using namespace DirectX;
 
 namespace
 {
-	const D3D11_INPUT_ELEMENT_DESC inputElementDesc[]
+	const D3D11_INPUT_ELEMENT_DESC inputElementDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
+
+	const UINT numInputElements = static_cast<unsigned>(std::size(inputElementDesc));
 
 	struct Vertex
 	{
@@ -19,18 +21,18 @@ namespace
 	
 	const Vertex vertices[]
 	{
-		{ .position = {  0.0f,  0.5f, 0 }, .color = { 1, 1, 0, 1 } },
-		{ .position = {  0.5f, -0.5f, 0 }, .color = { 1, 0, 1, 1 } },
-		{ .position = { -0.5f, -0.5f, 0 }, .color = { 0, 1, 1, 1 } },
+		{ .position = XMFLOAT3(  0.0f,  0.5f, 0 ), .color = XMFLOAT4( 1, 1, 0, 1 ) },
+		{ .position = XMFLOAT3(  0.5f, -0.5f, 0 ), .color = XMFLOAT4( 1, 0, 1, 1 ) },
+		{ .position = XMFLOAT3( -0.5f, -0.5f, 0 ), .color = XMFLOAT4( 0, 1, 1, 1 ) },
 	};
 
-	const unsigned int indices[]
+	const WORD indices[]
 	{
 		0, 1, 2,
 	};
 }
 
-bool GraphicsTest::load(winrt::com_ptr<ID3D11Device> pDevice)
+bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 {
 	const D3D11_BUFFER_DESC vertexBufferDesc
 	{
@@ -60,7 +62,7 @@ bool GraphicsTest::load(winrt::com_ptr<ID3D11Device> pDevice)
 		.BindFlags = D3D11_BIND_INDEX_BUFFER,
 		.CPUAccessFlags = 0,
 		.MiscFlags = 0,
-		.StructureByteStride = 0,
+		.StructureByteStride = sizeof(WORD),
 	};
 
 	const D3D11_SUBRESOURCE_DATA indexSubresourceData
@@ -74,7 +76,7 @@ bool GraphicsTest::load(winrt::com_ptr<ID3D11Device> pDevice)
 	if (FAILED(hr))
 		return false;
 
-	winrt::com_ptr<ID3DBlob> pVertexBlob;
+	winrt::com_ptr<ID3DBlob> pVertexBlob = nullptr;
 	hr = D3DReadFileToBlob(L"vertextest.cso", pVertexBlob.put());
 	if (FAILED(hr))
 		return false;
@@ -83,11 +85,11 @@ bool GraphicsTest::load(winrt::com_ptr<ID3D11Device> pDevice)
 	if (FAILED(hr))
 		return false;
 
-	hr = pDevice->CreateInputLayout(inputElementDesc, static_cast<unsigned>(std::size(inputElementDesc)), pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), pInputLayout.put());
+	hr = pDevice->CreateInputLayout(inputElementDesc, numInputElements, pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), pInputLayout.put());
 	if (FAILED(hr))
 		return false;
 
-	winrt::com_ptr<ID3DBlob> pPixelBlob;
+	winrt::com_ptr<ID3DBlob> pPixelBlob = nullptr;
 	hr = D3DReadFileToBlob(L"pixeltest.cso", pPixelBlob.put());
 	if (FAILED(hr))
 		return false;
@@ -99,16 +101,17 @@ bool GraphicsTest::load(winrt::com_ptr<ID3D11Device> pDevice)
 	return true;
 }
 
-void GraphicsTest::draw(winrt::com_ptr<ID3D11DeviceContext> pDeviceContext) const
+void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext) const
 {
-	const UINT vertexOffsets[]{ 0 };
-	const UINT vertexStrides[]{ sizeof(Vertex) };
-	ID3D11Buffer* vertexBuffers[]{ pVertexBuffer.get() };
+	const UINT numBuffers = 1;
+	const UINT vertexOffsets[numBuffers]{ 0 };
+	const UINT vertexStrides[numBuffers]{ sizeof(Vertex) };
+	ID3D11Buffer* const vertexBuffers[numBuffers]{ pVertexBuffer.get() };
 	pDeviceContext->IASetVertexBuffers(0, 1, vertexBuffers, vertexStrides, vertexOffsets);
-	pDeviceContext->IASetIndexBuffer(pIndexBuffer.get(), DXGI_FORMAT_R32_UINT, 0);
-	pDeviceContext->VSSetShader(pVertexShader.get(), nullptr, 0);
-	pDeviceContext->IASetInputLayout(pInputLayout.get());
-	pDeviceContext->PSSetShader(pPixelShader.get(), nullptr, 0);
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pDeviceContext->IASetIndexBuffer(pIndexBuffer.get(), DXGI_FORMAT_R16_UINT, 0);
+	pDeviceContext->IASetInputLayout(pInputLayout.get());
+	pDeviceContext->VSSetShader(pVertexShader.get(), nullptr, 0);
+	pDeviceContext->PSSetShader(pPixelShader.get(), nullptr, 0);
 	pDeviceContext->DrawIndexed(static_cast<unsigned>(std::size(indices)), 0, 0);
 }

@@ -21,7 +21,7 @@ public:
 	[[nodiscard]] winrt::com_ptr<ID3D11DeviceContext> getDeviceContext() const { return pDeviceContext; }
 
 protected:
-	winrt::com_ptr<ID3D11Device> pDevice;
-	winrt::com_ptr<ID3D11DeviceContext> pDeviceContext;
-	winrt::com_ptr<IDXGISwapChain> pSwapChain;
+	winrt::com_ptr<ID3D11Device> pDevice{ nullptr };
+	winrt::com_ptr<ID3D11DeviceContext> pDeviceContext{ nullptr };
+	winrt::com_ptr<IDXGISwapChain> pSwapChain{ nullptr };
 };

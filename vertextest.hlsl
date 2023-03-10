@@ -7,8 +7,8 @@ struct VS_OUTPUT
 
 VS_OUTPUT vs_main(float4 pos : POSITION, float4 col : COLOR)
 {
-    VS_OUTPUT Out;
-    Out.pos = pos;
-    Out.col = col;
-	return Out;
+    VS_OUTPUT output = (VS_OUTPUT)0;
+    output.pos = pos;
+    output.col = col;
+	return output;
 }
