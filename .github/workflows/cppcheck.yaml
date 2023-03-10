@@ -1,4 +1,5 @@
 name: cppcheck-action-test
+
 on:
   workflow_dispatch:
 
