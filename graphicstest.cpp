@@ -87,7 +87,7 @@ namespace
 		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX proj;
-		XMFLOAT3 vLightDir;
+		XMFLOAT3 lightDir;
 	};
 }
 
@@ -187,8 +187,8 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 
 	int texWidth, texHeight, texNumChannels;
 	unsigned char* textureBytes = stbi_load("cliff_03_v1.tga", &texWidth, &texHeight, &texNumChannels, 4);
-	assert(textureBytes);
-	const unsigned int texBytesPerRow = 4 * texWidth;
+	if (!textureBytes)
+		return false;
 
 	D3D11_TEXTURE2D_DESC textureDesc =
 	{
@@ -208,7 +208,7 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 	D3D11_SUBRESOURCE_DATA textureSubresourceData =
 	{
 		.pSysMem = textureBytes,
-		.SysMemPitch = texBytesPerRow,
+		.SysMemPitch = 4 * static_cast<unsigned>(texWidth),
 	};
 
 	hr = pDevice->CreateTexture2D(&textureDesc, &textureSubresourceData, pTexture.put());
@@ -242,7 +242,7 @@ void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext
 		.world = XMMatrixTranspose(world),
 		.view = XMMatrixTranspose(view),
 		.proj = XMMatrixTranspose(proj),
-		.vLightDir = XMFLOAT3(-0.577f, 0.577f, -0.577f),
+		.lightDir = XMFLOAT3(-0.577f, 0.577f, -0.577f),
 	};
 
 	pDeviceContext->UpdateSubresource(pConstantBuffer.get(), 0, nullptr, &constantBuffer, 0, 0);
