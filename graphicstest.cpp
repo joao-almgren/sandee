@@ -11,6 +11,7 @@ namespace
 	const D3D11_INPUT_ELEMENT_DESC g_inputElementDesc[]
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
@@ -20,41 +21,42 @@ namespace
 	struct Vertex
 	{
 		[[maybe_unused]] XMFLOAT3 position{};
+		[[maybe_unused]] XMFLOAT3 normal;
 		[[maybe_unused]] XMFLOAT4 color{};
 		[[maybe_unused]] XMFLOAT2 uv{};
 	};
 	
 	const Vertex g_vertices[]
 	{
-		{ XMFLOAT3(-1,  1, -1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(1, 0) },
-		{ XMFLOAT3( 1,  1, -1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(0, 0) },
-		{ XMFLOAT3( 1,  1,  1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(0, 1) },
-		{ XMFLOAT3(-1,  1,  1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(1, 1) },
+		{ XMFLOAT3(-1,  1, -1), XMFLOAT3( 0,  1,  0), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(1, 0) },
+		{ XMFLOAT3( 1,  1, -1), XMFLOAT3( 0,  1,  0), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(0, 0) },
+		{ XMFLOAT3( 1,  1,  1), XMFLOAT3( 0,  1,  0), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(0, 1) },
+		{ XMFLOAT3(-1,  1,  1), XMFLOAT3( 0,  1,  0), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(1, 1) },
 
-		{ XMFLOAT3(-1, -1, -1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(0, 0) },
-		{ XMFLOAT3( 1, -1, -1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(1, 0) },
-		{ XMFLOAT3( 1, -1,  1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(1, 1) },
-		{ XMFLOAT3(-1, -1,  1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(0, 1) },
+		{ XMFLOAT3(-1, -1, -1), XMFLOAT3( 0, -1,  0), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(0, 0) },
+		{ XMFLOAT3( 1, -1, -1), XMFLOAT3( 0, -1,  0), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(1, 0) },
+		{ XMFLOAT3( 1, -1,  1), XMFLOAT3( 0, -1,  0), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(1, 1) },
+		{ XMFLOAT3(-1, -1,  1), XMFLOAT3( 0, -1,  0), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(0, 1) },
 
-		{ XMFLOAT3(-1, -1,  1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(0, 1) },
-		{ XMFLOAT3(-1, -1, -1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(1, 1) },
-		{ XMFLOAT3(-1,  1, -1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(1, 0) },
-		{ XMFLOAT3(-1,  1,  1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(0, 0) },
+		{ XMFLOAT3(-1, -1,  1), XMFLOAT3(-1,  0,  0), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(0, 1) },
+		{ XMFLOAT3(-1, -1, -1), XMFLOAT3(-1,  0,  0), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(1, 1) },
+		{ XMFLOAT3(-1,  1, -1), XMFLOAT3(-1,  0,  0), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(1, 0) },
+		{ XMFLOAT3(-1,  1,  1), XMFLOAT3(-1,  0,  0), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(0, 0) },
 
-		{ XMFLOAT3( 1, -1,  1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(1, 1) },
-		{ XMFLOAT3( 1, -1, -1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(0, 1) },
-		{ XMFLOAT3( 1,  1, -1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(0, 0) },
-		{ XMFLOAT3( 1,  1,  1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(1, 0) },
+		{ XMFLOAT3( 1, -1,  1), XMFLOAT3( 1,  0,  0), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(1, 1) },
+		{ XMFLOAT3( 1, -1, -1), XMFLOAT3( 1,  0,  0), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(0, 1) },
+		{ XMFLOAT3( 1,  1, -1), XMFLOAT3( 1,  0,  0), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(0, 0) },
+		{ XMFLOAT3( 1,  1,  1), XMFLOAT3( 1,  0,  0), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(1, 0) },
 
-		{ XMFLOAT3(-1, -1, -1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(0, 1) },
-		{ XMFLOAT3( 1, -1, -1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(1, 1) },
-		{ XMFLOAT3( 1,  1, -1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(1, 0) },
-		{ XMFLOAT3(-1,  1, -1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(0, 0) },
+		{ XMFLOAT3(-1, -1, -1), XMFLOAT3( 0,  0, -1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(0, 1) },
+		{ XMFLOAT3( 1, -1, -1), XMFLOAT3( 0,  0, -1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(1, 1) },
+		{ XMFLOAT3( 1,  1, -1), XMFLOAT3( 0,  0, -1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(1, 0) },
+		{ XMFLOAT3(-1,  1, -1), XMFLOAT3( 0,  0, -1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(0, 0) },
 
-		{ XMFLOAT3(-1, -1,  1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(1, 1) },
-		{ XMFLOAT3( 1, -1,  1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(0, 1) },
-		{ XMFLOAT3( 1,  1,  1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(0, 0) },
-		{ XMFLOAT3(-1,  1,  1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(1, 0) },
+		{ XMFLOAT3(-1, -1,  1), XMFLOAT3( 0,  0,  1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(1, 1) },
+		{ XMFLOAT3( 1, -1,  1), XMFLOAT3( 0,  0,  1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(0, 1) },
+		{ XMFLOAT3( 1,  1,  1), XMFLOAT3( 0,  0,  1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(0, 0) },
+		{ XMFLOAT3(-1,  1,  1), XMFLOAT3( 0,  0,  1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(1, 0) },
 	};
 
 	const WORD g_indices[]
@@ -85,6 +87,7 @@ namespace
 		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX proj;
+		XMFLOAT4 vLightDir;
 	};
 }
 
@@ -239,6 +242,7 @@ void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext
 		.world = XMMatrixTranspose(world),
 		.view = XMMatrixTranspose(view),
 		.proj = XMMatrixTranspose(proj),
+		.vLightDir = XMFLOAT4(-0.577f, 0.577f, -0.577f, 1.0f),
 	};
 
 	pDeviceContext->UpdateSubresource(pConstantBuffer.get(), 0, nullptr, &constantBuffer, 0, 0);
@@ -256,6 +260,8 @@ void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext
 	ID3D11Buffer* const constantBuffers[numConstantBuffers]{ pConstantBuffer.get() };
 	pDeviceContext->VSSetConstantBuffers(0, numConstantBuffers, constantBuffers);
 	pDeviceContext->VSSetShader(pVertexShader.get(), nullptr, 0);
+
+	pDeviceContext->PSSetConstantBuffers(0, numConstantBuffers, constantBuffers);
 	pDeviceContext->PSSetShader(pPixelShader.get(), nullptr, 0);
 
 	const UINT numSamplerStates = 1;

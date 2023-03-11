@@ -24,4 +24,7 @@ protected:
 	winrt::com_ptr<ID3D11Device> pDevice{ nullptr };
 	winrt::com_ptr<ID3D11DeviceContext> pDeviceContext{ nullptr };
 	winrt::com_ptr<IDXGISwapChain> pSwapChain{ nullptr };
+	winrt::com_ptr<ID3D11RenderTargetView> pRenderTarget{ nullptr };
+	winrt::com_ptr<ID3D11Texture2D> pDepthStencil{ nullptr };
+	winrt::com_ptr<ID3D11DepthStencilView> pDepthStencilView{ nullptr };
 };

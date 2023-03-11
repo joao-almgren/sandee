@@ -50,6 +50,44 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		return false;
 	}
 
+	winrt::com_ptr<ID3D11Resource> pBackBuffer;
+	if (FAILED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void())))
+		return false;
+
+	if (FAILED(pDevice->CreateRenderTargetView(pBackBuffer.get(), nullptr, pRenderTarget.put())))
+		return false;
+
+	D3D11_TEXTURE2D_DESC descDepth =
+	{
+		descDepth.Width = windowWidth,
+		descDepth.Height = windowWidth,
+		descDepth.MipLevels = 1,
+		descDepth.ArraySize = 1,
+		descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT,
+		descDepth.SampleDesc.Count = 1,
+		descDepth.SampleDesc.Quality = 0,
+		descDepth.Usage = D3D11_USAGE_DEFAULT,
+		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL,
+		descDepth.CPUAccessFlags = 0,
+		descDepth.MiscFlags = 0,
+	};
+
+	if (FAILED(pDevice->CreateTexture2D(&descDepth, nullptr, pDepthStencil.put())))
+		return false;
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV =
+	{
+		.Format = descDepth.Format,
+		.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D,
+		.Texture2D =
+		{
+			.MipSlice = 0,
+		},
+	};
+
+	if (FAILED(pDevice->CreateDepthStencilView(pDepthStencil.get(), &descDSV, pDepthStencilView.put())))
+		return false;
+
 	const D3D11_VIEWPORT viewport[] {
 	{
 		.TopLeftX = 0,
@@ -72,27 +110,12 @@ void Graphics::present() const
 
 void Graphics::resetRenderTarget() const
 {
-	winrt::com_ptr<ID3D11Resource> pBackBuffer;
-	if (SUCCEEDED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void())))
-	{
-		winrt::com_ptr<ID3D11RenderTargetView> pRenderTarget;
-		if (SUCCEEDED(pDevice->CreateRenderTargetView(pBackBuffer.get(), nullptr, pRenderTarget.put())))
-		{
-			ID3D11RenderTargetView* pTarget[]{ pRenderTarget.get() };
-			pDeviceContext->OMSetRenderTargets(1, pTarget, nullptr);
-		}
-	}
+	ID3D11RenderTargetView* pTargets[]{ pRenderTarget.get() };
+	pDeviceContext->OMSetRenderTargets(1, pTargets, nullptr);
 }
 
 void Graphics::clearScreen(const float (&color)[4]) const
 {
-	winrt::com_ptr<ID3D11Resource> pBackBuffer;
-	if (SUCCEEDED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void())))
-	{
-		winrt::com_ptr<ID3D11RenderTargetView> pRenderTarget;
-		if (SUCCEEDED(pDevice->CreateRenderTargetView(pBackBuffer.get(), nullptr, pRenderTarget.put())))
-		{
-			pDeviceContext->ClearRenderTargetView(pRenderTarget.get(), color);
-		}
-	}
+	pDeviceContext->ClearRenderTargetView(pRenderTarget.get(), color);
+	pDeviceContext->ClearDepthStencilView(pDepthStencilView.get(), D3D11_CLEAR_DEPTH, 1, 0);
 }
