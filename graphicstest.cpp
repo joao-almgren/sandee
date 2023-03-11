@@ -1,6 +1,8 @@
 #include "graphicstest.h"
 #include <d3dcompiler.h>
 #include <directxmath.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 namespace
 {
@@ -10,6 +12,7 @@ namespace
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	const UINT g_numInputElements = static_cast<unsigned>(std::size(g_inputElementDesc));
@@ -18,19 +21,61 @@ namespace
 	{
 		[[maybe_unused]] XMFLOAT3 position{};
 		[[maybe_unused]] XMFLOAT4 color{};
+		[[maybe_unused]] XMFLOAT2 uv{};
 	};
 	
 	const Vertex g_vertices[]
 	{
-		{ .position = XMFLOAT3( -1,  1, 0 ), .color = XMFLOAT4( 1, 0, 0, 1 ) },
-		{ .position = XMFLOAT3(  1,  1, 0 ), .color = XMFLOAT4( 0, 1, 0, 1 ) },
-		{ .position = XMFLOAT3(  1, -1, 0 ), .color = XMFLOAT4( 0, 0, 1, 1 ) },
-		{ .position = XMFLOAT3( -1, -1, 0 ), .color = XMFLOAT4( 1, 1, 0, 1 ) },
+		{ XMFLOAT3(-1,  1, -1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(1, 0) },
+		{ XMFLOAT3( 1,  1, -1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(0, 0) },
+		{ XMFLOAT3( 1,  1,  1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(0, 1) },
+		{ XMFLOAT3(-1,  1,  1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(1, 1) },
+
+		{ XMFLOAT3(-1, -1, -1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(0, 0) },
+		{ XMFLOAT3( 1, -1, -1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(1, 0) },
+		{ XMFLOAT3( 1, -1,  1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(1, 1) },
+		{ XMFLOAT3(-1, -1,  1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(0, 1) },
+
+		{ XMFLOAT3(-1, -1,  1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(0, 1) },
+		{ XMFLOAT3(-1, -1, -1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(1, 1) },
+		{ XMFLOAT3(-1,  1, -1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(1, 0) },
+		{ XMFLOAT3(-1,  1,  1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(0, 0) },
+
+		{ XMFLOAT3( 1, -1,  1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(1, 1) },
+		{ XMFLOAT3( 1, -1, -1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(0, 1) },
+		{ XMFLOAT3( 1,  1, -1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(0, 0) },
+		{ XMFLOAT3( 1,  1,  1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(1, 0) },
+
+		{ XMFLOAT3(-1, -1, -1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(0, 1) },
+		{ XMFLOAT3( 1, -1, -1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(1, 1) },
+		{ XMFLOAT3( 1,  1, -1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(1, 0) },
+		{ XMFLOAT3(-1,  1, -1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(0, 0) },
+
+		{ XMFLOAT3(-1, -1,  1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(1, 1) },
+		{ XMFLOAT3( 1, -1,  1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(0, 1) },
+		{ XMFLOAT3( 1,  1,  1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(0, 0) },
+		{ XMFLOAT3(-1,  1,  1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(1, 0) },
 	};
 
 	const WORD g_indices[]
 	{
-		0, 1, 2, 0, 2, 3,
+		3, 1, 0,
+		2, 1, 3,
+
+		6, 4, 5,
+		7, 4, 6,
+
+		11, 9, 8,
+		10, 9, 11,
+
+		14, 12, 13,
+		15, 12, 14,
+
+		19, 17, 16,
+		18, 17, 19,
+
+		22, 20, 21,
+		23, 20, 22,
 	};
 
 	const UINT g_numIndices = static_cast<unsigned>(std::size(g_indices));
@@ -123,17 +168,66 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 	if (FAILED(hr))
 		return false;
 
+	D3D11_SAMPLER_DESC samplerDesc =
+	{
+		.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT,
+		.AddressU = D3D11_TEXTURE_ADDRESS_BORDER,
+		.AddressV = D3D11_TEXTURE_ADDRESS_BORDER,
+		.AddressW = D3D11_TEXTURE_ADDRESS_BORDER,
+		.ComparisonFunc = D3D11_COMPARISON_NEVER,
+		.BorderColor = { 0, 0, 0, 0 },
+	};
+
+	hr = pDevice->CreateSamplerState(&samplerDesc, pSamplerState.put());
+	if (FAILED(hr))
+		return false;
+
+	int texWidth, texHeight, texNumChannels;
+	unsigned char* textureBytes = stbi_load("cliff_03_v1.tga", &texWidth, &texHeight, &texNumChannels, 4);
+	assert(textureBytes);
+	const unsigned int texBytesPerRow = 4 * texWidth;
+
+	D3D11_TEXTURE2D_DESC textureDesc =
+	{
+		.Width = static_cast<unsigned>(texWidth),
+		.Height = static_cast<unsigned>(texHeight),
+		.MipLevels = 1,
+		.ArraySize = 1,
+		.Format = DXGI_FORMAT_R8G8B8A8_UNORM,
+		.SampleDesc =
+		{
+			.Count = 1,
+		},
+		.Usage = D3D11_USAGE_IMMUTABLE,
+		.BindFlags = D3D11_BIND_SHADER_RESOURCE,
+	};
+
+	D3D11_SUBRESOURCE_DATA textureSubresourceData =
+	{
+		.pSysMem = textureBytes,
+		.SysMemPitch = texBytesPerRow,
+	};
+
+	hr = pDevice->CreateTexture2D(&textureDesc, &textureSubresourceData, pTexture.put());
+	free(textureBytes);
+	if (FAILED(hr))
+		return false;
+
+	hr = pDevice->CreateShaderResourceView(pTexture.get(), nullptr, pTextureView.put());
+	if (FAILED(hr))
+		return false;
+
 	return true;
 }
 
 void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext, const int windowWidth, const int windowHeight) const
 {
 	static float t = 0;
-	t = (t < 2 * XM_PI) ? t + XM_PI * 0.005f : 0;
+	t = (t < 2 * XM_PI) ? t + XM_PI * 0.002f : 0;
 
-	XMMATRIX world = XMMatrixRotationZ(t);
+	XMMATRIX world = XMMatrixRotationRollPitchYaw(t, t, 0);
 
-	XMVECTOR eyePos = XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
+	XMVECTOR eyePos = XMVectorSet(0.0f, 0.0f, -3.0f, 0.0f);
 	XMVECTOR atPos = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR upDir = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	XMMATRIX view = XMMatrixLookAtLH(eyePos, atPos, upDir);
@@ -163,5 +257,14 @@ void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext
 	pDeviceContext->VSSetConstantBuffers(0, numConstantBuffers, constantBuffers);
 	pDeviceContext->VSSetShader(pVertexShader.get(), nullptr, 0);
 	pDeviceContext->PSSetShader(pPixelShader.get(), nullptr, 0);
+
+	const UINT numSamplerStates = 1;
+	ID3D11SamplerState* const samplerStates[numSamplerStates]{ pSamplerState.get() };
+	pDeviceContext->PSSetSamplers(0, 1, samplerStates);
+
+	const UINT numTextureViews = 1;
+	ID3D11ShaderResourceView* const textureViews[numTextureViews]{ pTextureView.get() };
+	pDeviceContext->PSSetShaderResources(0, 1, textureViews);
+
 	pDeviceContext->DrawIndexed(g_numIndices, 0, 0);
 }

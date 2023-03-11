@@ -10,12 +10,14 @@ struct VsInput
 {
     float4 pos : POSITION;
     float4 col : COLOR;
+    float2 uv : TEXCOORD;
 };
 
 struct VsOutput
 {
     float4 pos : SV_POSITION;
     float4 col : COLOR;
+    float2 uv : TEXCOORD;
 };
 
 VsOutput main(const VsInput input)
@@ -25,5 +27,6 @@ VsOutput main(const VsInput input)
     output.pos = mul(output.pos, view);
     output.pos = mul(output.pos, proj);
     output.col = input.col;
-	return output;
+    output.uv = input.uv;
+    return output;
 }
