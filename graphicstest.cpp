@@ -87,7 +87,7 @@ namespace
 		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX proj;
-		XMFLOAT4 vLightDir;
+		XMFLOAT3 vLightDir;
 	};
 }
 
@@ -242,22 +242,14 @@ void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext
 		.world = XMMatrixTranspose(world),
 		.view = XMMatrixTranspose(view),
 		.proj = XMMatrixTranspose(proj),
-		.vLightDir = XMFLOAT4(-0.577f, 0.577f, -0.577f, 1.0f),
+		.vLightDir = XMFLOAT3(-0.577f, 0.577f, -0.577f),
 	};
 
 	pDeviceContext->UpdateSubresource(pConstantBuffer.get(), 0, nullptr, &constantBuffer, 0, 0);
 
-	const UINT numVertexBuffers = 1;
-	const UINT vertexOffsets[numVertexBuffers]{ 0 };
-	const UINT vertexStrides[numVertexBuffers]{ sizeof(Vertex) };
-	ID3D11Buffer* const vertexBuffers[numVertexBuffers]{ pVertexBuffer.get() };
-	pDeviceContext->IASetVertexBuffers(0, numVertexBuffers, vertexBuffers, vertexStrides, vertexOffsets);
-	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	pDeviceContext->IASetIndexBuffer(pIndexBuffer.get(), DXGI_FORMAT_R16_UINT, 0);
-	pDeviceContext->IASetInputLayout(pInputLayout.get());
-
 	const UINT numConstantBuffers = 1;
 	ID3D11Buffer* const constantBuffers[numConstantBuffers]{ pConstantBuffer.get() };
+
 	pDeviceContext->VSSetConstantBuffers(0, numConstantBuffers, constantBuffers);
 	pDeviceContext->VSSetShader(pVertexShader.get(), nullptr, 0);
 
@@ -271,6 +263,15 @@ void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext
 	const UINT numTextureViews = 1;
 	ID3D11ShaderResourceView* const textureViews[numTextureViews]{ pTextureView.get() };
 	pDeviceContext->PSSetShaderResources(0, 1, textureViews);
+
+	const UINT numVertexBuffers = 1;
+	const UINT vertexOffsets[numVertexBuffers]{ 0 };
+	const UINT vertexStrides[numVertexBuffers]{ sizeof(Vertex) };
+	ID3D11Buffer* const vertexBuffers[numVertexBuffers]{ pVertexBuffer.get() };
+	pDeviceContext->IASetVertexBuffers(0, numVertexBuffers, vertexBuffers, vertexStrides, vertexOffsets);
+	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pDeviceContext->IASetIndexBuffer(pIndexBuffer.get(), DXGI_FORMAT_R16_UINT, 0);
+	pDeviceContext->IASetInputLayout(pInputLayout.get());
 
 	pDeviceContext->DrawIndexed(g_numIndices, 0, 0);
 }
