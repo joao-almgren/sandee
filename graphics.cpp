@@ -28,7 +28,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		.BufferCount = 2,
 		.OutputWindow = hWnd,
 		.Windowed = TRUE,
-		.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL,
+		.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD,
 		.Flags = 0,
 	};
 

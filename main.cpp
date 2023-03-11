@@ -14,6 +14,7 @@ int WINAPI wWinMain(
 	const WNDCLASSEX wc
 	{
 		.cbSize = sizeof(WNDCLASSEX),
+		.style = CS_HREDRAW | CS_VREDRAW,
 		.lpfnWndProc{ [](const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam) -> LRESULT
 		{
 			switch (message)
@@ -39,7 +40,7 @@ int WINAPI wWinMain(
 		.lpszClassName = windowTitle,
 	};
 
-	if (!RegisterClassEx(&wc))
+	if (!RegisterClassExW(&wc))
 		return 0;
 
 	const int windowWidth = 800;
@@ -53,7 +54,7 @@ int WINAPI wWinMain(
 	const auto windowOriginLeft = (GetSystemMetrics(SM_CXSCREEN) - adjustedWindowWidth) / 2;
 	const auto windowOriginTop = (GetSystemMetrics(SM_CYSCREEN) - adjustedWindowHeight) / 2;
 
-	const auto hWnd{ CreateWindowEx
+	const auto hWnd = CreateWindowExW
 	(
 		WS_EX_OVERLAPPEDWINDOW,
 		windowTitle,
@@ -67,7 +68,7 @@ int WINAPI wWinMain(
 		nullptr,
 		hInstance,
 		nullptr
-	)};
+	);
 
 	if (!hWnd)
 		return 0;
@@ -97,7 +98,7 @@ int WINAPI wWinMain(
 		{
 			graphics.resetRenderTarget();
 			graphics.clearScreen({ 0.5, 0, 0.5, 0 });
-			graphicsTest.draw(graphics.getDeviceContext());
+			graphicsTest.draw(graphics.getDeviceContext(), windowWidth, windowHeight);
 			graphics.present();
 		}
 	}
