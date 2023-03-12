@@ -1,6 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <memory>
+#include "input.h"
 #include "graphics.h"
 #include "camera.h"
 #include "graphicstest.h"
@@ -80,6 +81,10 @@ int WINAPI wWinMain(
 	SetFocus(hWnd);
 	ShowCursor(FALSE);
 
+	Input input;
+	if (!input.init(hWnd, hInstance))
+		return 0;
+
 	Graphics graphics;
 	if (!graphics.initialize(hWnd, windowWidth, windowHeight))
 		return 0;
@@ -91,7 +96,6 @@ int WINAPI wWinMain(
 	Camera camera;
 	camera.setProjection(3.14f / 2, windowWidth / static_cast<float>(windowHeight), 0.1f, 1000.0f);
 	camera.moveForward(-3);
-	camera.resetView();
 
 	MSG msg{};
 	while (msg.message != WM_QUIT)
@@ -103,6 +107,31 @@ int WINAPI wWinMain(
 		}
 		else
 		{
+			// tick
+			{
+				float speed = 0.01f;
+
+				input.update();
+
+				POINT mouseMove{ input.mouseState.lX, input.mouseState.lY };
+				camera.rotate(static_cast<float>(mouseMove.y) / 300.0f, static_cast<float>(-mouseMove.x) / 300.0f);
+
+				if (input.keyState[DIK_D] || input.keyState[DIK_RIGHT])
+					camera.moveRight(speed);
+				else if (input.keyState[DIK_A] || input.keyState[DIK_LEFT])
+					camera.moveRight(-speed);
+				if (input.keyState[DIK_W] || input.keyState[DIK_UP])
+					camera.moveForward(speed);
+				else if (input.keyState[DIK_S] || input.keyState[DIK_DOWN])
+					camera.moveForward(-speed);
+				if (input.keyState[DIK_Q])
+					camera.moveUp(speed);
+				else if (input.keyState[DIK_Z])
+					camera.moveUp(-speed);
+
+				camera.resetView();
+			}
+
 			graphics.resetRenderTarget();
 			graphics.clearScreen({ 0.5, 0, 0.5, 0 });
 

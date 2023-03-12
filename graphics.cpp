@@ -88,7 +88,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		.Height = static_cast<unsigned>(windowWidth),
 		.MipLevels = 1,
 		.ArraySize = 1,
-		.Format = DXGI_FORMAT_D24_UNORM_S8_UINT,
+		.Format = DXGI_FORMAT_D32_FLOAT,
 		.SampleDesc
 		{
 			.Count = 1,
