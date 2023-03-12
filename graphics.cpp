@@ -34,7 +34,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		.Flags = 0,
 	};
 
-	if (FAILED(D3D11CreateDeviceAndSwapChain(
+	HRESULT hr = D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
@@ -43,14 +43,14 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		0,
 		D3D11_SDK_VERSION,
 		&swapChainDesc,
-		pSwapChain.put(),
-		pDevice.put(),
+		m_pSwapChain.put(),
+		m_pDevice.put(),
 		nullptr,
-		pDeviceContext.put()
-	)))
-	{
+		m_pDeviceContext.put()
+	);
+
+	if (FAILED(hr))
 		return false;
-	}
 
 	D3D11_RASTERIZER_DESC rasterizerDesc =
 	{
@@ -65,17 +65,22 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		.MultisampleEnable = FALSE,
 		.AntialiasedLineEnable = FALSE,
 	};
-	ID3D11RasterizerState* pRasterizerState;
-	if (FAILED(pDevice->CreateRasterizerState(&rasterizerDesc, &pRasterizerState)))
+
+	ID3D11RasterizerState * pRasterizerState;
+	hr = m_pDevice->CreateRasterizerState(&rasterizerDesc, &pRasterizerState);
+	if (FAILED(hr))
 		return false;
-	pDeviceContext->RSSetState(pRasterizerState);
+
+	m_pDeviceContext->RSSetState(pRasterizerState);
 	pRasterizerState->Release();
 
 	winrt::com_ptr<ID3D11Resource> pBackBuffer;
-	if (FAILED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void())))
+	hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void());
+	if (FAILED(hr))
 		return false;
 
-	if (FAILED(pDevice->CreateRenderTargetView(pBackBuffer.get(), nullptr, pRenderTarget.put())))
+	hr = m_pDevice->CreateRenderTargetView(pBackBuffer.get(), nullptr, m_pRenderTarget.put());
+	if (FAILED(hr))
 		return false;
 
 	D3D11_TEXTURE2D_DESC descDepth =
@@ -93,7 +98,8 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		descDepth.MiscFlags = 0,
 	};
 
-	if (FAILED(pDevice->CreateTexture2D(&descDepth, nullptr, pDepthStencil.put())))
+	hr = m_pDevice->CreateTexture2D(&descDepth, nullptr, m_pDepthStencil.put());
+	if (FAILED(hr))
 		return false;
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV =
@@ -106,7 +112,8 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		},
 	};
 
-	if (FAILED(pDevice->CreateDepthStencilView(pDepthStencil.get(), &descDSV, pDepthStencilView.put())))
+	hr = m_pDevice->CreateDepthStencilView(m_pDepthStencil.get(), &descDSV, m_pDepthStencilView.put());
+	if (FAILED(hr))
 		return false;
 
 	const D3D11_VIEWPORT viewport[] {
@@ -119,26 +126,26 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		.MaxDepth = 1,
 	}};
 
-	pDeviceContext->RSSetViewports(1, viewport);
+	m_pDeviceContext->RSSetViewports(1, viewport);
 
 	return true;
 }
 
 void Graphics::present() const
 {
-	pSwapChain->Present(1, 0);
+	m_pSwapChain->Present(1, 0);
 }
 
 void Graphics::resetRenderTarget() const
 {
-	ID3D11RenderTargetView* pTargets[]{ pRenderTarget.get() };
-	pDeviceContext->OMSetRenderTargets(1, pTargets, nullptr);
+	ID3D11RenderTargetView * pTargets[]{ m_pRenderTarget.get() };
+	m_pDeviceContext->OMSetRenderTargets(1, pTargets, nullptr);
 }
 
 void Graphics::clearScreen(const float (& color)[4]) const
 {
-	pDeviceContext->ClearRenderTargetView(pRenderTarget.get(), color);
-	pDeviceContext->ClearDepthStencilView(pDepthStencilView.get(), D3D11_CLEAR_DEPTH, 1, 0);
+	m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget.get(), color);
+	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView.get(), D3D11_CLEAR_DEPTH, 1, 0);
 }
 
 bool Graphics::loadTexture(const char * const filename, ID3D11Texture2D ** pTexture, ID3D11ShaderResourceView ** pTextureView) const
@@ -169,12 +176,12 @@ bool Graphics::loadTexture(const char * const filename, ID3D11Texture2D ** pText
 		.SysMemPitch = 4 * static_cast<unsigned>(texWidth),
 	};
 
-	HRESULT hr = pDevice->CreateTexture2D(&textureDesc, &textureSubresourceData, pTexture);
+	HRESULT hr = m_pDevice->CreateTexture2D(&textureDesc, &textureSubresourceData, pTexture);
 	free(textureBytes);
 	if (FAILED(hr))
 		return false;
 
-	hr = pDevice->CreateShaderResourceView(*pTexture, nullptr, pTextureView);
+	hr = m_pDevice->CreateShaderResourceView(*pTexture, nullptr, pTextureView);
 	if (FAILED(hr))
 	{
 		(*pTexture)->Release();

@@ -85,7 +85,7 @@ int WINAPI wWinMain(
 		return 0;
 
 	GraphicsTest graphicsTest(std::make_shared<Graphics>(graphics));
-	if (!graphicsTest.load(graphics.getDevice()))
+	if (!graphicsTest.load())
 		return 0;
 
 	Camera camera;

@@ -4,7 +4,7 @@ cbuffer ConstantBuffer : register(b0)
 	matrix world;
 	matrix view;
 	matrix projection;
-	float3 lightDir;
+	float3 lightDirection;
 }
 
 struct VsInput

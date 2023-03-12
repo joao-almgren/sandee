@@ -2,53 +2,53 @@
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-void Camera::setProjection(const float fov, const float aspect, const float nearZ, const float farZ)
+void Camera::setProjection(const float fov, const float aspectRatio, const float nearZ, const float farZ)
 {
-	mProjection = XMMatrixPerspectiveFovLH(fov, aspect, nearZ, farZ);
+	m_projection = XMMatrixPerspectiveFovLH(fov, aspectRatio, nearZ, farZ);
 }
 
 void Camera::rotate(const float dPitch, const float dYaw)
 {
-	mPitch += dPitch;
-	mYaw += dYaw;
+	m_pitch += dPitch;
+	m_yaw += dYaw;
 
-	if (mPitch > XM_PIDIV2)
-		mPitch = XM_PIDIV2;
-	else if (mPitch < -XM_PIDIV2)
-		mPitch = -XM_PIDIV2;
+	if (m_pitch > XM_PIDIV2)
+		m_pitch = XM_PIDIV2;
+	else if (m_pitch < -XM_PIDIV2)
+		m_pitch = -XM_PIDIV2;
 
-	const Matrix matY = Matrix::CreateRotationY(mYaw);
-	const Matrix matX = Matrix::CreateRotationX(mPitch);
+	const Matrix matY = Matrix::CreateRotationY(m_yaw);
+	const Matrix matX = Matrix::CreateRotationX(m_pitch);
 	const Matrix matRot = matY * matX;
-	mDir = matRot.Forward();
+	m_direction = matRot.Forward();
 
-	const Vector3 at(mPos + mDir);
-	const Vector3 yup(0, 1, 0);
-	mView = XMMatrixLookAtLH(mPos, at, yup);
+	const Vector3 at(m_position + m_direction);
+	const Vector3 up(0, 1, 0);
+	m_view = XMMatrixLookAtLH(m_position, at, up);
 
-	mRight = mView.Right();
-	mUp = mView.Up();
-	mDir = mView.Forward();
+	m_right = m_view.Right();
+	m_up = m_view.Up();
+	m_direction = m_view.Forward();
 }
 
 void Camera::resetView()
 {
-	const Vector3 at(mPos + mDir);
-	const Vector3 yup(0, 1, 0);
-	mView = XMMatrixLookAtLH(mPos, at, yup);
+	const Vector3 at(m_position + m_direction);
+	const Vector3 up(0, 1, 0);
+	m_view = XMMatrixLookAtLH(m_position, at, up);
 }
 
 void Camera::moveRight(const float scale)
 {
-	mPos += scale * mRight;
+	m_position += scale * m_right;
 }
 
 void Camera::moveForward(const float scale)
 {
-	mPos += scale * mDir;
+	m_position += scale * m_direction;
 }
 
 void Camera::moveUp(const float scale)
 {
-	mPos += scale * mUp;
+	m_position += scale * m_up;
 }

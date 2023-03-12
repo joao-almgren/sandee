@@ -27,35 +27,35 @@ namespace
 	
 	const Vertex g_vertices[]
 	{
-		{ {-1,  1, -1}, { 0,  1,  0}, {1, 0, 0, 1}, {1, 0} },
-		{ { 1,  1, -1}, { 0,  1,  0}, {0, 1, 0, 1}, {0, 0} },
-		{ { 1,  1,  1}, { 0,  1,  0}, {0, 0, 1, 1}, {0, 1} },
-		{ {-1,  1,  1}, { 0,  1,  0}, {0, 0, 0, 1}, {1, 1} },
+		{ {-1, 1,-1}, { 0, 1, 0}, {1, 0, 0, 1}, {1, 0} },
+		{ { 1, 1,-1}, { 0, 1, 0}, {0, 1, 0, 1}, {0, 0} },
+		{ { 1, 1, 1}, { 0, 1, 0}, {0, 0, 1, 1}, {0, 1} },
+		{ {-1, 1, 1}, { 0, 1, 0}, {0, 0, 0, 1}, {1, 1} },
 
-		{ {-1, -1, -1}, { 0, -1,  0}, {1, 0, 0, 1}, {0, 0} },
-		{ { 1, -1, -1}, { 0, -1,  0}, {0, 1, 0, 1}, {1, 0} },
-		{ { 1, -1,  1}, { 0, -1,  0}, {0, 0, 1, 1}, {1, 1} },
-		{ {-1, -1,  1}, { 0, -1,  0}, {0, 0, 0, 1}, {0, 1} },
+		{ {-1,-1,-1}, { 0,-1, 0}, {1, 0, 0, 1}, {0, 0} },
+		{ { 1,-1,-1}, { 0,-1, 0}, {0, 1, 0, 1}, {1, 0} },
+		{ { 1,-1, 1}, { 0,-1, 0}, {0, 0, 1, 1}, {1, 1} },
+		{ {-1,-1, 1}, { 0,-1, 0}, {0, 0, 0, 1}, {0, 1} },
 
-		{ {-1, -1,  1}, {-1,  0,  0}, {1, 0, 0, 1}, {0, 1} },
-		{ {-1, -1, -1}, {-1,  0,  0}, {0, 1, 0, 1}, {1, 1} },
-		{ {-1,  1, -1}, {-1,  0,  0}, {0, 0, 1, 1}, {1, 0} },
-		{ {-1,  1,  1}, {-1,  0,  0}, {0, 0, 0, 1}, {0, 0} },
+		{ {-1,-1, 1}, {-1, 0, 0}, {1, 0, 0, 1}, {0, 1} },
+		{ {-1,-1,-1}, {-1, 0, 0}, {0, 1, 0, 1}, {1, 1} },
+		{ {-1, 1,-1}, {-1, 0, 0}, {0, 0, 1, 1}, {1, 0} },
+		{ {-1, 1, 1}, {-1, 0, 0}, {0, 0, 0, 1}, {0, 0} },
 
-		{ { 1, -1,  1}, { 1,  0,  0}, {1, 0, 0, 1}, {1, 1} },
-		{ { 1, -1, -1}, { 1,  0,  0}, {0, 1, 0, 1}, {0, 1} },
-		{ { 1,  1, -1}, { 1,  0,  0}, {0, 0, 1, 1}, {0, 0} },
-		{ { 1,  1,  1}, { 1,  0,  0}, {0, 0, 0, 1}, {1, 0} },
+		{ { 1,-1, 1}, { 1, 0, 0}, {1, 0, 0, 1}, {1, 1} },
+		{ { 1,-1,-1}, { 1, 0, 0}, {0, 1, 0, 1}, {0, 1} },
+		{ { 1, 1,-1}, { 1, 0, 0}, {0, 0, 1, 1}, {0, 0} },
+		{ { 1, 1, 1}, { 1, 0, 0}, {0, 0, 0, 1}, {1, 0} },
 
-		{ {-1, -1, -1}, { 0,  0, -1}, {1, 0, 0, 1}, {0, 1} },
-		{ { 1, -1, -1}, { 0,  0, -1}, {0, 1, 0, 1}, {1, 1} },
-		{ { 1,  1, -1}, { 0,  0, -1}, {0, 0, 1, 1}, {1, 0} },
-		{ {-1,  1, -1}, { 0,  0, -1}, {0, 0, 0, 1}, {0, 0} },
+		{ {-1,-1,-1}, { 0, 0,-1}, {1, 0, 0, 1}, {0, 1} },
+		{ { 1,-1,-1}, { 0, 0,-1}, {0, 1, 0, 1}, {1, 1} },
+		{ { 1, 1,-1}, { 0, 0,-1}, {0, 0, 1, 1}, {1, 0} },
+		{ {-1, 1,-1}, { 0, 0,-1}, {0, 0, 0, 1}, {0, 0} },
 
-		{ {-1, -1,  1}, { 0,  0,  1}, {1, 0, 0, 1}, {1, 1} },
-		{ { 1, -1,  1}, { 0,  0,  1}, {0, 1, 0, 1}, {0, 1} },
-		{ { 1,  1,  1}, { 0,  0,  1}, {0, 0, 1, 1}, {0, 0} },
-		{ {-1,  1,  1}, { 0,  0,  1}, {0, 0, 0, 1}, {1, 0} },
+		{ {-1,-1, 1}, { 0, 0, 1}, {1, 0, 0, 1}, {1, 1} },
+		{ { 1,-1, 1}, { 0, 0, 1}, {0, 1, 0, 1}, {0, 1} },
+		{ { 1, 1, 1}, { 0, 0, 1}, {0, 0, 1, 1}, {0, 0} },
+		{ {-1, 1, 1}, { 0, 0, 1}, {0, 0, 0, 1}, {1, 0} },
 	};
 
 	const WORD g_indices[]
@@ -86,12 +86,14 @@ namespace
 		XMMATRIX world;
 		XMMATRIX view;
 		XMMATRIX projection;
-		XMFLOAT3 lightDir;
+		XMFLOAT3 lightDirection;
 	};
 }
 
-bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
+bool GraphicsTest::load()
 {
+	winrt::com_ptr<ID3D11Device> pDevice = m_pGraphics->getDevice();
+
 	const D3D11_BUFFER_DESC vertexBufferDesc
 	{
 		.ByteWidth = sizeof(g_vertices),
@@ -109,7 +111,7 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 		.SysMemSlicePitch = 0,
 	};
 
-	HRESULT hr = pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, pVertexBuffer.put());
+	HRESULT hr = pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, m_pVertexBuffer.put());
 	if (FAILED(hr))
 		return false;
 
@@ -130,7 +132,7 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 		.SysMemSlicePitch = 0,
 	};
 
-	hr = pDevice->CreateBuffer(&indexBufferDesc, &indexSubresourceData, pIndexBuffer.put());
+	hr = pDevice->CreateBuffer(&indexBufferDesc, &indexSubresourceData, m_pIndexBuffer.put());
 	if (FAILED(hr))
 		return false;
 
@@ -144,7 +146,7 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 		.StructureByteStride = sizeof(ConstantBuffer),
 	};
 
-	hr = pDevice->CreateBuffer(&constantBufferDesc, nullptr, pConstantBuffer.put());
+	hr = pDevice->CreateBuffer(&constantBufferDesc, nullptr, m_pConstantBuffer.put());
 	if (FAILED(hr))
 		return false;
 
@@ -153,11 +155,11 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 	if (FAILED(hr))
 		return false;
 
-	hr = pDevice->CreateVertexShader(pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), nullptr, pVertexShader.put());
+	hr = pDevice->CreateVertexShader(pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), nullptr, m_pVertexShader.put());
 	if (FAILED(hr))
 		return false;
 
-	hr = pDevice->CreateInputLayout(g_inputElementDesc, g_numInputElements, pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), pInputLayout.put());
+	hr = pDevice->CreateInputLayout(g_inputElementDesc, g_numInputElements, pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), m_pInputLayout.put());
 	if (FAILED(hr))
 		return false;
 
@@ -166,7 +168,7 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 	if (FAILED(hr))
 		return false;
 
-	hr = pDevice->CreatePixelShader(pPixelBlob->GetBufferPointer(), pPixelBlob->GetBufferSize(), nullptr, pPixelShader.put());
+	hr = pDevice->CreatePixelShader(pPixelBlob->GetBufferPointer(), pPixelBlob->GetBufferSize(), nullptr, m_pPixelShader.put());
 	if (FAILED(hr))
 		return false;
 
@@ -180,11 +182,11 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 		.BorderColor = { 0, 0, 0, 0 },
 	};
 
-	hr = pDevice->CreateSamplerState(&samplerDesc, pSamplerState.put());
+	hr = pDevice->CreateSamplerState(&samplerDesc, m_pSamplerState.put());
 	if (FAILED(hr))
 		return false;
 
-	if (!pGraphics->loadTexture("cliff_03_v1.tga", pTexture.put(), pTextureView.put()))
+	if (!m_pGraphics->loadTexture("cliff_03_v1.tga", m_pTexture.put(), m_pTextureView.put()))
 		return false;
 
 	return true;
@@ -192,7 +194,7 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 
 void GraphicsTest::draw(const Camera & camera) const
 {
-	winrt::com_ptr<ID3D11DeviceContext> pDeviceContext = pGraphics->getDeviceContext();
+	winrt::com_ptr<ID3D11DeviceContext> pDeviceContext = m_pGraphics->getDeviceContext();
 
 	static float t = 0;
 	t = (t < 2 * XM_PI) ? t + XM_PI * 0.002f : 0;
@@ -204,36 +206,36 @@ void GraphicsTest::draw(const Camera & camera) const
 		.world = world.Transpose(),
 		.view = camera.getView().Transpose(),
 		.projection = camera.getProjection().Transpose(),
-		.lightDir = { -0.577f, 0.577f, -0.577f },
+		.lightDirection = { -0.577f, 0.577f, -0.577f },
 	};
 
-	pDeviceContext->UpdateSubresource(pConstantBuffer.get(), 0, nullptr, &constantBuffer, 0, 0);
+	pDeviceContext->UpdateSubresource(m_pConstantBuffer.get(), 0, nullptr, &constantBuffer, 0, 0);
 
 	const UINT numConstantBuffers = 1;
-	ID3D11Buffer * const constantBuffers[numConstantBuffers]{ pConstantBuffer.get() };
+	ID3D11Buffer * const constantBuffers[numConstantBuffers]{ m_pConstantBuffer.get() };
 
 	pDeviceContext->VSSetConstantBuffers(0, numConstantBuffers, constantBuffers);
-	pDeviceContext->VSSetShader(pVertexShader.get(), nullptr, 0);
+	pDeviceContext->VSSetShader(m_pVertexShader.get(), nullptr, 0);
 
 	pDeviceContext->PSSetConstantBuffers(0, numConstantBuffers, constantBuffers);
-	pDeviceContext->PSSetShader(pPixelShader.get(), nullptr, 0);
+	pDeviceContext->PSSetShader(m_pPixelShader.get(), nullptr, 0);
 
 	const UINT numSamplerStates = 1;
-	ID3D11SamplerState* const samplerStates[numSamplerStates]{ pSamplerState.get() };
+	ID3D11SamplerState* const samplerStates[numSamplerStates]{ m_pSamplerState.get() };
 	pDeviceContext->PSSetSamplers(0, 1, samplerStates);
 
 	const UINT numTextureViews = 1;
-	ID3D11ShaderResourceView* const textureViews[numTextureViews]{ pTextureView.get() };
+	ID3D11ShaderResourceView* const textureViews[numTextureViews]{ m_pTextureView.get() };
 	pDeviceContext->PSSetShaderResources(0, 1, textureViews);
 
 	const UINT numVertexBuffers = 1;
 	const UINT vertexOffsets[numVertexBuffers]{ 0 };
 	const UINT vertexStrides[numVertexBuffers]{ sizeof(Vertex) };
-	ID3D11Buffer * const vertexBuffers[numVertexBuffers]{ pVertexBuffer.get() };
+	ID3D11Buffer * const vertexBuffers[numVertexBuffers]{ m_pVertexBuffer.get() };
 	pDeviceContext->IASetVertexBuffers(0, numVertexBuffers, vertexBuffers, vertexStrides, vertexOffsets);
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	pDeviceContext->IASetIndexBuffer(pIndexBuffer.get(), DXGI_FORMAT_R16_UINT, 0);
-	pDeviceContext->IASetInputLayout(pInputLayout.get());
+	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.get(), DXGI_FORMAT_R16_UINT, 0);
+	pDeviceContext->IASetInputLayout(m_pInputLayout.get());
 
 	pDeviceContext->DrawIndexed(g_numIndices, 0, 0);
 }

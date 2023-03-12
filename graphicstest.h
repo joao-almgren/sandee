@@ -8,25 +8,25 @@
 class GraphicsTest
 {
 public:
-	GraphicsTest(std::shared_ptr<Graphics> pGraphics) : pGraphics{ pGraphics } {}
-	GraphicsTest(const GraphicsTest& g) = delete;
-	GraphicsTest(GraphicsTest&& g) = delete;
-	GraphicsTest& operator=(const GraphicsTest& g) = delete;
-	GraphicsTest& operator=(GraphicsTest&& g) = delete;
+	GraphicsTest(std::shared_ptr<Graphics> pGraphics) : m_pGraphics{ pGraphics } {}
+	GraphicsTest(const GraphicsTest&) = delete;
+	GraphicsTest(GraphicsTest&&) = delete;
+	GraphicsTest& operator=(const GraphicsTest&) = delete;
+	GraphicsTest& operator=(GraphicsTest&&) = delete;
 	~GraphicsTest() = default;
 
-	[[nodiscard]] bool load(winrt::com_ptr<ID3D11Device> pDevice);
+	[[nodiscard]] bool load();
 	void draw(const Camera & camera) const;
 
 protected:
-	std::shared_ptr<Graphics> pGraphics{ nullptr };
-	winrt::com_ptr<ID3D11Buffer> pVertexBuffer{ nullptr };
-	winrt::com_ptr<ID3D11Buffer> pIndexBuffer{ nullptr };
-	winrt::com_ptr<ID3D11Buffer> pConstantBuffer{ nullptr };
-	winrt::com_ptr<ID3D11VertexShader> pVertexShader{ nullptr };
-	winrt::com_ptr<ID3D11InputLayout> pInputLayout{ nullptr };
-	winrt::com_ptr<ID3D11PixelShader> pPixelShader{ nullptr };
-	winrt::com_ptr<ID3D11SamplerState> pSamplerState{ nullptr };
-	winrt::com_ptr<ID3D11Texture2D> pTexture{ nullptr };
-	winrt::com_ptr<ID3D11ShaderResourceView> pTextureView{ nullptr };
+	std::shared_ptr<Graphics> m_pGraphics{ nullptr };
+	winrt::com_ptr<ID3D11Buffer> m_pVertexBuffer{ nullptr };
+	winrt::com_ptr<ID3D11Buffer> m_pIndexBuffer{ nullptr };
+	winrt::com_ptr<ID3D11Buffer> m_pConstantBuffer{ nullptr };
+	winrt::com_ptr<ID3D11VertexShader> m_pVertexShader{ nullptr };
+	winrt::com_ptr<ID3D11InputLayout> m_pInputLayout{ nullptr };
+	winrt::com_ptr<ID3D11PixelShader> m_pPixelShader{ nullptr };
+	winrt::com_ptr<ID3D11SamplerState> m_pSamplerState{ nullptr };
+	winrt::com_ptr<ID3D11Texture2D> m_pTexture{ nullptr };
+	winrt::com_ptr<ID3D11ShaderResourceView> m_pTextureView{ nullptr };
 };
