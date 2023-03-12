@@ -52,7 +52,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 	if (FAILED(hr))
 		return false;
 
-	D3D11_RASTERIZER_DESC rasterizerDesc =
+	D3D11_RASTERIZER_DESC rasterizerDesc
 	{
 		.FillMode = D3D11_FILL_SOLID,
 		.CullMode = D3D11_CULL_BACK,
@@ -66,13 +66,12 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		.AntialiasedLineEnable = FALSE,
 	};
 
-	ID3D11RasterizerState * pRasterizerState;
-	hr = m_pDevice->CreateRasterizerState(&rasterizerDesc, &pRasterizerState);
+	winrt::com_ptr<ID3D11RasterizerState> pRasterizerState;
+	hr = m_pDevice->CreateRasterizerState(&rasterizerDesc, pRasterizerState.put());
 	if (FAILED(hr))
 		return false;
 
-	m_pDeviceContext->RSSetState(pRasterizerState);
-	pRasterizerState->Release();
+	m_pDeviceContext->RSSetState(pRasterizerState.get());
 
 	winrt::com_ptr<ID3D11Resource> pBackBuffer;
 	hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void());
@@ -83,36 +82,39 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 	if (FAILED(hr))
 		return false;
 
-	D3D11_TEXTURE2D_DESC descDepth =
+	D3D11_TEXTURE2D_DESC depthDesc
 	{
-		descDepth.Width = windowWidth,
-		descDepth.Height = windowWidth,
-		descDepth.MipLevels = 1,
-		descDepth.ArraySize = 1,
-		descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT,
-		descDepth.SampleDesc.Count = 1,
-		descDepth.SampleDesc.Quality = 0,
-		descDepth.Usage = D3D11_USAGE_DEFAULT,
-		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL,
-		descDepth.CPUAccessFlags = 0,
-		descDepth.MiscFlags = 0,
+		.Width = static_cast<unsigned>(windowWidth),
+		.Height = static_cast<unsigned>(windowWidth),
+		.MipLevels = 1,
+		.ArraySize = 1,
+		.Format = DXGI_FORMAT_D24_UNORM_S8_UINT,
+		.SampleDesc
+		{
+			.Count = 1,
+			.Quality = 0,
+		},
+		.Usage = D3D11_USAGE_DEFAULT,
+		.BindFlags = D3D11_BIND_DEPTH_STENCIL,
+		.CPUAccessFlags = 0,
+		.MiscFlags = 0,
 	};
 
-	hr = m_pDevice->CreateTexture2D(&descDepth, nullptr, m_pDepthStencil.put());
+	hr = m_pDevice->CreateTexture2D(&depthDesc, nullptr, m_pDepthStencil.put());
 	if (FAILED(hr))
 		return false;
 
-	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV =
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc
 	{
-		.Format = descDepth.Format,
+		.Format = depthDesc.Format,
 		.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D,
-		.Texture2D =
+		.Texture2D
 		{
 			.MipSlice = 0,
 		},
 	};
 
-	hr = m_pDevice->CreateDepthStencilView(m_pDepthStencil.get(), &descDSV, m_pDepthStencilView.put());
+	hr = m_pDevice->CreateDepthStencilView(m_pDepthStencil.get(), &depthStencilViewDesc, m_pDepthStencilView.put());
 	if (FAILED(hr))
 		return false;
 
@@ -155,14 +157,14 @@ bool Graphics::loadTexture(const char * const filename, ID3D11Texture2D ** pText
 	if (!textureBytes)
 		return false;
 
-	D3D11_TEXTURE2D_DESC textureDesc =
+	D3D11_TEXTURE2D_DESC textureDesc
 	{
 		.Width = static_cast<unsigned>(texWidth),
 		.Height = static_cast<unsigned>(texHeight),
 		.MipLevels = 1,
 		.ArraySize = 1,
 		.Format = DXGI_FORMAT_R8G8B8A8_UNORM,
-		.SampleDesc =
+		.SampleDesc
 		{
 			.Count = 1,
 		},
@@ -170,7 +172,7 @@ bool Graphics::loadTexture(const char * const filename, ID3D11Texture2D ** pText
 		.BindFlags = D3D11_BIND_SHADER_RESOURCE,
 	};
 
-	D3D11_SUBRESOURCE_DATA textureSubresourceData =
+	D3D11_SUBRESOURCE_DATA textureSubresourceData
 	{
 		.pSysMem = textureBytes,
 		.SysMemPitch = 4 * static_cast<unsigned>(texWidth),

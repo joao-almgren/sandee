@@ -91,6 +91,7 @@ int WINAPI wWinMain(
 	Camera camera;
 	camera.setProjection(3.14f / 2, windowWidth / static_cast<float>(windowHeight), 0.1f, 1000.0f);
 	camera.moveForward(-3);
+	camera.resetView();
 
 	MSG msg{};
 	while (msg.message != WM_QUIT)
@@ -102,8 +103,6 @@ int WINAPI wWinMain(
 		}
 		else
 		{
-			camera.resetView();
-
 			graphics.resetRenderTarget();
 			graphics.clearScreen({ 0.5, 0, 0.5, 0 });
 

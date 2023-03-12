@@ -172,7 +172,7 @@ bool GraphicsTest::load()
 	if (FAILED(hr))
 		return false;
 
-	D3D11_SAMPLER_DESC samplerDesc =
+	D3D11_SAMPLER_DESC samplerDesc
 	{
 		.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT,
 		.AddressU = D3D11_TEXTURE_ADDRESS_BORDER,
