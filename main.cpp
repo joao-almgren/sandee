@@ -1,8 +1,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <DirectXMath.h>
 #include <memory>
 #include "graphics.h"
+#include "camera.h"
 #include "graphicstest.h"
 
 int WINAPI wWinMain(
@@ -88,6 +88,10 @@ int WINAPI wWinMain(
 	if (!graphicsTest.load(graphics.getDevice()))
 		return 0;
 
+	Camera camera;
+	camera.setProjection(3.14f / 2, windowWidth / static_cast<float>(windowHeight), 0.1f, 1000.0f);
+	camera.moveForward(-3);
+
 	MSG msg{};
 	while (msg.message != WM_QUIT)
 	{
@@ -98,18 +102,13 @@ int WINAPI wWinMain(
 		}
 		else
 		{
-			using namespace DirectX;
-
-			XMVECTOR eyePos = XMVectorSet(0.0f, 0.0f, -3.0f, 0.0f);
-			XMVECTOR atPos = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-			XMVECTOR upDir = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-			XMMATRIX view = XMMatrixLookAtLH(eyePos, atPos, upDir);
-
-			XMMATRIX proj = XMMatrixPerspectiveFovLH(XM_PIDIV2, windowWidth / static_cast<float>(windowHeight), 0.1f, 1000.0f);
+			camera.resetView();
 
 			graphics.resetRenderTarget();
 			graphics.clearScreen({ 0.5, 0, 0.5, 0 });
-			graphicsTest.draw(graphics.getDeviceContext(), view, proj);
+
+			graphicsTest.draw(camera);
+
 			graphics.present();
 		}
 	}

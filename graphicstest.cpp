@@ -1,9 +1,11 @@
 #include "graphicstest.h"
 #include <d3dcompiler.h>
+#include <SimpleMath.h>
 
 namespace
 {
 	using namespace DirectX;
+	using namespace DirectX::SimpleMath;
 
 	const D3D11_INPUT_ELEMENT_DESC g_inputElementDesc[]
 	{
@@ -25,35 +27,35 @@ namespace
 	
 	const Vertex g_vertices[]
 	{
-		{ XMFLOAT3(-1,  1, -1), XMFLOAT3( 0,  1,  0), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(1, 0) },
-		{ XMFLOAT3( 1,  1, -1), XMFLOAT3( 0,  1,  0), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(0, 0) },
-		{ XMFLOAT3( 1,  1,  1), XMFLOAT3( 0,  1,  0), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(0, 1) },
-		{ XMFLOAT3(-1,  1,  1), XMFLOAT3( 0,  1,  0), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(1, 1) },
+		{ {-1,  1, -1}, { 0,  1,  0}, {1, 0, 0, 1}, {1, 0} },
+		{ { 1,  1, -1}, { 0,  1,  0}, {0, 1, 0, 1}, {0, 0} },
+		{ { 1,  1,  1}, { 0,  1,  0}, {0, 0, 1, 1}, {0, 1} },
+		{ {-1,  1,  1}, { 0,  1,  0}, {0, 0, 0, 1}, {1, 1} },
 
-		{ XMFLOAT3(-1, -1, -1), XMFLOAT3( 0, -1,  0), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(0, 0) },
-		{ XMFLOAT3( 1, -1, -1), XMFLOAT3( 0, -1,  0), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(1, 0) },
-		{ XMFLOAT3( 1, -1,  1), XMFLOAT3( 0, -1,  0), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(1, 1) },
-		{ XMFLOAT3(-1, -1,  1), XMFLOAT3( 0, -1,  0), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(0, 1) },
+		{ {-1, -1, -1}, { 0, -1,  0}, {1, 0, 0, 1}, {0, 0} },
+		{ { 1, -1, -1}, { 0, -1,  0}, {0, 1, 0, 1}, {1, 0} },
+		{ { 1, -1,  1}, { 0, -1,  0}, {0, 0, 1, 1}, {1, 1} },
+		{ {-1, -1,  1}, { 0, -1,  0}, {0, 0, 0, 1}, {0, 1} },
 
-		{ XMFLOAT3(-1, -1,  1), XMFLOAT3(-1,  0,  0), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(0, 1) },
-		{ XMFLOAT3(-1, -1, -1), XMFLOAT3(-1,  0,  0), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(1, 1) },
-		{ XMFLOAT3(-1,  1, -1), XMFLOAT3(-1,  0,  0), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(1, 0) },
-		{ XMFLOAT3(-1,  1,  1), XMFLOAT3(-1,  0,  0), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(0, 0) },
+		{ {-1, -1,  1}, {-1,  0,  0}, {1, 0, 0, 1}, {0, 1} },
+		{ {-1, -1, -1}, {-1,  0,  0}, {0, 1, 0, 1}, {1, 1} },
+		{ {-1,  1, -1}, {-1,  0,  0}, {0, 0, 1, 1}, {1, 0} },
+		{ {-1,  1,  1}, {-1,  0,  0}, {0, 0, 0, 1}, {0, 0} },
 
-		{ XMFLOAT3( 1, -1,  1), XMFLOAT3( 1,  0,  0), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(1, 1) },
-		{ XMFLOAT3( 1, -1, -1), XMFLOAT3( 1,  0,  0), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(0, 1) },
-		{ XMFLOAT3( 1,  1, -1), XMFLOAT3( 1,  0,  0), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(0, 0) },
-		{ XMFLOAT3( 1,  1,  1), XMFLOAT3( 1,  0,  0), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(1, 0) },
+		{ { 1, -1,  1}, { 1,  0,  0}, {1, 0, 0, 1}, {1, 1} },
+		{ { 1, -1, -1}, { 1,  0,  0}, {0, 1, 0, 1}, {0, 1} },
+		{ { 1,  1, -1}, { 1,  0,  0}, {0, 0, 1, 1}, {0, 0} },
+		{ { 1,  1,  1}, { 1,  0,  0}, {0, 0, 0, 1}, {1, 0} },
 
-		{ XMFLOAT3(-1, -1, -1), XMFLOAT3( 0,  0, -1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(0, 1) },
-		{ XMFLOAT3( 1, -1, -1), XMFLOAT3( 0,  0, -1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(1, 1) },
-		{ XMFLOAT3( 1,  1, -1), XMFLOAT3( 0,  0, -1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(1, 0) },
-		{ XMFLOAT3(-1,  1, -1), XMFLOAT3( 0,  0, -1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(0, 0) },
+		{ {-1, -1, -1}, { 0,  0, -1}, {1, 0, 0, 1}, {0, 1} },
+		{ { 1, -1, -1}, { 0,  0, -1}, {0, 1, 0, 1}, {1, 1} },
+		{ { 1,  1, -1}, { 0,  0, -1}, {0, 0, 1, 1}, {1, 0} },
+		{ {-1,  1, -1}, { 0,  0, -1}, {0, 0, 0, 1}, {0, 0} },
 
-		{ XMFLOAT3(-1, -1,  1), XMFLOAT3( 0,  0,  1), XMFLOAT4(1, 0, 0, 1), XMFLOAT2(1, 1) },
-		{ XMFLOAT3( 1, -1,  1), XMFLOAT3( 0,  0,  1), XMFLOAT4(0, 1, 0, 1), XMFLOAT2(0, 1) },
-		{ XMFLOAT3( 1,  1,  1), XMFLOAT3( 0,  0,  1), XMFLOAT4(0, 0, 1, 1), XMFLOAT2(0, 0) },
-		{ XMFLOAT3(-1,  1,  1), XMFLOAT3( 0,  0,  1), XMFLOAT4(0, 0, 0, 1), XMFLOAT2(1, 0) },
+		{ {-1, -1,  1}, { 0,  0,  1}, {1, 0, 0, 1}, {1, 1} },
+		{ { 1, -1,  1}, { 0,  0,  1}, {0, 1, 0, 1}, {0, 1} },
+		{ { 1,  1,  1}, { 0,  0,  1}, {0, 0, 1, 1}, {0, 0} },
+		{ {-1,  1,  1}, { 0,  0,  1}, {0, 0, 0, 1}, {1, 0} },
 	};
 
 	const WORD g_indices[]
@@ -83,7 +85,7 @@ namespace
 	{
 		XMMATRIX world;
 		XMMATRIX view;
-		XMMATRIX proj;
+		XMMATRIX projection;
 		XMFLOAT3 lightDir;
 	};
 }
@@ -188,25 +190,27 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 	return true;
 }
 
-void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext, const XMMATRIX & view, const XMMATRIX & proj) const
+void GraphicsTest::draw(const Camera & camera) const
 {
+	winrt::com_ptr<ID3D11DeviceContext> pDeviceContext = pGraphics->getDeviceContext();
+
 	static float t = 0;
 	t = (t < 2 * XM_PI) ? t + XM_PI * 0.002f : 0;
 
-	XMMATRIX world = XMMatrixRotationRollPitchYaw(t, t, 0);
+	Matrix world = Matrix::CreateFromYawPitchRoll(0, t, t);
 
 	ConstantBuffer constantBuffer
 	{
-		.world = XMMatrixTranspose(world),
-		.view = XMMatrixTranspose(view),
-		.proj = XMMatrixTranspose(proj),
-		.lightDir = XMFLOAT3(-0.577f, 0.577f, -0.577f),
+		.world = world.Transpose(),
+		.view = camera.getView().Transpose(),
+		.projection = camera.getProjection().Transpose(),
+		.lightDir = { -0.577f, 0.577f, 0.577f },
 	};
 
 	pDeviceContext->UpdateSubresource(pConstantBuffer.get(), 0, nullptr, &constantBuffer, 0, 0);
 
 	const UINT numConstantBuffers = 1;
-	ID3D11Buffer* const constantBuffers[numConstantBuffers]{ pConstantBuffer.get() };
+	ID3D11Buffer * const constantBuffers[numConstantBuffers]{ pConstantBuffer.get() };
 
 	pDeviceContext->VSSetConstantBuffers(0, numConstantBuffers, constantBuffers);
 	pDeviceContext->VSSetShader(pVertexShader.get(), nullptr, 0);
@@ -225,7 +229,7 @@ void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext
 	const UINT numVertexBuffers = 1;
 	const UINT vertexOffsets[numVertexBuffers]{ 0 };
 	const UINT vertexStrides[numVertexBuffers]{ sizeof(Vertex) };
-	ID3D11Buffer* const vertexBuffers[numVertexBuffers]{ pVertexBuffer.get() };
+	ID3D11Buffer * const vertexBuffers[numVertexBuffers]{ pVertexBuffer.get() };
 	pDeviceContext->IASetVertexBuffers(0, numVertexBuffers, vertexBuffers, vertexStrides, vertexOffsets);
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	pDeviceContext->IASetIndexBuffer(pIndexBuffer.get(), DXGI_FORMAT_R16_UINT, 0);

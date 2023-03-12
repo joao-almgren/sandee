@@ -1,9 +1,9 @@
 #pragma once
 #include <d3d11.h>
-#include <DirectXMath.h>
 #include <winrt/base.h>
 #include <memory>
 #include "graphics.h"
+#include "camera.h"
 
 class GraphicsTest
 {
@@ -16,7 +16,7 @@ public:
 	~GraphicsTest() = default;
 
 	[[nodiscard]] bool load(winrt::com_ptr<ID3D11Device> pDevice);
-	void draw(winrt::com_ptr<ID3D11DeviceContext> pDeviceContext, const DirectX::XMMATRIX & view, const DirectX::XMMATRIX & proj) const;
+	void draw(const Camera & camera) const;
 
 protected:
 	std::shared_ptr<Graphics> pGraphics{ nullptr };

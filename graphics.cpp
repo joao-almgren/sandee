@@ -52,6 +52,25 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		return false;
 	}
 
+	D3D11_RASTERIZER_DESC rasterizerDesc =
+	{
+		.FillMode = D3D11_FILL_SOLID,
+		.CullMode = D3D11_CULL_BACK,
+		.FrontCounterClockwise = TRUE,
+		.DepthBias = 0,
+		.DepthBiasClamp = 0.0f,
+		.SlopeScaledDepthBias = 0.0f,
+		.DepthClipEnable = TRUE,
+		.ScissorEnable = FALSE,
+		.MultisampleEnable = FALSE,
+		.AntialiasedLineEnable = FALSE,
+	};
+	ID3D11RasterizerState* pRasterizerState;
+	if (FAILED(pDevice->CreateRasterizerState(&rasterizerDesc, &pRasterizerState)))
+		return false;
+	pDeviceContext->RSSetState(pRasterizerState);
+	pRasterizerState->Release();
+
 	winrt::com_ptr<ID3D11Resource> pBackBuffer;
 	if (FAILED(pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void())))
 		return false;
@@ -116,16 +135,16 @@ void Graphics::resetRenderTarget() const
 	pDeviceContext->OMSetRenderTargets(1, pTargets, nullptr);
 }
 
-void Graphics::clearScreen(const float (&color)[4]) const
+void Graphics::clearScreen(const float (& color)[4]) const
 {
 	pDeviceContext->ClearRenderTargetView(pRenderTarget.get(), color);
 	pDeviceContext->ClearDepthStencilView(pDepthStencilView.get(), D3D11_CLEAR_DEPTH, 1, 0);
 }
 
-bool Graphics::loadTexture(const char* const filename, ID3D11Texture2D** pTexture, ID3D11ShaderResourceView** pTextureView) const
+bool Graphics::loadTexture(const char * const filename, ID3D11Texture2D ** pTexture, ID3D11ShaderResourceView ** pTextureView) const
 {
 	int texWidth, texHeight, texNumChannels;
-	unsigned char* textureBytes = stbi_load(filename, &texWidth, &texHeight, &texNumChannels, 4);
+	unsigned char * textureBytes = stbi_load(filename, &texWidth, &texHeight, &texNumChannels, 4);
 	if (!textureBytes)
 		return false;
 
