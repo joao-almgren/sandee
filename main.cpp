@@ -1,10 +1,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <memory>
-#include "input.h"
+#include <Keyboard.h>
+#include <Mouse.h>
 #include "graphics.h"
 #include "camera.h"
 #include "graphicstest.h"
+using namespace DirectX;
+using namespace std;
 
 int WINAPI wWinMain(
 	_In_ const HINSTANCE hInstance,
@@ -20,16 +23,32 @@ int WINAPI wWinMain(
 		.style = CS_HREDRAW | CS_VREDRAW,
 		.lpfnWndProc{ [](const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam) -> LRESULT
 		{
-			switch (message)
+			switch (message)  // NOLINT(hicpp-multiway-paths-covered)
 			{
+			case WM_ACTIVATEAPP:
+				Keyboard::ProcessMessage(message, wParam, lParam);
+				Mouse::ProcessMessage(message, wParam, lParam);
+				break;
+			case WM_ACTIVATE:
+			case WM_INPUT:
+			case WM_MOUSEMOVE:
+			case WM_LBUTTONDOWN:
+			case WM_LBUTTONUP:
+			case WM_RBUTTONDOWN:
+			case WM_RBUTTONUP:
+			case WM_MBUTTONDOWN:
+			case WM_MBUTTONUP:
+			case WM_MOUSEWHEEL:
+			case WM_XBUTTONDOWN:
+			case WM_XBUTTONUP:
+			case WM_MOUSEHOVER:
+				Mouse::ProcessMessage(message, wParam, lParam);
+				break;
 			case WM_KEYDOWN:
-				switch (wParam)  // NOLINT(hicpp-multiway-paths-covered)
-				{
-				case VK_ESCAPE:
-					PostMessage(hWnd, WM_CLOSE, 0, 0);
-					return 0;
-				default: ;
-				}
+			case WM_KEYUP:
+			case WM_SYSKEYUP:
+			case WM_SYSKEYDOWN:
+				Keyboard::ProcessMessage(message, wParam, lParam);
 				break;
 			case WM_DESTROY:
 				PostQuitMessage(0);
@@ -81,9 +100,10 @@ int WINAPI wWinMain(
 	SetFocus(hWnd);
 	ShowCursor(FALSE);
 
-	Input input;
-	if (!input.init(hWnd, hInstance))
-		return 0;
+	unique_ptr<Keyboard> keyboard = make_unique<Keyboard>();
+	unique_ptr<Mouse> mouse = make_unique<Mouse>();
+	mouse->SetWindow(hWnd);
+	mouse->SetMode(Mouse::MODE_RELATIVE);
 
 	Graphics graphics;
 	if (!graphics.initialize(hWnd, windowWidth, windowHeight))
@@ -111,22 +131,24 @@ int WINAPI wWinMain(
 			{
 				float speed = 0.01f;
 
-				input.update();
+				auto kb = keyboard->GetState();
+				auto mus = mouse->GetState();
 
-				POINT mouseMove{ input.mouseState.lX, input.mouseState.lY };
-				camera.rotate(static_cast<float>(mouseMove.y) / 300.0f, static_cast<float>(-mouseMove.x) / 300.0f);
+				camera.rotate(static_cast<float>(mus.y) / 300.0f, static_cast<float>(-mus.x) / 300.0f);
 
-				if (input.keyState[DIK_D] || input.keyState[DIK_RIGHT])
+				if (kb.Escape)
+					PostMessage(hWnd, WM_CLOSE, 0, 0);
+				if (kb.D || kb.Right)
 					camera.moveRight(speed);
-				else if (input.keyState[DIK_A] || input.keyState[DIK_LEFT])
+				else if (kb.A || kb.Left)
 					camera.moveRight(-speed);
-				if (input.keyState[DIK_W] || input.keyState[DIK_UP])
+				if (kb.W || kb.Up)
 					camera.moveForward(speed);
-				else if (input.keyState[DIK_S] || input.keyState[DIK_DOWN])
+				else if (kb.S || kb.Down)
 					camera.moveForward(-speed);
-				if (input.keyState[DIK_Q])
+				if (kb.Q)
 					camera.moveUp(speed);
-				else if (input.keyState[DIK_Z])
+				else if (kb.Z)
 					camera.moveUp(-speed);
 
 				camera.resetView();

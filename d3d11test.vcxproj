@@ -150,14 +150,12 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="graphicstest.cpp" />
-    <ClCompile Include="input.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="graphicstest.h" />
-    <ClInclude Include="input.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
