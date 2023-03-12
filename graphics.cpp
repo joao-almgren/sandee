@@ -1,6 +1,8 @@
+#include "graphics.h"
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
-#include "graphics.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int windowHeight)
 {
@@ -118,4 +120,47 @@ void Graphics::clearScreen(const float (&color)[4]) const
 {
 	pDeviceContext->ClearRenderTargetView(pRenderTarget.get(), color);
 	pDeviceContext->ClearDepthStencilView(pDepthStencilView.get(), D3D11_CLEAR_DEPTH, 1, 0);
+}
+
+bool Graphics::loadTexture(const char* const filename, ID3D11Texture2D** pTexture, ID3D11ShaderResourceView** pTextureView) const
+{
+	int texWidth, texHeight, texNumChannels;
+	unsigned char* textureBytes = stbi_load(filename, &texWidth, &texHeight, &texNumChannels, 4);
+	if (!textureBytes)
+		return false;
+
+	D3D11_TEXTURE2D_DESC textureDesc =
+	{
+		.Width = static_cast<unsigned>(texWidth),
+		.Height = static_cast<unsigned>(texHeight),
+		.MipLevels = 1,
+		.ArraySize = 1,
+		.Format = DXGI_FORMAT_R8G8B8A8_UNORM,
+		.SampleDesc =
+		{
+			.Count = 1,
+		},
+		.Usage = D3D11_USAGE_IMMUTABLE,
+		.BindFlags = D3D11_BIND_SHADER_RESOURCE,
+	};
+
+	D3D11_SUBRESOURCE_DATA textureSubresourceData =
+	{
+		.pSysMem = textureBytes,
+		.SysMemPitch = 4 * static_cast<unsigned>(texWidth),
+	};
+
+	HRESULT hr = pDevice->CreateTexture2D(&textureDesc, &textureSubresourceData, pTexture);
+	free(textureBytes);
+	if (FAILED(hr))
+		return false;
+
+	hr = pDevice->CreateShaderResourceView(*pTexture, nullptr, pTextureView);
+	if (FAILED(hr))
+	{
+		(*pTexture)->Release();
+		return false;
+	}
+
+	return true;
 }

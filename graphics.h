@@ -1,12 +1,12 @@
 #pragma once
 #include <d3d11.h>
-#include "winrt/base.h"
+#include <winrt/base.h>
 
 class Graphics
 {
 public:
 	Graphics() = default;
-	Graphics(const Graphics& g) = delete;
+	Graphics(const Graphics& g) = default;
 	Graphics(Graphics&& g) = delete;
 	Graphics& operator=(const Graphics& g) = delete;
 	Graphics& operator=(Graphics&& g) = delete;
@@ -19,6 +19,8 @@ public:
 
 	[[nodiscard]] winrt::com_ptr<ID3D11Device> getDevice() const { return pDevice; }
 	[[nodiscard]] winrt::com_ptr<ID3D11DeviceContext> getDeviceContext() const { return pDeviceContext; }
+
+	bool loadTexture(const char * filename, ID3D11Texture2D** pTexture, ID3D11ShaderResourceView** pTextureView) const;
 
 protected:
 	winrt::com_ptr<ID3D11Device> pDevice{ nullptr };

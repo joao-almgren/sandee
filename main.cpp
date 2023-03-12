@@ -1,5 +1,7 @@
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <Windows.h>
+#include <DirectXMath.h>
+#include <memory>
 #include "graphics.h"
 #include "graphicstest.h"
 
@@ -82,7 +84,7 @@ int WINAPI wWinMain(
 	if (!graphics.initialize(hWnd, windowWidth, windowHeight))
 		return 0;
 
-	GraphicsTest graphicsTest;
+	GraphicsTest graphicsTest(std::make_shared<Graphics>(graphics));
 	if (!graphicsTest.load(graphics.getDevice()))
 		return 0;
 
@@ -96,9 +98,18 @@ int WINAPI wWinMain(
 		}
 		else
 		{
+			using namespace DirectX;
+
+			XMVECTOR eyePos = XMVectorSet(0.0f, 0.0f, -3.0f, 0.0f);
+			XMVECTOR atPos = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+			XMVECTOR upDir = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+			XMMATRIX view = XMMatrixLookAtLH(eyePos, atPos, upDir);
+
+			XMMATRIX proj = XMMatrixPerspectiveFovLH(XM_PIDIV2, windowWidth / static_cast<float>(windowHeight), 0.1f, 1000.0f);
+
 			graphics.resetRenderTarget();
 			graphics.clearScreen({ 0.5, 0, 0.5, 0 });
-			graphicsTest.draw(graphics.getDeviceContext(), windowWidth, windowHeight);
+			graphicsTest.draw(graphics.getDeviceContext(), view, proj);
 			graphics.present();
 		}
 	}

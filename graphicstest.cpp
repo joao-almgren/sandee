@@ -1,8 +1,5 @@
 #include "graphicstest.h"
 #include <d3dcompiler.h>
-#include <directxmath.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 namespace
 {
@@ -185,57 +182,18 @@ bool GraphicsTest::load(const winrt::com_ptr<ID3D11Device> pDevice)
 	if (FAILED(hr))
 		return false;
 
-	int texWidth, texHeight, texNumChannels;
-	unsigned char* textureBytes = stbi_load("cliff_03_v1.tga", &texWidth, &texHeight, &texNumChannels, 4);
-	if (!textureBytes)
-		return false;
-
-	D3D11_TEXTURE2D_DESC textureDesc =
-	{
-		.Width = static_cast<unsigned>(texWidth),
-		.Height = static_cast<unsigned>(texHeight),
-		.MipLevels = 1,
-		.ArraySize = 1,
-		.Format = DXGI_FORMAT_R8G8B8A8_UNORM,
-		.SampleDesc =
-		{
-			.Count = 1,
-		},
-		.Usage = D3D11_USAGE_IMMUTABLE,
-		.BindFlags = D3D11_BIND_SHADER_RESOURCE,
-	};
-
-	D3D11_SUBRESOURCE_DATA textureSubresourceData =
-	{
-		.pSysMem = textureBytes,
-		.SysMemPitch = 4 * static_cast<unsigned>(texWidth),
-	};
-
-	hr = pDevice->CreateTexture2D(&textureDesc, &textureSubresourceData, pTexture.put());
-	free(textureBytes);
-	if (FAILED(hr))
-		return false;
-
-	hr = pDevice->CreateShaderResourceView(pTexture.get(), nullptr, pTextureView.put());
-	if (FAILED(hr))
+	if (!pGraphics->loadTexture("cliff_03_v1.tga", pTexture.put(), pTextureView.put()))
 		return false;
 
 	return true;
 }
 
-void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext, const int windowWidth, const int windowHeight) const
+void GraphicsTest::draw(const winrt::com_ptr<ID3D11DeviceContext> pDeviceContext, const XMMATRIX & view, const XMMATRIX & proj) const
 {
 	static float t = 0;
 	t = (t < 2 * XM_PI) ? t + XM_PI * 0.002f : 0;
 
 	XMMATRIX world = XMMatrixRotationRollPitchYaw(t, t, 0);
-
-	XMVECTOR eyePos = XMVectorSet(0.0f, 0.0f, -3.0f, 0.0f);
-	XMVECTOR atPos = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	XMVECTOR upDir = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	XMMATRIX view = XMMatrixLookAtLH(eyePos, atPos, upDir);
-
-	XMMATRIX proj = XMMatrixPerspectiveFovLH(XM_PIDIV2, windowWidth / static_cast<float>(windowHeight), 0.1f, 1000.0f);
 
 	ConstantBuffer constantBuffer
 	{
