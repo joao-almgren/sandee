@@ -27,5 +27,5 @@ private:
 	Matrix mView{}, mProjection{};
 	float mPitch{ 0 }, mYaw{ 0 };
 	Vector3 mPos{ 0 , 0, 0 };
-	Vector3 mDir{ 0, 0, -1 }, mRight{ 1, 0, 0 }, mUp{ 0, 1, 0 };
+	Vector3 mDir{ 0, 0, 1 }, mRight{ 1, 0, 0 }, mUp{ 0, 1, 0 };
 };

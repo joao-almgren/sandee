@@ -56,7 +56,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 	{
 		.FillMode = D3D11_FILL_SOLID,
 		.CullMode = D3D11_CULL_BACK,
-		.FrontCounterClockwise = TRUE,
+		.FrontCounterClockwise = FALSE,
 		.DepthBias = 0,
 		.DepthBiasClamp = 0.0f,
 		.SlopeScaledDepthBias = 0.0f,

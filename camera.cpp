@@ -4,7 +4,7 @@ using namespace DirectX::SimpleMath;
 
 void Camera::setProjection(const float fov, const float aspect, const float nearZ, const float farZ)
 {
-	mProjection = Matrix::CreatePerspectiveFieldOfView(fov, aspect, nearZ, farZ);
+	mProjection = XMMatrixPerspectiveFovLH(fov, aspect, nearZ, farZ);
 }
 
 void Camera::rotate(const float dPitch, const float dYaw)
@@ -24,7 +24,7 @@ void Camera::rotate(const float dPitch, const float dYaw)
 
 	const Vector3 at(mPos + mDir);
 	const Vector3 yup(0, 1, 0);
-	mView = Matrix::CreateLookAt(mPos, at, yup);
+	mView = XMMatrixLookAtLH(mPos, at, yup);
 
 	mRight = mView.Right();
 	mUp = mView.Up();
@@ -35,7 +35,7 @@ void Camera::resetView()
 {
 	const Vector3 at(mPos + mDir);
 	const Vector3 yup(0, 1, 0);
-	mView = Matrix::CreateLookAt(mPos, at, yup);
+	mView = XMMatrixLookAtLH(mPos, at, yup);
 }
 
 void Camera::moveRight(const float scale)

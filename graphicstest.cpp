@@ -204,7 +204,7 @@ void GraphicsTest::draw(const Camera & camera) const
 		.world = world.Transpose(),
 		.view = camera.getView().Transpose(),
 		.projection = camera.getProjection().Transpose(),
-		.lightDir = { -0.577f, 0.577f, 0.577f },
+		.lightDir = { -0.577f, 0.577f, -0.577f },
 	};
 
 	pDeviceContext->UpdateSubresource(pConstantBuffer.get(), 0, nullptr, &constantBuffer, 0, 0);
