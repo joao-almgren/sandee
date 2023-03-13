@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "graphicstest.h"
 #include "fps.h"
+
 using namespace DirectX;
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -33,11 +34,11 @@ int WINAPI wWinMain(
 
 			switch (message)  // NOLINT(hicpp-multiway-paths-covered)
 			{
+			case WM_ACTIVATE:
 			case WM_ACTIVATEAPP:
 				Keyboard::ProcessMessage(message, wParam, lParam);
 				Mouse::ProcessMessage(message, wParam, lParam);
 				break;
-			case WM_ACTIVATE:
 			case WM_INPUT:
 			case WM_MOUSEMOVE:
 			case WM_LBUTTONDOWN:
@@ -59,8 +60,8 @@ int WINAPI wWinMain(
 					return 0;
 				}
 			case WM_KEYUP:
-			case WM_SYSKEYUP:
 			case WM_SYSKEYDOWN:
+			case WM_SYSKEYUP:
 				Keyboard::ProcessMessage(message, wParam, lParam);
 				break;
 			case WM_DESTROY:
@@ -111,12 +112,13 @@ int WINAPI wWinMain(
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
 	SetFocus(hWnd);
-	ShowCursor(TRUE);
+	//ShowCursor(FALSE);
 
 	auto keyboard = std::make_unique<Keyboard>();
+	Keyboard::KeyboardStateTracker keyboardTracker;
 	auto mouse = std::make_unique<Mouse>();
 	mouse->SetWindow(hWnd);
-	mouse->SetMode(Mouse::MODE_RELATIVE);
+	Mouse::ButtonStateTracker mouseTracker;
 
 	Graphics graphics;
 	if (!graphics.initialize(hWnd, windowWidth, windowHeight))
@@ -162,9 +164,22 @@ int WINAPI wWinMain(
 				ImGui::End();
 
 				auto keyboardState = keyboard->GetState();
+				keyboardTracker.Update(keyboardState);
 				auto mouseState = mouse->GetState();
+				mouseTracker.Update(mouseState);
 
-				camera.rotate(static_cast<float>(mouseState.y) / 300.0f, static_cast<float>(-mouseState.x) / 300.0f);
+				if (mouseTracker.leftButton == Mouse::ButtonStateTracker::ButtonState::RELEASED)
+				{
+					if (mouseState.positionMode == Mouse::MODE_RELATIVE)
+						mouse->SetMode(Mouse::MODE_ABSOLUTE);
+					else
+						mouse->SetMode(Mouse::MODE_RELATIVE);
+				}
+
+				if (mouseState.positionMode == Mouse::MODE_RELATIVE)
+				{
+					camera.rotate(static_cast<float>(mouseState.y) / 300.0f, static_cast<float>(mouseState.x) / 300.0f);
+				}
 
 				float speed = 0.05f * tick;
 				if (keyboardState.D || keyboardState.Right)
