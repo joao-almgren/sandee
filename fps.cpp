@@ -1,10 +1,7 @@
 #include "fps.h"
 #include <chrono>
 
-namespace
-{
-	using namespace std::chrono;
-}
+using namespace std::chrono;
 
 class Timer
 {

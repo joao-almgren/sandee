@@ -4,11 +4,11 @@
 #include <SimpleMath.h>
 #include <winrt/base.h>
 
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
+
 namespace
 {
-	using namespace DirectX;
-	using namespace DirectX::SimpleMath;
-
 	const D3D11_INPUT_ELEMENT_DESC g_inputElementDesc[]
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -238,7 +238,7 @@ void GraphicsTestImpl::draw(const Camera & camera) const
 		.world = world.Transpose(),
 		.view = camera.getView().Transpose(),
 		.projection = camera.getProjection().Transpose(),
-		.lightDirection = { -0.577f, 0.577f, -0.577f },
+		.lightDirection = { -0.577f, 0.577f, 0.577f },
 	};
 
 	pDeviceContext->UpdateSubresource(m_pConstantBuffer.get(), 0, nullptr, &constantBuffer, 0, 0);
