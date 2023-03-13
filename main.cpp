@@ -151,54 +151,52 @@ int WINAPI wWinMain(
 		}
 		else
 		{
+			fpsCount.tick();
+			const float tick = 60.0f / static_cast<float>(fpsCount.getAverageFps());
+
 			ImGui_ImplDX11_NewFrame();
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
 
-			// tick
+			ImGui::Begin("FPS");
+			ImGui::Text("%.1f fps", fpsCount.getAverageFps());
+			ImGui::End();
+
+			auto keyboardState = keyboard->GetState();
+			keyboardTracker.Update(keyboardState);
+			auto mouseState = mouse->GetState();
+			mouseTracker.Update(mouseState);
+
+			if (mouseTracker.leftButton == Mouse::ButtonStateTracker::ButtonState::RELEASED)
 			{
-				const float tick = 60.0f / static_cast<float>(fpsCount.getAverageFps());
-
-				ImGui::Begin("FPS");
-				ImGui::Text("%.1f fps", fpsCount.getAverageFps());
-				ImGui::End();
-
-				auto keyboardState = keyboard->GetState();
-				keyboardTracker.Update(keyboardState);
-				auto mouseState = mouse->GetState();
-				mouseTracker.Update(mouseState);
-
-				if (mouseTracker.leftButton == Mouse::ButtonStateTracker::ButtonState::RELEASED)
-				{
-					if (mouseState.positionMode == Mouse::MODE_RELATIVE)
-						mouse->SetMode(Mouse::MODE_ABSOLUTE);
-					else
-						mouse->SetMode(Mouse::MODE_RELATIVE);
-				}
-
 				if (mouseState.positionMode == Mouse::MODE_RELATIVE)
-				{
-					camera.rotate(static_cast<float>(mouseState.y) / 300.0f, static_cast<float>(mouseState.x) / 300.0f);
-				}
-
-				float speed = 0.05f * tick;
-				if (keyboardState.D || keyboardState.Right)
-					camera.moveRight(speed);
-				else if (keyboardState.A || keyboardState.Left)
-					camera.moveRight(-speed);
-				if (keyboardState.W || keyboardState.Up)
-					camera.moveForward(speed);
-				else if (keyboardState.S || keyboardState.Down)
-					camera.moveForward(-speed);
-				if (keyboardState.Q)
-					camera.moveUp(speed);
-				else if (keyboardState.Z)
-					camera.moveUp(-speed);
-
-				camera.resetView();
-
-				graphicsTest.update(tick);
+					mouse->SetMode(Mouse::MODE_ABSOLUTE);
+				else
+					mouse->SetMode(Mouse::MODE_RELATIVE);
 			}
+
+			if (mouseState.positionMode == Mouse::MODE_RELATIVE)
+			{
+				camera.rotate(static_cast<float>(mouseState.y) / 300.0f, static_cast<float>(mouseState.x) / 300.0f);
+			}
+
+			float speed = 0.05f * tick;
+			if (keyboardState.D || keyboardState.Right)
+				camera.moveRight(speed);
+			else if (keyboardState.A || keyboardState.Left)
+				camera.moveRight(-speed);
+			if (keyboardState.W || keyboardState.Up)
+				camera.moveForward(speed);
+			else if (keyboardState.S || keyboardState.Down)
+				camera.moveForward(-speed);
+			if (keyboardState.Q)
+				camera.moveUp(speed);
+			else if (keyboardState.Z)
+				camera.moveUp(-speed);
+
+			camera.resetView();
+
+			graphicsTest.update(tick);
 
 			graphics.resetRenderTarget();
 			graphics.clearScreen({ 0.5, 0, 0.5, 0 });

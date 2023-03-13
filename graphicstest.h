@@ -18,5 +18,5 @@ public:
 	void update(float tick) const;
 
 private:
-	std::unique_ptr<class GraphicsTestImpl> m_pImpl{};
+	std::unique_ptr<class GraphicsTestImpl> m_pImpl;
 };
