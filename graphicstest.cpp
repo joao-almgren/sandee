@@ -104,6 +104,7 @@ public:
 
 	[[nodiscard]] bool load();
 	void draw(const Camera& camera) const;
+	void update(float tick);
 
 private:
 	std::shared_ptr<Graphics> m_pGraphics{ nullptr };
@@ -116,6 +117,7 @@ private:
 	winrt::com_ptr<ID3D11SamplerState> m_pSamplerState{ nullptr };
 	winrt::com_ptr<ID3D11Texture2D> m_pTexture{ nullptr };
 	winrt::com_ptr<ID3D11ShaderResourceView> m_pTextureView{ nullptr };
+	float m_worldAngle{ 0 };
 };
 
 bool GraphicsTestImpl::load()
@@ -220,14 +222,16 @@ bool GraphicsTestImpl::load()
 	return true;
 }
 
+void GraphicsTestImpl::update(const float tick)
+{
+	m_worldAngle = (m_worldAngle < 2 * XM_PI) ? m_worldAngle + XM_PI * 0.005f * tick : 0;
+}
+
 void GraphicsTestImpl::draw(const Camera & camera) const
 {
 	const auto pDeviceContext = m_pGraphics->getDeviceContext();
 
-	static float t = 0;
-	t = (t < 2 * XM_PI) ? t + XM_PI * 0.002f : 0;
-
-	const Matrix world = Matrix::CreateFromYawPitchRoll(0, t, t);
+	const Matrix world = Matrix::CreateFromYawPitchRoll(0, m_worldAngle, m_worldAngle);
 
 	const ConstantBuffer constantBuffer
 	{
@@ -283,4 +287,9 @@ bool GraphicsTest::load() const
 void GraphicsTest::draw(const Camera& camera) const
 {
 	m_pImpl->draw(camera);
+}
+
+void GraphicsTest::update(const float tick) const
+{
+	m_pImpl->update(tick);
 }

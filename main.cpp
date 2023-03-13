@@ -6,8 +6,8 @@
 #include "graphics.h"
 #include "camera.h"
 #include "graphicstest.h"
+#include "fps.h"
 using namespace DirectX;
-using namespace std;
 
 int WINAPI wWinMain(
 	_In_ const HINSTANCE hInstance,
@@ -100,8 +100,8 @@ int WINAPI wWinMain(
 	SetFocus(hWnd);
 	ShowCursor(FALSE);
 
-	auto keyboard = make_unique<Keyboard>();
-	auto mouse = make_unique<Mouse>();
+	auto keyboard = std::make_unique<Keyboard>();
+	auto mouse = std::make_unique<Mouse>();
 	mouse->SetWindow(hWnd);
 	mouse->SetMode(Mouse::MODE_RELATIVE);
 
@@ -117,6 +117,8 @@ int WINAPI wWinMain(
 	camera.setProjection(3.14f / 2, windowWidth / static_cast<float>(windowHeight), 0.1f, 1000.0f);
 	camera.moveForward(-3);
 
+	FpsCounter fpsCount;
+
 	MSG msg{};
 	while (msg.message != WM_QUIT)
 	{
@@ -129,29 +131,32 @@ int WINAPI wWinMain(
 		{
 			// tick
 			{
-				float speed = 0.01f;
+				const float tick = 60.0f / static_cast<float>(fpsCount.getAverageFps());
 
-				auto kb = keyboard->GetState();
-				auto mus = mouse->GetState();
+				auto keyboardState = keyboard->GetState();
+				auto mouseState = mouse->GetState();
 
-				camera.rotate(static_cast<float>(mus.y) / 300.0f, static_cast<float>(-mus.x) / 300.0f);
+				camera.rotate(static_cast<float>(mouseState.y) / 300.0f, static_cast<float>(-mouseState.x) / 300.0f);
 
-				if (kb.Escape)
+				float speed = 0.05f * tick;
+				if (keyboardState.Escape)
 					PostMessage(hWnd, WM_CLOSE, 0, 0);
-				if (kb.D || kb.Right)
+				if (keyboardState.D || keyboardState.Right)
 					camera.moveRight(speed);
-				else if (kb.A || kb.Left)
+				else if (keyboardState.A || keyboardState.Left)
 					camera.moveRight(-speed);
-				if (kb.W || kb.Up)
+				if (keyboardState.W || keyboardState.Up)
 					camera.moveForward(speed);
-				else if (kb.S || kb.Down)
+				else if (keyboardState.S || keyboardState.Down)
 					camera.moveForward(-speed);
-				if (kb.Q)
+				if (keyboardState.Q)
 					camera.moveUp(speed);
-				else if (kb.Z)
+				else if (keyboardState.Z)
 					camera.moveUp(-speed);
 
 				camera.resetView();
+
+				graphicsTest.update(tick);
 			}
 
 			graphics.resetRenderTarget();

@@ -148,12 +148,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="fps.cpp" />
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="graphicstest.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="fps.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="graphicstest.h" />
     <ClInclude Include="stb_image.h" />
