@@ -52,7 +52,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 	if (FAILED(hr))
 		return false;
 
-	D3D11_RASTERIZER_DESC rasterizerDesc
+	const D3D11_RASTERIZER_DESC rasterizerDesc
 	{
 		.FillMode = D3D11_FILL_SOLID,
 		.CullMode = D3D11_CULL_BACK,
@@ -82,7 +82,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 	if (FAILED(hr))
 		return false;
 
-	D3D11_TEXTURE2D_DESC depthDesc
+	const D3D11_TEXTURE2D_DESC depthDesc
 	{
 		.Width = static_cast<unsigned>(windowWidth),
 		.Height = static_cast<unsigned>(windowWidth),
@@ -104,7 +104,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 	if (FAILED(hr))
 		return false;
 
-	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc
+	const D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc
 	{
 		.Format = depthDesc.Format,
 		.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D,
@@ -154,10 +154,10 @@ bool Graphics::loadTexture(const char * const filename, ID3D11Texture2D ** pText
 {
 	int texWidth, texHeight, texNumChannels;
 	unsigned char * textureBytes = stbi_load(filename, &texWidth, &texHeight, &texNumChannels, 4);
-	if (!textureBytes)
+	if (textureBytes == nullptr)
 		return false;
 
-	D3D11_TEXTURE2D_DESC textureDesc
+	const D3D11_TEXTURE2D_DESC textureDesc
 	{
 		.Width = static_cast<unsigned>(texWidth),
 		.Height = static_cast<unsigned>(texHeight),
@@ -172,7 +172,7 @@ bool Graphics::loadTexture(const char * const filename, ID3D11Texture2D ** pText
 		.BindFlags = D3D11_BIND_SHADER_RESOURCE,
 	};
 
-	D3D11_SUBRESOURCE_DATA textureSubresourceData
+	const D3D11_SUBRESOURCE_DATA textureSubresourceData
 	{
 		.pSysMem = textureBytes,
 		.SysMemPitch = 4 * static_cast<unsigned>(texWidth),

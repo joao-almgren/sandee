@@ -27,9 +27,7 @@ void Camera::rotate(const float dPitch, const float dYaw)
 	const Matrix matRot = matY * matX;
 	m_direction = matRot.Forward();
 
-	const Vector3 at(m_position + m_direction);
-	const Vector3 up(0, 1, 0);
-	m_view = XMMatrixLookAtLH(m_position, at, up);
+	resetView();
 
 	m_right = m_view.Left();
 	m_up = m_view.Up();

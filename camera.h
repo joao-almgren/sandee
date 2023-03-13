@@ -1,6 +1,5 @@
 #pragma once
 #include <SimpleMath.h>
-using namespace DirectX::SimpleMath;
 
 class Camera
 {
@@ -12,8 +11,8 @@ public:
 	Camera& operator=(Camera&&) = delete;
 	~Camera() = default;
 
-	Matrix getProjection() const { return m_projection; }
-	Matrix getView() const { return m_view; }
+	[[nodiscard]] DirectX::SimpleMath::Matrix getProjection() const noexcept { return m_projection; }
+	[[nodiscard]] DirectX::SimpleMath::Matrix getView() const noexcept { return m_view; }
 
 	void setProjection(float fov, float aspectRatio, float nearZ, float farZ);
 	void resetView();
@@ -24,8 +23,8 @@ public:
 	void moveForward(float scale = 1);
 
 private:
-	Matrix m_view{}, m_projection{};
+	DirectX::SimpleMath::Matrix m_view{}, m_projection{};
 	float m_pitch{ 0 }, m_yaw{ 0 };
-	Vector3 m_position{ 0, 0, 0 };
-	Vector3 m_direction{ 0, 0, 1 }, m_right{ 1, 0, 0 }, m_up{ 0, 1, 0 };
+	DirectX::SimpleMath::Vector3 m_position{ 0, 0, 0 };
+	DirectX::SimpleMath::Vector3 m_direction{ 0, 0, 1 }, m_right{ 1, 0, 0 }, m_up{ 0, 1, 0 };
 };

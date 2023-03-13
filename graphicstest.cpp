@@ -1,6 +1,8 @@
 #include "graphicstest.h"
+#include <d3d11.h>
 #include <d3dcompiler.h>
 #include <SimpleMath.h>
+#include <winrt/base.h>
 
 namespace
 {
@@ -20,7 +22,7 @@ namespace
 	struct Vertex
 	{
 		[[maybe_unused]] XMFLOAT3 position{};
-		[[maybe_unused]] XMFLOAT3 normal;
+		[[maybe_unused]] XMFLOAT3 normal{};
 		[[maybe_unused]] XMFLOAT4 color{};
 		[[maybe_unused]] XMFLOAT2 uv{};
 	};
@@ -83,16 +85,42 @@ namespace
 
 	struct ConstantBuffer
 	{
-		XMMATRIX world;
-		XMMATRIX view;
-		XMMATRIX projection;
-		XMFLOAT3 lightDirection;
+		[[maybe_unused]] XMMATRIX world{};
+		[[maybe_unused]] XMMATRIX view{};
+		[[maybe_unused]] XMMATRIX projection{};
+		[[maybe_unused]] XMFLOAT3 lightDirection{};
 	};
 }
 
-bool GraphicsTest::load()
+class GraphicsTestImpl
 {
-	winrt::com_ptr<ID3D11Device> pDevice = m_pGraphics->getDevice();
+public:
+	explicit GraphicsTestImpl(std::shared_ptr<Graphics> pGraphics) : m_pGraphics{ pGraphics } {}
+	GraphicsTestImpl(const GraphicsTestImpl&) = delete;
+	GraphicsTestImpl(GraphicsTestImpl&&) = delete;
+	GraphicsTestImpl& operator=(const GraphicsTestImpl&) = delete;
+	GraphicsTestImpl& operator=(GraphicsTestImpl&&) = delete;
+	~GraphicsTestImpl() = default;
+
+	[[nodiscard]] bool load();
+	void draw(const Camera& camera) const;
+
+private:
+	std::shared_ptr<Graphics> m_pGraphics{ nullptr };
+	winrt::com_ptr<ID3D11Buffer> m_pVertexBuffer{ nullptr };
+	winrt::com_ptr<ID3D11Buffer> m_pIndexBuffer{ nullptr };
+	winrt::com_ptr<ID3D11Buffer> m_pConstantBuffer{ nullptr };
+	winrt::com_ptr<ID3D11VertexShader> m_pVertexShader{ nullptr };
+	winrt::com_ptr<ID3D11InputLayout> m_pInputLayout{ nullptr };
+	winrt::com_ptr<ID3D11PixelShader> m_pPixelShader{ nullptr };
+	winrt::com_ptr<ID3D11SamplerState> m_pSamplerState{ nullptr };
+	winrt::com_ptr<ID3D11Texture2D> m_pTexture{ nullptr };
+	winrt::com_ptr<ID3D11ShaderResourceView> m_pTextureView{ nullptr };
+};
+
+bool GraphicsTestImpl::load()
+{
+	const auto pDevice = m_pGraphics->getDevice();
 
 	const D3D11_BUFFER_DESC vertexBufferDesc
 	{
@@ -172,7 +200,7 @@ bool GraphicsTest::load()
 	if (FAILED(hr))
 		return false;
 
-	D3D11_SAMPLER_DESC samplerDesc
+	const D3D11_SAMPLER_DESC samplerDesc
 	{
 		.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT,
 		.AddressU = D3D11_TEXTURE_ADDRESS_BORDER,
@@ -192,16 +220,16 @@ bool GraphicsTest::load()
 	return true;
 }
 
-void GraphicsTest::draw(const Camera & camera) const
+void GraphicsTestImpl::draw(const Camera & camera) const
 {
-	winrt::com_ptr<ID3D11DeviceContext> pDeviceContext = m_pGraphics->getDeviceContext();
+	const auto pDeviceContext = m_pGraphics->getDeviceContext();
 
 	static float t = 0;
 	t = (t < 2 * XM_PI) ? t + XM_PI * 0.002f : 0;
 
-	Matrix world = Matrix::CreateFromYawPitchRoll(0, t, t);
+	const Matrix world = Matrix::CreateFromYawPitchRoll(0, t, t);
 
-	ConstantBuffer constantBuffer
+	const ConstantBuffer constantBuffer
 	{
 		.world = world.Transpose(),
 		.view = camera.getView().Transpose(),
@@ -238,4 +266,21 @@ void GraphicsTest::draw(const Camera & camera) const
 	pDeviceContext->IASetInputLayout(m_pInputLayout.get());
 
 	pDeviceContext->DrawIndexed(g_numIndices, 0, 0);
+}
+
+GraphicsTest::GraphicsTest(std::shared_ptr<Graphics> pGraphics)
+	: m_pImpl{ std::make_unique<GraphicsTestImpl>(pGraphics) }
+{
+}
+
+GraphicsTest::~GraphicsTest() = default;
+
+bool GraphicsTest::load() const
+{
+	return m_pImpl->load();
+}
+
+void GraphicsTest::draw(const Camera& camera) const
+{
+	m_pImpl->draw(camera);
 }

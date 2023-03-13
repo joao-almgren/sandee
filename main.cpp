@@ -100,8 +100,8 @@ int WINAPI wWinMain(
 	SetFocus(hWnd);
 	ShowCursor(FALSE);
 
-	unique_ptr<Keyboard> keyboard = make_unique<Keyboard>();
-	unique_ptr<Mouse> mouse = make_unique<Mouse>();
+	auto keyboard = make_unique<Keyboard>();
+	auto mouse = make_unique<Mouse>();
 	mouse->SetWindow(hWnd);
 	mouse->SetMode(Mouse::MODE_RELATIVE);
 

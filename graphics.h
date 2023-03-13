@@ -17,12 +17,12 @@ public:
 	void resetRenderTarget() const;
 	void clearScreen(const float (& color)[4] = { 0, 0, 0, 0 }) const;
 
-	[[nodiscard]] winrt::com_ptr<ID3D11Device> getDevice() const { return m_pDevice; }
-	[[nodiscard]] winrt::com_ptr<ID3D11DeviceContext> getDeviceContext() const { return m_pDeviceContext; }
+	[[nodiscard]] winrt::com_ptr<ID3D11Device> getDevice() const noexcept { return m_pDevice; }
+	[[nodiscard]] winrt::com_ptr<ID3D11DeviceContext> getDeviceContext() const noexcept { return m_pDeviceContext; }
 
 	bool loadTexture(const char * filename, ID3D11Texture2D ** pTexture, ID3D11ShaderResourceView ** pTextureView) const;
 
-protected:
+private:
 	winrt::com_ptr<ID3D11Device> m_pDevice{ nullptr };
 	winrt::com_ptr<ID3D11DeviceContext> m_pDeviceContext{ nullptr };
 	winrt::com_ptr<IDXGISwapChain> m_pSwapChain{ nullptr };
