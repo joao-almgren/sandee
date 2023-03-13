@@ -1,8 +1,8 @@
 #include "graphicstest.h"
+#include <winrt/base.h>
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <SimpleMath.h>
-#include <winrt/base.h>
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;

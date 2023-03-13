@@ -1,25 +1,21 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <memory>
 #include <Keyboard.h>
 #include <Mouse.h>
+#include <memory>
 #include "imgui.h"
 #include "backends/imgui_impl_win32.h"
 #include "backends/imgui_impl_dx11.h"
-#include "graphics.h"
-#include "camera.h"
-#include "graphicstest.h"
 #include "fps.h"
+#include "camera.h"
+#include "graphics.h"
+#include "graphicstest.h"
 
 using namespace DirectX;
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-int WINAPI wWinMain(
-	_In_ const HINSTANCE hInstance,
-	_In_opt_ const HINSTANCE /*hPrevInstance*/,
-	_In_ const LPWSTR /*lpCmdLine*/,
-	_In_ const int /*nShowCmd*/)
+int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*hPrevInstance*/, _In_ const LPWSTR /*lpCmdLine*/, _In_ const int /*nShowCmd*/)
 {
 	const auto windowTitle = L"D3D11Test";
 
@@ -32,7 +28,7 @@ int WINAPI wWinMain(
 			if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
 				return true;
 
-			switch (message)  // NOLINT(hicpp-multiway-paths-covered)
+			switch (message) // NOLINT(hicpp-multiway-paths-covered)
 			{
 			case WM_ACTIVATE:
 			case WM_ACTIVATEAPP:
@@ -57,7 +53,7 @@ int WINAPI wWinMain(
 				if (wParam == VK_ESCAPE)
 				{
 					PostMessageW(hWnd, WM_CLOSE, 0, 0);
-					return 0;
+					break;
 				}
 			case WM_KEYUP:
 			case WM_SYSKEYDOWN:
@@ -66,14 +62,22 @@ int WINAPI wWinMain(
 				break;
 			case WM_DESTROY:
 				PostQuitMessage(0);
-				return 0;
-			default: ;
+				break;
+			default:
+				return DefWindowProcW(hWnd, message, wParam, lParam);
 			}
 
-			return DefWindowProcW(hWnd, message, wParam, lParam);
+			return 0;
 		}},
+		.cbClsExtra = 0,
+		.cbWndExtra = 0,
 		.hInstance = hInstance,
+		.hIcon = LoadIcon(hInstance, (LPCTSTR)IDI_APPLICATION),
+		.hCursor = LoadCursor(nullptr, IDC_ARROW),
+		.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1),
+		.lpszMenuName = nullptr,
 		.lpszClassName = windowTitle,
+		.hIconSm = LoadIcon(hInstance, (LPCTSTR)IDI_APPLICATION),
 	};
 
 	if (!RegisterClassExW(&wc))
@@ -90,7 +94,7 @@ int WINAPI wWinMain(
 	const auto windowOriginLeft = (GetSystemMetrics(SM_CXSCREEN) - adjustedWindowWidth) / 2;
 	const auto windowOriginTop = (GetSystemMetrics(SM_CYSCREEN) - adjustedWindowHeight) / 2;
 
-	const auto hWnd = CreateWindowExW
+	const HWND hWnd = CreateWindowExW
 	(
 		WS_EX_OVERLAPPEDWINDOW,
 		windowTitle,
@@ -110,9 +114,6 @@ int WINAPI wWinMain(
 		return 0;
 
 	ShowWindow(hWnd, SW_SHOW);
-	UpdateWindow(hWnd);
-	SetFocus(hWnd);
-	//ShowCursor(FALSE);
 
 	auto keyboard = std::make_unique<Keyboard>();
 	Keyboard::KeyboardStateTracker keyboardTracker;
@@ -124,13 +125,6 @@ int WINAPI wWinMain(
 	if (!graphics.initialize(hWnd, windowWidth, windowHeight))
 		return 0;
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::GetIO();
-	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(hWnd);
-	ImGui_ImplDX11_Init(graphics.getDevice().get(), graphics.getDeviceContext().get());
-
 	GraphicsTest graphicsTest(std::make_shared<Graphics>(graphics));
 	if (!graphicsTest.load())
 		return 0;
@@ -140,6 +134,12 @@ int WINAPI wWinMain(
 	camera.moveForward(-3);
 
 	FpsCounter fpsCount;
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(hWnd);
+	ImGui_ImplDX11_Init(graphics.getDevice().get(), graphics.getDeviceContext().get());
 
 	MSG msg{};
 	while (msg.message != WM_QUIT)
@@ -167,7 +167,7 @@ int WINAPI wWinMain(
 			auto mouseState = mouse->GetState();
 			mouseTracker.Update(mouseState);
 
-			if (mouseTracker.leftButton == Mouse::ButtonStateTracker::ButtonState::RELEASED)
+			if (mouseTracker.rightButton == Mouse::ButtonStateTracker::ButtonState::RELEASED)
 			{
 				if (mouseState.positionMode == Mouse::MODE_RELATIVE)
 					mouse->SetMode(Mouse::MODE_ABSOLUTE);
