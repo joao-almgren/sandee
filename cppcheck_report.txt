@@ -1,5 +1,749 @@
-main.cpp:6:0: style: The function 'wWinMain' is never used. [unusedFunction]
+graphics.cpp:0:0: information: Too many #ifdef configurations - cppcheck only checks 12 of 21 configurations. Use --force to check all configurations. [toomanyconfigs]
 
 ^
-nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingInclude]
+stb_image.h:5587:17: style: Redundant condition: If 'req_comp >= 3', the comparison 'req_comp' is always true. [redundantCondition]
+   if (req_comp && req_comp >= 3) // we can directly decode 3 or 4
+                ^
+stb_image.h:7267:30: style: Condition 'count==0' is always false [knownConditionTrueFalse]
+                  if ((count == 0) || (count > nleft)) { STBI_FREE(hdr_data); STBI_FREE(scanline); return stbi__errpf("corrupt", "bad RLE data in HDR"); }
+                             ^
+stb_image.h:7263:26: note: Assuming that condition 'count>128' is not redundant
+               if (count > 128) {
+                         ^
+stb_image.h:7266:19: note: Compound assignment '-=', assigned value is 0
+                  count -= 128;
+                  ^
+stb_image.h:7267:30: note: Condition 'count==0' is always false
+                  if ((count == 0) || (count > nleft)) { STBI_FREE(hdr_data); STBI_FREE(scanline); return stbi__errpf("corrupt", "bad RLE data in HDR"); }
+                             ^
+stb_image.h:7113:6: style: Redundant initialization for 'c'. The initialized value is overwritten before it is read. [redundantInitialization]
+   c = (char) stbi__get8(z);
+     ^
+stb_image.h:7111:11: note: c is initialized
+   char c = '\0';
+          ^
+stb_image.h:7113:6: note: c is overwritten
+   c = (char) stbi__get8(z);
+     ^
+stb_image.h:1185:11: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   return stbi__errpuc("unknown image type", "Image not of any known type, or corrupt");
+          ^
+stb_image.h:1195:32: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (reduced == NULL) return stbi__errpuc("outofmem", "Out of memory");
+                               ^
+stb_image.h:1211:50: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (enlarged == NULL) return (stbi__uint16 *) stbi__errpuc("outofmem", "Out of memory");
+                                                 ^
+stb_image.h:1368:19: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (!f) return stbi__errpuc("can't fopen", "Unable to open file");
+                  ^
+stb_image.h:1404:31: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (!f) return (stbi_us *) stbi__errpuc("can't fopen", "Unable to open file");
+                              ^
+stb_image.h:1473:11: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   return stbi__errpf("unknown image type", "Image not of any known type, or corrupt");
+          ^
+stb_image.h:1495:19: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (!f) return stbi__errpf("can't fopen", "Unable to open file");
+                  ^
+stb_image.h:1764:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("outofmem", "Out of memory");
+             ^
+stb_image.h:1788:76: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         default: STBI_ASSERT(0); STBI_FREE(data); STBI_FREE(good); return stbi__errpuc("unsupported", "Unsupported format conversion");
+                                                                           ^
+stb_image.h:1821:31: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return (stbi__uint16 *) stbi__errpuc("outofmem", "Out of memory");
+                              ^
+stb_image.h:1845:92: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         default: STBI_ASSERT(0); STBI_FREE(data); STBI_FREE(good); return (stbi__uint16*) stbi__errpuc("unsupported", "Unsupported format conversion");
+                                                                                           ^
+stb_image.h:1862:50: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (output == NULL) { STBI_FREE(data); return stbi__errpf("outofmem", "Out of memory"); }
+                                                 ^
+stb_image.h:1888:50: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (output == NULL) { STBI_FREE(data); return stbi__errpuc("outofmem", "Out of memory"); }
+                                                 ^
+stb_image.h:3869:45: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (req_comp < 0 || req_comp > 4) return stbi__errpuc("bad req_comp", "Internal error");
+                                            ^
+stb_image.h:3903:71: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         if (!z->img_comp[k].linebuf) { stbi__cleanup_jpeg(z); return stbi__errpuc("outofmem", "Out of memory"); }
+                                                                      ^
+stb_image.h:3921:52: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      if (!output) { stbi__cleanup_jpeg(z); return stbi__errpuc("outofmem", "Out of memory"); }
+                                                   ^
+stb_image.h:4030:19: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (!j) return stbi__errpuc("outofmem", "Out of memory");
+                  ^
+stb_image.h:5265:45: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (req_comp < 0 || req_comp > 4) return stbi__errpuc("bad req_comp", "Internal error");
+                                            ^
+stb_image.h:5272:17: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         return stbi__errpuc("bad bits_per_channel", "PNG not supported: unsupported color depth");
+                ^
+stb_image.h:5450:61: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (stbi__get8(s) != 'B' || stbi__get8(s) != 'M') return stbi__errpuc("not BMP", "Corrupt BMP");
+                                                            ^
+stb_image.h:5459:33: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (info->offset < 0) return stbi__errpuc("bad BMP", "bad BMP");
+                                ^
+stb_image.h:5461:80: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (hsz != 12 && hsz != 40 && hsz != 56 && hsz != 108 && hsz != 124) return stbi__errpuc("unknown BMP", "BMP type not supported: unknown");
+                                                                               ^
+stb_image.h:5469:38: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (stbi__get16le(s) != 1) return stbi__errpuc("bad BMP", "bad BMP");
+                                     ^
+stb_image.h:5473:50: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      if (compress == 1 || compress == 2) return stbi__errpuc("BMP RLE", "BMP type not supported: RLE");
+                                                 ^
+stb_image.h:5474:33: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      if (compress >= 4) return stbi__errpuc("BMP JPEG/PNG", "BMP type not supported: unsupported compression"); // this includes PNG/JPEG modes
+                                ^
+stb_image.h:5475:71: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      if (compress == 3 && info->bpp != 16 && info->bpp != 32) return stbi__errpuc("bad BMP", "bad BMP"); // bitfields requires 16 or 32 bits/pixel
+                                                                      ^
+stb_image.h:5499:26: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+                  return stbi__errpuc("bad BMP", "bad BMP");
+                         ^
+stb_image.h:5502:23: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+               return stbi__errpuc("bad BMP", "bad BMP");
+                      ^
+stb_image.h:5508:20: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+            return stbi__errpuc("bad BMP", "bad BMP");
+                   ^
+stb_image.h:5547:47: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (s->img_y > STBI_MAX_DIMENSIONS) return stbi__errpuc("too large","Very large image (corrupt?)");
+                                              ^
+stb_image.h:5548:47: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (s->img_x > STBI_MAX_DIMENSIONS) return stbi__errpuc("too large","Very large image (corrupt?)");
+                                              ^
+stb_image.h:5570:17: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         return stbi__errpuc("bad header", "Corrupt BMP");
+                ^
+stb_image.h:5577:17: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         return stbi__errpuc("bad offset", "Corrupt BMP");
+                ^
+stb_image.h:5594:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("too large", "Corrupt BMP");
+             ^
+stb_image.h:5597:21: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (!out) return stbi__errpuc("outofmem", "Out of memory");
+                    ^
+stb_image.h:5600:63: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      if (psize == 0 || psize > 256) { STBI_FREE(out); return stbi__errpuc("invalid", "Corrupt BMP"); }
+                                                              ^
+stb_image.h:5612:37: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      else { STBI_FREE(out); return stbi__errpuc("bad bpp", "Corrupt BMP"); }
+                                    ^
+stb_image.h:5669:58: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         if (!mr || !mg || !mb) { STBI_FREE(out); return stbi__errpuc("bad masks", "Corrupt BMP"); }
+                                                         ^
+stb_image.h:5675:93: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         if (rcount > 8 || gcount > 8 || bcount > 8 || acount > 8) { STBI_FREE(out); return stbi__errpuc("bad masks", "Corrupt BMP"); }
+                                                                                            ^
+stb_image.h:5900:49: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (tga_height > STBI_MAX_DIMENSIONS) return stbi__errpuc("too large","Very large image (corrupt?)");
+                                                ^
+stb_image.h:5901:48: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (tga_width > STBI_MAX_DIMENSIONS) return stbi__errpuc("too large","Very large image (corrupt?)");
+                                               ^
+stb_image.h:5916:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("bad format", "Can't find out TGA pixelformat");
+             ^
+stb_image.h:5924:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("too large", "Corrupt TGA");
+             ^
+stb_image.h:5927:26: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (!tga_data) return stbi__errpuc("outofmem", "Out of memory");
+                         ^
+stb_image.h:5944:20: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+            return stbi__errpuc("bad palette", "Corrupt TGA");
+                   ^
+stb_image.h:5953:20: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+            return stbi__errpuc("outofmem", "Out of memory");
+                   ^
+stb_image.h:5965:23: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+               return stbi__errpuc("bad palette", "Corrupt TGA");
+                      ^
+stb_image.h:6137:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("not PSD", "Corrupt PSD image");
+             ^
+stb_image.h:6141:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("wrong version", "Unsupported version of PSD image");
+             ^
+stb_image.h:6149:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("wrong channel count", "Unsupported number of channels in PSD image");
+             ^
+stb_image.h:6155:40: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (h > STBI_MAX_DIMENSIONS) return stbi__errpuc("too large","Very large image (corrupt?)");
+                                       ^
+stb_image.h:6156:40: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (w > STBI_MAX_DIMENSIONS) return stbi__errpuc("too large","Very large image (corrupt?)");
+                                       ^
+stb_image.h:6161:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("unsupported bit depth", "PSD bit depth is not 8 or 16 bit");
+             ^
+stb_image.h:6174:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("wrong color format", "PSD is not in RGB color format");
+             ^
+stb_image.h:6191:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("bad compression", "PSD has an unknown compression format");
+             ^
+stb_image.h:6195:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("too large", "Corrupt PSD");
+             ^
+stb_image.h:6205:21: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (!out) return stbi__errpuc("outofmem", "Out of memory");
+                    ^
+stb_image.h:6238:23: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+               return stbi__errpuc("corrupt", "bad RLE data");
+                      ^
+stb_image.h:6372:38: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         if (stbi__at_eof(s)) return stbi__errpuc("bad file","PIC file too short");
+                                     ^
+stb_image.h:6400:17: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         return stbi__errpuc("bad format","too many packets");
+                ^
+stb_image.h:6411:44: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      if (stbi__at_eof(s))          return stbi__errpuc("bad file","file too short (reading packets)");
+                                           ^
+stb_image.h:6412:38: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      if (packet->size != 8)  return stbi__errpuc("bad format","packet isn't 8bpp");
+                                     ^
+stb_image.h:6426:23: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+               return stbi__errpuc("bad format","packet has bad compression type");
+                      ^
+stb_image.h:6445:52: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+                     if (stbi__at_eof(s))   return stbi__errpuc("bad file","file too short (pure read count)");
+                                                   ^
+stb_image.h:6463:48: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+                  if (stbi__at_eof(s))  return stbi__errpuc("bad file","file too short (mixed read count)");
+                                               ^
+stb_image.h:6473:32: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+                        return stbi__errpuc("bad file","scanline overrun");
+                               ^
+stb_image.h:6482:45: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+                     if (count>left) return stbi__errpuc("bad file","scanline overrun");
+                                            ^
+stb_image.h:6513:40: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (y > STBI_MAX_DIMENSIONS) return stbi__errpuc("too large","Very large image (corrupt?)");
+                                       ^
+stb_image.h:6514:40: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (x > STBI_MAX_DIMENSIONS) return stbi__errpuc("too large","Very large image (corrupt?)");
+                                       ^
+stb_image.h:6516:33: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (stbi__at_eof(s))  return stbi__errpuc("bad file","file too short (pic header)");
+                                ^
+stb_image.h:6517:51: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (!stbi__mad3sizes_valid(x, y, 4, 0)) return stbi__errpuc("too large", "PIC image too large to decode");
+                                                  ^
+stb_image.h:6525:24: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (!result) return stbi__errpuc("outofmem", "Out of memory");
+                       ^
+stb_image.h:6745:23: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+               return stbi__errpuc("no clear code", "Corrupt GIF");
+                      ^
+stb_image.h:6751:26: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+                  return stbi__errpuc("too many codes", "Corrupt GIF");
+                         ^
+stb_image.h:6758:23: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+               return stbi__errpuc("illegal code in raster", "Corrupt GIF");
+                      ^
+stb_image.h:6769:20: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+            return stbi__errpuc("illegal code in raster", "Corrupt GIF");
+                   ^
+stb_image.h:6790:17: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         return stbi__errpuc("too large", "GIF image is too large");
+                ^
+stb_image.h:6796:17: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         return stbi__errpuc("outofmem", "Out of memory");
+                ^
+stb_image.h:6854:23: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+               return stbi__errpuc("bad Image Descriptor", "Corrupt GIF");
+                      ^
+stb_image.h:6887:23: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+               return stbi__errpuc("missing color table", "Corrupt GIF");
+                      ^
+stb_image.h:6946:20: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+            return stbi__errpuc("unknown code", "Corrupt GIF");
+                   ^
+stb_image.h:6959:11: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   return stbi__errpuc("outofmem", "Out of memory");
+          ^
+stb_image.h:7043:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("not GIF", "Image was not as a gif type.");
+             ^
+stb_image.h:7174:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpf("not HDR", "Corrupt HDR image");
+             ^
+stb_image.h:7183:26: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (!valid)    return stbi__errpf("unsupported format", "Unsupported HDR format");
+                         ^
+stb_image.h:7188:42: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (strncmp(token, "-Y ", 3))  return stbi__errpf("unsupported data layout", "Unsupported HDR format");
+                                         ^
+stb_image.h:7192:42: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (strncmp(token, "+X ", 3))  return stbi__errpf("unsupported data layout", "Unsupported HDR format");
+                                         ^
+stb_image.h:7196:45: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (height > STBI_MAX_DIMENSIONS) return stbi__errpf("too large","Very large image (corrupt?)");
+                                            ^
+stb_image.h:7197:44: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (width > STBI_MAX_DIMENSIONS) return stbi__errpf("too large","Very large image (corrupt?)");
+                                           ^
+stb_image.h:7206:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpf("too large", "HDR image is too large");
+             ^
+stb_image.h:7211:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpf("outofmem", "Out of memory");
+             ^
+stb_image.h:7249:79: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+         if (len != width) { STBI_FREE(hdr_data); STBI_FREE(scanline); return stbi__errpf("invalid decoded scanline length", "corrupt HDR"); }
+                                                                              ^
+stb_image.h:7254:23: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+               return stbi__errpf("outofmem", "Out of memory");
+                      ^
+stb_image.h:7267:107: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+                  if ((count == 0) || (count > nleft)) { STBI_FREE(hdr_data); STBI_FREE(scanline); return stbi__errpf("corrupt", "bad RLE data in HDR"); }
+                                                                                                          ^
+stb_image.h:7272:107: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+                  if ((count == 0) || (count > nleft)) { STBI_FREE(hdr_data); STBI_FREE(scanline); return stbi__errpf("corrupt", "bad RLE data in HDR"); }
+                                                                                                          ^
+stb_image.h:7514:47: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (s->img_y > STBI_MAX_DIMENSIONS) return stbi__errpuc("too large","Very large image (corrupt?)");
+                                              ^
+stb_image.h:7515:47: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (s->img_x > STBI_MAX_DIMENSIONS) return stbi__errpuc("too large","Very large image (corrupt?)");
+                                              ^
+stb_image.h:7522:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("too large", "PNM too large");
+             ^
+stb_image.h:7525:21: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+   if (!out) return stbi__errpuc("outofmem", "Out of memory");
+                    ^
+stb_image.h:7528:14: style: Same value in both branches of ternary operator. [duplicateValueTernary]
+      return stbi__errpuc("bad PNM", "PNM file truncated");
+             ^
+stb_image.h:2265:8: style: The scope of the variable 'diff' can be reduced. [variableScope]
+   int diff,dc;
+       ^
+stb_image.h:2265:13: style: The scope of the variable 'dc' can be reduced. [variableScope]
+   int diff,dc;
+            ^
+stb_image.h:2266:8: style: The scope of the variable 't' can be reduced. [variableScope]
+   int t;
+       ^
+stb_image.h:3265:15: style: The scope of the variable 'q' can be reduced. [variableScope]
+   int Lf,p,i,q, h_max=1,v_max=1,c;
+              ^
+stb_image.h:3506:10: style: The scope of the variable 't0' can be reduced. [variableScope]
+   int i,t0,t1;
+         ^
+stb_image.h:4242:10: style: The scope of the variable 's' can be reduced. [variableScope]
+   int b,s;
+         ^
+stb_image.h:4462:15: style: The scope of the variable 'type' can be reduced. [variableScope]
+   int final, type;
+              ^
+stb_image.h:4879:11: style: The scope of the variable 'i' can be reduced. [variableScope]
+      int i,j,x,y;
+          ^
+stb_image.h:4879:13: style: The scope of the variable 'j' can be reduced. [variableScope]
+      int i,j,x,y;
+            ^
+stb_image.h:5757:9: style: The scope of the variable 'sz' can be reduced. [variableScope]
+    int sz, tga_colormap_type;
+        ^
+stb_image.h:5891:11: style: The scope of the variable 'j' can be reduced. [variableScope]
+   int i, j;
+          ^
+stb_image.h:5893:8: style: The scope of the variable 'RLE_count' can be reduced. [variableScope]
+   int RLE_count = 0;
+       ^
+stb_image.h:5894:8: style: The scope of the variable 'RLE_repeating' can be reduced. [variableScope]
+   int RLE_repeating = 0;
+       ^
+stb_image.h:5895:8: style: The scope of the variable 'read_next_pixel' can be reduced. [variableScope]
+   int read_next_pixel = 1;
+       ^
+stb_image.h:6089:22: style: The scope of the variable 'len' can be reduced. [variableScope]
+   int count, nleft, len;
+                     ^
+stb_image.h:6779:8: style: The scope of the variable 'dispose' can be reduced. [variableScope]
+   int dispose;
+       ^
+stb_image.h:5409:6: error: Shifting by a negative value is undefined behaviour [shiftNegative]
+   v >>= (8-bits);
+     ^
+stb_image.h:1364:71: style:inconclusive: Function 'stbi_load' argument 4 names different: declaration 'channels_in_file' definition 'comp'. [funcArgNamesDifferent]
+STBIDEF stbi_uc *stbi_load(char const *filename, int *x, int *y, int *comp, int req_comp)
+                                                                      ^
+stb_image.h:425:83: note: Function 'stbi_load' argument 4 names different: declaration 'channels_in_file' definition 'comp'.
+STBIDEF stbi_uc *stbi_load            (char const *filename, int *x, int *y, int *channels_in_file, int desired_channels);
+                                                                                  ^
+stb_image.h:1364:71: note: Function 'stbi_load' argument 4 names different: declaration 'channels_in_file' definition 'comp'.
+STBIDEF stbi_uc *stbi_load(char const *filename, int *x, int *y, int *comp, int req_comp)
+                                                                      ^
+stb_image.h:1364:81: style:inconclusive: Function 'stbi_load' argument 5 names different: declaration 'desired_channels' definition 'req_comp'. [funcArgNamesDifferent]
+STBIDEF stbi_uc *stbi_load(char const *filename, int *x, int *y, int *comp, int req_comp)
+                                                                                ^
+stb_image.h:425:105: note: Function 'stbi_load' argument 5 names different: declaration 'desired_channels' definition 'req_comp'.
+STBIDEF stbi_uc *stbi_load            (char const *filename, int *x, int *y, int *channels_in_file, int desired_channels);
+                                                                                                        ^
+stb_image.h:1364:81: note: Function 'stbi_load' argument 5 names different: declaration 'desired_channels' definition 'req_comp'.
+STBIDEF stbi_uc *stbi_load(char const *filename, int *x, int *y, int *comp, int req_comp)
+                                                                                ^
+stb_image.h:1374:68: style:inconclusive: Function 'stbi_load_from_file' argument 4 names different: declaration 'channels_in_file' definition 'comp'. [funcArgNamesDifferent]
+STBIDEF stbi_uc *stbi_load_from_file(FILE *f, int *x, int *y, int *comp, int req_comp)
+                                                                   ^
+stb_image.h:426:70: note: Function 'stbi_load_from_file' argument 4 names different: declaration 'channels_in_file' definition 'comp'.
+STBIDEF stbi_uc *stbi_load_from_file  (FILE *f, int *x, int *y, int *channels_in_file, int desired_channels);
+                                                                     ^
+stb_image.h:1374:68: note: Function 'stbi_load_from_file' argument 4 names different: declaration 'channels_in_file' definition 'comp'.
+STBIDEF stbi_uc *stbi_load_from_file(FILE *f, int *x, int *y, int *comp, int req_comp)
+                                                                   ^
+stb_image.h:1374:78: style:inconclusive: Function 'stbi_load_from_file' argument 5 names different: declaration 'desired_channels' definition 'req_comp'. [funcArgNamesDifferent]
+STBIDEF stbi_uc *stbi_load_from_file(FILE *f, int *x, int *y, int *comp, int req_comp)
+                                                                             ^
+stb_image.h:426:92: note: Function 'stbi_load_from_file' argument 5 names different: declaration 'desired_channels' definition 'req_comp'.
+STBIDEF stbi_uc *stbi_load_from_file  (FILE *f, int *x, int *y, int *channels_in_file, int desired_channels);
+                                                                                           ^
+stb_image.h:1374:78: note: Function 'stbi_load_from_file' argument 5 names different: declaration 'desired_channels' definition 'req_comp'.
+STBIDEF stbi_uc *stbi_load_from_file(FILE *f, int *x, int *y, int *comp, int req_comp)
+                                                                             ^
+stb_image.h:1387:76: style:inconclusive: Function 'stbi_load_from_file_16' argument 4 names different: declaration 'channels_in_file' definition 'comp'. [funcArgNamesDifferent]
+STBIDEF stbi__uint16 *stbi_load_from_file_16(FILE *f, int *x, int *y, int *comp, int req_comp)
+                                                                           ^
+stb_image.h:448:71: note: Function 'stbi_load_from_file_16' argument 4 names different: declaration 'channels_in_file' definition 'comp'.
+STBIDEF stbi_us *stbi_load_from_file_16(FILE *f, int *x, int *y, int *channels_in_file, int desired_channels);
+                                                                      ^
+stb_image.h:1387:76: note: Function 'stbi_load_from_file_16' argument 4 names different: declaration 'channels_in_file' definition 'comp'.
+STBIDEF stbi__uint16 *stbi_load_from_file_16(FILE *f, int *x, int *y, int *comp, int req_comp)
+                                                                           ^
+stb_image.h:1387:86: style:inconclusive: Function 'stbi_load_from_file_16' argument 5 names different: declaration 'desired_channels' definition 'req_comp'. [funcArgNamesDifferent]
+STBIDEF stbi__uint16 *stbi_load_from_file_16(FILE *f, int *x, int *y, int *comp, int req_comp)
+                                                                                     ^
+stb_image.h:448:93: note: Function 'stbi_load_from_file_16' argument 5 names different: declaration 'desired_channels' definition 'req_comp'.
+STBIDEF stbi_us *stbi_load_from_file_16(FILE *f, int *x, int *y, int *channels_in_file, int desired_channels);
+                                                                                            ^
+stb_image.h:1387:86: note: Function 'stbi_load_from_file_16' argument 5 names different: declaration 'desired_channels' definition 'req_comp'.
+STBIDEF stbi__uint16 *stbi_load_from_file_16(FILE *f, int *x, int *y, int *comp, int req_comp)
+                                                                                     ^
+stb_image.h:1400:74: style:inconclusive: Function 'stbi_load_16' argument 4 names different: declaration 'channels_in_file' definition 'comp'. [funcArgNamesDifferent]
+STBIDEF stbi_us *stbi_load_16(char const *filename, int *x, int *y, int *comp, int req_comp)
+                                                                         ^
+stb_image.h:447:84: note: Function 'stbi_load_16' argument 4 names different: declaration 'channels_in_file' definition 'comp'.
+STBIDEF stbi_us *stbi_load_16          (char const *filename, int *x, int *y, int *channels_in_file, int desired_channels);
+                                                                                   ^
+stb_image.h:1400:74: note: Function 'stbi_load_16' argument 4 names different: declaration 'channels_in_file' definition 'comp'.
+STBIDEF stbi_us *stbi_load_16(char const *filename, int *x, int *y, int *comp, int req_comp)
+                                                                         ^
+stb_image.h:1400:84: style:inconclusive: Function 'stbi_load_16' argument 5 names different: declaration 'desired_channels' definition 'req_comp'. [funcArgNamesDifferent]
+STBIDEF stbi_us *stbi_load_16(char const *filename, int *x, int *y, int *comp, int req_comp)
+                                                                                   ^
+stb_image.h:447:106: note: Function 'stbi_load_16' argument 5 names different: declaration 'desired_channels' definition 'req_comp'.
+STBIDEF stbi_us *stbi_load_16          (char const *filename, int *x, int *y, int *channels_in_file, int desired_channels);
+                                                                                                         ^
+stb_image.h:1400:84: note: Function 'stbi_load_16' argument 5 names different: declaration 'desired_channels' definition 'req_comp'.
+STBIDEF stbi_us *stbi_load_16(char const *filename, int *x, int *y, int *comp, int req_comp)
+                                                                                   ^
+stb_image.h:1491:70: style:inconclusive: Function 'stbi_loadf' argument 4 names different: declaration 'channels_in_file' definition 'comp'. [funcArgNamesDifferent]
+STBIDEF float *stbi_loadf(char const *filename, int *x, int *y, int *comp, int req_comp)
+                                                                     ^
+stb_image.h:460:85: note: Function 'stbi_loadf' argument 4 names different: declaration 'channels_in_file' definition 'comp'.
+   STBIDEF float *stbi_loadf            (char const *filename, int *x, int *y, int *channels_in_file, int desired_channels);
+                                                                                    ^
+stb_image.h:1491:70: note: Function 'stbi_loadf' argument 4 names different: declaration 'channels_in_file' definition 'comp'.
+STBIDEF float *stbi_loadf(char const *filename, int *x, int *y, int *comp, int req_comp)
+                                                                     ^
+stb_image.h:1491:80: style:inconclusive: Function 'stbi_loadf' argument 5 names different: declaration 'desired_channels' definition 'req_comp'. [funcArgNamesDifferent]
+STBIDEF float *stbi_loadf(char const *filename, int *x, int *y, int *comp, int req_comp)
+                                                                               ^
+stb_image.h:460:107: note: Function 'stbi_loadf' argument 5 names different: declaration 'desired_channels' definition 'req_comp'.
+   STBIDEF float *stbi_loadf            (char const *filename, int *x, int *y, int *channels_in_file, int desired_channels);
+                                                                                                          ^
+stb_image.h:1491:80: note: Function 'stbi_loadf' argument 5 names different: declaration 'desired_channels' definition 'req_comp'.
+STBIDEF float *stbi_loadf(char const *filename, int *x, int *y, int *comp, int req_comp)
+                                                                               ^
+stb_image.h:1501:67: style:inconclusive: Function 'stbi_loadf_from_file' argument 4 names different: declaration 'channels_in_file' definition 'comp'. [funcArgNamesDifferent]
+STBIDEF float *stbi_loadf_from_file(FILE *f, int *x, int *y, int *comp, int req_comp)
+                                                                  ^
+stb_image.h:461:72: note: Function 'stbi_loadf_from_file' argument 4 names different: declaration 'channels_in_file' definition 'comp'.
+   STBIDEF float *stbi_loadf_from_file  (FILE *f, int *x, int *y, int *channels_in_file, int desired_channels);
+                                                                       ^
+stb_image.h:1501:67: note: Function 'stbi_loadf_from_file' argument 4 names different: declaration 'channels_in_file' definition 'comp'.
+STBIDEF float *stbi_loadf_from_file(FILE *f, int *x, int *y, int *comp, int req_comp)
+                                                                  ^
+stb_image.h:1501:77: style:inconclusive: Function 'stbi_loadf_from_file' argument 5 names different: declaration 'desired_channels' definition 'req_comp'. [funcArgNamesDifferent]
+STBIDEF float *stbi_loadf_from_file(FILE *f, int *x, int *y, int *comp, int req_comp)
+                                                                            ^
+stb_image.h:461:94: note: Function 'stbi_loadf_from_file' argument 5 names different: declaration 'desired_channels' definition 'req_comp'.
+   STBIDEF float *stbi_loadf_from_file  (FILE *f, int *x, int *y, int *channels_in_file, int desired_channels);
+                                                                                             ^
+stb_image.h:1501:77: note: Function 'stbi_loadf_from_file' argument 5 names different: declaration 'desired_channels' definition 'req_comp'.
+STBIDEF float *stbi_loadf_from_file(FILE *f, int *x, int *y, int *comp, int req_comp)
+                                                                            ^
+stb_image.h:6499:51: style:inconclusive: Function 'stbi__pic_load' argument 2 names different: declaration 'x' definition 'px'. [funcArgNamesDifferent]
+static void *stbi__pic_load(stbi__context *s,int *px,int *py,int *comp,int req_comp, stbi__result_info *ri)
+                                                  ^
+stb_image.h:946:55: note: Function 'stbi__pic_load' argument 2 names different: declaration 'x' definition 'px'.
+static void    *stbi__pic_load(stbi__context *s, int *x, int *y, int *comp, int req_comp, stbi__result_info *ri);
+                                                      ^
+stb_image.h:6499:51: note: Function 'stbi__pic_load' argument 2 names different: declaration 'x' definition 'px'.
+static void *stbi__pic_load(stbi__context *s,int *px,int *py,int *comp,int req_comp, stbi__result_info *ri)
+                                                  ^
+stb_image.h:6499:59: style:inconclusive: Function 'stbi__pic_load' argument 3 names different: declaration 'y' definition 'py'. [funcArgNamesDifferent]
+static void *stbi__pic_load(stbi__context *s,int *px,int *py,int *comp,int req_comp, stbi__result_info *ri)
+                                                          ^
+stb_image.h:946:63: note: Function 'stbi__pic_load' argument 3 names different: declaration 'y' definition 'py'.
+static void    *stbi__pic_load(stbi__context *s, int *x, int *y, int *comp, int req_comp, stbi__result_info *ri);
+                                                              ^
+stb_image.h:6499:59: note: Function 'stbi__pic_load' argument 3 names different: declaration 'y' definition 'py'.
+static void *stbi__pic_load(stbi__context *s,int *px,int *py,int *comp,int req_comp, stbi__result_info *ri)
+                                                          ^
+stb_image.h:1101:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(retval_from_stbi_load);
+^
+stb_image.h:1200:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(orig);
+^
+stb_image.h:1216:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(orig);
+^
+stb_image.h:1763:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      STBI_FREE(data);
+^
+stb_image.h:1788:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+         default: STBI_ASSERT(0); STBI_FREE(data); STBI_FREE(good); return stbi__errpuc("unsupported", "Unsupported format conversion");
+^
+stb_image.h:1793:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(data);
+^
+stb_image.h:1820:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      STBI_FREE(data);
+^
+stb_image.h:1845:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+         default: STBI_ASSERT(0); STBI_FREE(data); STBI_FREE(good); return (stbi__uint16*) stbi__errpuc("unsupported", "Unsupported format conversion");
+^
+stb_image.h:1850:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(data);
+^
+stb_image.h:1862:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   if (output == NULL) { STBI_FREE(data); return stbi__errpf("outofmem", "Out of memory"); }
+^
+stb_image.h:1875:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(data);
+^
+stb_image.h:1888:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   if (output == NULL) { STBI_FREE(data); return stbi__errpuc("outofmem", "Out of memory"); }
+^
+stb_image.h:1905:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(data);
+^
+stb_image.h:3245:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+         STBI_FREE(z->img_comp[i].raw_data);
+^
+stb_image.h:3250:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+         STBI_FREE(z->img_comp[i].raw_coeff);
+^
+stb_image.h:3255:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+         STBI_FREE(z->img_comp[i].linebuf);
+^
+stb_image.h:4036:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(j);
+^
+stb_image.h:4050:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(j);
+^
+stb_image.h:4074:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(j);
+^
+stb_image.h:4509:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      STBI_FREE(a.zout_start);
+^
+stb_image.h:4530:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      STBI_FREE(a.zout_start);
+^
+stb_image.h:4557:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      STBI_FREE(a.zout_start);
+^
+stb_image.h:4886:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+            STBI_FREE(final);
+^
+stb_image.h:4897:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+         STBI_FREE(a->out);
+^
+stb_image.h:4986:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(a->out);
+^
+stb_image.h:5208:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+            STBI_FREE(z->idata); z->idata = NULL;
+^
+stb_image.h:5234:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+            STBI_FREE(z->expanded); z->expanded = NULL;
+^
+stb_image.h:5287:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(p->out);      p->out      = NULL;
+^
+stb_image.h:5288:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(p->expanded); p->expanded = NULL;
+^
+stb_image.h:5289:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(p->idata);    p->idata    = NULL;
+^
+stb_image.h:5600:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      if (psize == 0 || psize > 256) { STBI_FREE(out); return stbi__errpuc("invalid", "Corrupt BMP"); }
+^
+stb_image.h:5612:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      else { STBI_FREE(out); return stbi__errpuc("bad bpp", "Corrupt BMP"); }
+^
+stb_image.h:5669:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+         if (!mr || !mg || !mb) { STBI_FREE(out); return stbi__errpuc("bad masks", "Corrupt BMP"); }
+^
+stb_image.h:5675:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+         if (rcount > 8 || gcount > 8 || bcount > 8 || acount > 8) { STBI_FREE(out); return stbi__errpuc("bad masks", "Corrupt BMP"); }
+^
+stb_image.h:5943:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+            STBI_FREE(tga_data);
+^
+stb_image.h:5952:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+            STBI_FREE(tga_data);
+^
+stb_image.h:5963:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+               STBI_FREE(tga_data);
+^
+stb_image.h:5964:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+               STBI_FREE(tga_palette);
+^
+stb_image.h:6045:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+         STBI_FREE( tga_palette );
+^
+stb_image.h:6237:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+               STBI_FREE(out);
+^
+stb_image.h:6529:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      STBI_FREE(result);
+^
+stb_image.h:6643:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      STBI_FREE(g);
+^
+stb_image.h:6649:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(g);
+^
+stb_image.h:6953:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(g->out);
+^
+stb_image.h:6954:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(g->history);
+^
+stb_image.h:6955:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(g->background);
+^
+stb_image.h:6957:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   if (out) STBI_FREE(out);
+^
+stb_image.h:6958:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   if (delays && *delays) STBI_FREE(*delays);
+^
+stb_image.h:7032:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      STBI_FREE(g.out);
+^
+stb_image.h:7033:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      STBI_FREE(g.history);
+^
+stb_image.h:7034:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      STBI_FREE(g.background);
+^
+stb_image.h:7066:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      STBI_FREE(g.out);
+^
+stb_image.h:7070:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(g.history);
+^
+stb_image.h:7071:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   STBI_FREE(g.background);
+^
+stb_image.h:7244:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+            STBI_FREE(scanline);
+^
+stb_image.h:7249:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+         if (len != width) { STBI_FREE(hdr_data); STBI_FREE(scanline); return stbi__errpf("invalid decoded scanline length", "corrupt HDR"); }
+^
+stb_image.h:7253:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+               STBI_FREE(hdr_data);
+^
+stb_image.h:7267:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+                  if ((count == 0) || (count > nleft)) { STBI_FREE(hdr_data); STBI_FREE(scanline); return stbi__errpf("corrupt", "bad RLE data in HDR"); }
+^
+stb_image.h:7272:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+                  if ((count == 0) || (count > nleft)) { STBI_FREE(hdr_data); STBI_FREE(scanline); return stbi__errpf("corrupt", "bad RLE data in HDR"); }
+^
+stb_image.h:7282:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+         STBI_FREE(scanline);
+^
+stb_image.h:7527:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_FREE' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+      STBI_FREE(out);
+^
+stb_image.h:985:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_MALLOC' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+    return STBI_MALLOC(size);
+^
+stb_image.h:4272:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_REALLOC_SIZED' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+   q = (char *) STBI_REALLOC_SIZED(z->zout_start, old_limit, limit);
+^
+stb_image.h:5190:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_REALLOC_SIZED' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+               p = (stbi_uc *) STBI_REALLOC_SIZED(z->idata, idata_limit_old, idata_limit); if (p == NULL) return stbi__err("outofmem", "Out of memory");
+^
+stb_image.h:6993:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_REALLOC_SIZED' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+               void *tmp = (stbi_uc*) STBI_REALLOC_SIZED( out, out_size, layers * stride );
+^
+stb_image.h:7002:0: information: Skipping configuration 'STBI_FREE;STBI_MALLOC;STBI_REALLOC;STBI_REALLOC_SIZED' since the value of 'STBI_REALLOC_SIZED' is unknown. Use -D if you want to check it. You can use -U to skip it explicitly. [ConfigurationNotChecked]
+                  int *new_delays = (int*) STBI_REALLOC_SIZED( *delays, delays_size, sizeof(int) * layers );
+^
+stb_image.h:3834:25: style: Variable 'j->idct_block_kernel' is reassigned a value before the old one has been used. [redundantAssignment]
+   j->idct_block_kernel = stbi__idct_simd;
+                        ^
+stb_image.h:3821:25: note: j->idct_block_kernel is assigned
+   j->idct_block_kernel = stbi__idct_block;
+                        ^
+stb_image.h:3834:25: note: j->idct_block_kernel is overwritten
+   j->idct_block_kernel = stbi__idct_simd;
+                        ^
+stb_image.h:3835:27: style: Variable 'j->YCbCr_to_RGB_kernel' is reassigned a value before the old one has been used. [redundantAssignment]
+   j->YCbCr_to_RGB_kernel = stbi__YCbCr_to_RGB_simd;
+                          ^
+stb_image.h:3822:27: note: j->YCbCr_to_RGB_kernel is assigned
+   j->YCbCr_to_RGB_kernel = stbi__YCbCr_to_RGB_row;
+                          ^
+stb_image.h:3835:27: note: j->YCbCr_to_RGB_kernel is overwritten
+   j->YCbCr_to_RGB_kernel = stbi__YCbCr_to_RGB_simd;
+                          ^
+stb_image.h:3836:32: style: Variable 'j->resample_row_hv_2_kernel' is reassigned a value before the old one has been used. [redundantAssignment]
+   j->resample_row_hv_2_kernel = stbi__resample_row_hv_2_simd;
+                               ^
+stb_image.h:3823:32: note: j->resample_row_hv_2_kernel is assigned
+   j->resample_row_hv_2_kernel = stbi__resample_row_hv_2;
+                               ^
+stb_image.h:3836:32: note: j->resample_row_hv_2_kernel is overwritten
+   j->resample_row_hv_2_kernel = stbi__resample_row_hv_2_simd;
+                               ^
+stb_image.h:6998:29: style: Variable 'out_size' is assigned a value that is never used. [unreadVariable]
+                   out_size = layers * stride;
+                            ^
+stb_image.h:7006:31: style: Variable 'delays_size' is assigned a value that is never used. [unreadVariable]
+                  delays_size = layers * sizeof(int);
+                              ^
+stb_image.h:7012:25: style: Variable 'out_size' is assigned a value that is never used. [unreadVariable]
+               out_size = layers * stride;
+                        ^
+stb_image.h:7017:31: style: Variable 'delays_size' is assigned a value that is never used. [unreadVariable]
+                  delays_size = layers * sizeof(int);
+                              ^
+graphicstest.h:11:2: style: Class 'GraphicsTest' has a constructor with 1 argument that is not explicit. [noExplicitConstructor]
+ GraphicsTest(std::shared_ptr<Graphics> pGraphics) : m_pGraphics{ pGraphics } {}
+ ^
+main.cpp:12:0: style: The function 'wWinMain' is never used. [unusedFunction]
+
+^
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingIncludeSystem]
 
