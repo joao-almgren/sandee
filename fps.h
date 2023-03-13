@@ -17,7 +17,8 @@ public:
 	[[nodiscard]] unsigned int getFrameCount() const noexcept { return frameCount; }
 
 private:
-	double fps, averageFps;
+	double fps;
+	double averageFps;
 	unsigned int frameCount;
 	std::unique_ptr<class Timer> timer;
 };

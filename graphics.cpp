@@ -108,6 +108,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 	{
 		.Format = depthDesc.Format,
 		.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D,
+		.Flags = 0,
 		.Texture2D
 		{
 			.MipSlice = 0,
@@ -170,12 +171,15 @@ bool Graphics::loadTexture(const char * const filename, ID3D11Texture2D ** pText
 		},
 		.Usage = D3D11_USAGE_IMMUTABLE,
 		.BindFlags = D3D11_BIND_SHADER_RESOURCE,
+		.CPUAccessFlags = 0,
+		.MiscFlags = 0,
 	};
 
 	const D3D11_SUBRESOURCE_DATA textureSubresourceData
 	{
 		.pSysMem = textureBytes,
 		.SysMemPitch = 4 * static_cast<unsigned>(texWidth),
+		.SysMemSlicePitch = 0,
 	};
 
 	HRESULT hr = m_pDevice->CreateTexture2D(&textureDesc, &textureSubresourceData, pTexture);

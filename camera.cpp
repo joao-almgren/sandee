@@ -10,12 +10,11 @@ void Camera::setProjection(const float fov, const float aspectRatio, const float
 
 void Camera::rotate(const float dPitch, const float dYaw)
 {
-	const float pitchLimit = XM_PIDIV2 - 0.01f;
 	m_pitch += dPitch;
-	if (m_pitch > pitchLimit)
-		m_pitch = pitchLimit;
-	else if (m_pitch < -pitchLimit)
-		m_pitch = -pitchLimit;
+	if (m_pitch > XM_PIDIV2)
+		m_pitch = XM_PIDIV2;
+	else if (m_pitch < -XM_PIDIV2)
+		m_pitch = -XM_PIDIV2;
 
 	m_yaw += dYaw;
 	if (m_yaw > XM_2PI)

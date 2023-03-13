@@ -11,7 +11,8 @@
 #include "graphics.h"
 #include "graphicstest.h"
 
-using namespace DirectX;
+using Mouse = DirectX::Mouse;
+using Keyboard = DirectX::Keyboard;
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -52,7 +53,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 			case WM_KEYDOWN:
 				if (wParam == VK_ESCAPE)
 				{
-					PostMessageW(hWnd, WM_CLOSE, 0, 0);
+					PostMessage(hWnd, WM_CLOSE, 0, 0);
 					break;
 				}
 			case WM_KEYUP:
@@ -80,7 +81,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		.hIconSm = LoadIcon(hInstance, (LPCTSTR)IDI_APPLICATION),
 	};
 
-	if (!RegisterClassExW(&wc))
+	if (!RegisterClassEx(&wc))
 		return 0;
 
 	const int windowWidth = 800;
@@ -94,7 +95,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 	const auto windowOriginLeft = (GetSystemMetrics(SM_CXSCREEN) - adjustedWindowWidth) / 2;
 	const auto windowOriginTop = (GetSystemMetrics(SM_CYSCREEN) - adjustedWindowHeight) / 2;
 
-	const HWND hWnd = CreateWindowExW
+	const HWND hWnd = CreateWindowEx
 	(
 		WS_EX_OVERLAPPEDWINDOW,
 		windowTitle,
@@ -130,10 +131,10 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		return 0;
 
 	Camera camera;
-	camera.setProjection(3.14f / 2, windowWidth / static_cast<float>(windowHeight), 0.1f, 1000.0f);
+	camera.setProjection(DirectX::XM_PIDIV2, windowWidth / static_cast<float>(windowHeight), 0.1f, 1000.0f);
 	camera.moveForward(-3);
 
-	FpsCounter fpsCount;
+	FpsCounter fpsCounter;
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -151,15 +152,15 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		}
 		else
 		{
-			fpsCount.tick();
-			const float tick = 60.0f / static_cast<float>(fpsCount.getAverageFps());
+			fpsCounter.tick();
+			const float tick = 60.0f / static_cast<float>(fpsCounter.getAverageFps());
 
 			ImGui_ImplDX11_NewFrame();
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
 
 			ImGui::Begin("FPS");
-			ImGui::Text("%.1f fps", fpsCount.getAverageFps());
+			ImGui::Text("%.1f fps", fpsCounter.getAverageFps());
 			ImGui::End();
 
 			auto keyboardState = keyboard->GetState();

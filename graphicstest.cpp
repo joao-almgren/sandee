@@ -208,8 +208,12 @@ bool GraphicsTestImpl::load()
 		.AddressU = D3D11_TEXTURE_ADDRESS_BORDER,
 		.AddressV = D3D11_TEXTURE_ADDRESS_BORDER,
 		.AddressW = D3D11_TEXTURE_ADDRESS_BORDER,
+		.MipLODBias = 0,
+		.MaxAnisotropy = 0,
 		.ComparisonFunc = D3D11_COMPARISON_NEVER,
 		.BorderColor = { 0, 0, 0, 0 },
+		.MinLOD = 0,
+		.MaxLOD = 0,
 	};
 
 	hr = pDevice->CreateSamplerState(&samplerDesc, m_pSamplerState.put());
