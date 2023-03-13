@@ -3,11 +3,16 @@
 #include <memory>
 #include <Keyboard.h>
 #include <Mouse.h>
+#include "imgui.h"
+#include "backends/imgui_impl_win32.h"
+#include "backends/imgui_impl_dx11.h"
 #include "graphics.h"
 #include "camera.h"
 #include "graphicstest.h"
 #include "fps.h"
 using namespace DirectX;
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 int WINAPI wWinMain(
 	_In_ const HINSTANCE hInstance,
@@ -23,6 +28,9 @@ int WINAPI wWinMain(
 		.style = CS_HREDRAW | CS_VREDRAW,
 		.lpfnWndProc{ [](const HWND hWnd, const UINT message, const WPARAM wParam, const LPARAM lParam) -> LRESULT
 		{
+			if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+				return true;
+
 			switch (message)  // NOLINT(hicpp-multiway-paths-covered)
 			{
 			case WM_ACTIVATEAPP:
@@ -47,7 +55,7 @@ int WINAPI wWinMain(
 			case WM_KEYDOWN:
 				if (wParam == VK_ESCAPE)
 				{
-					PostMessage(hWnd, WM_CLOSE, 0, 0);
+					PostMessageW(hWnd, WM_CLOSE, 0, 0);
 					return 0;
 				}
 			case WM_KEYUP:
@@ -61,7 +69,7 @@ int WINAPI wWinMain(
 			default: ;
 			}
 
-			return DefWindowProc(hWnd, message, wParam, lParam);
+			return DefWindowProcW(hWnd, message, wParam, lParam);
 		}},
 		.hInstance = hInstance,
 		.lpszClassName = windowTitle,
@@ -103,7 +111,7 @@ int WINAPI wWinMain(
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
 	SetFocus(hWnd);
-	ShowCursor(FALSE);
+	ShowCursor(TRUE);
 
 	auto keyboard = std::make_unique<Keyboard>();
 	auto mouse = std::make_unique<Mouse>();
@@ -113,6 +121,13 @@ int WINAPI wWinMain(
 	Graphics graphics;
 	if (!graphics.initialize(hWnd, windowWidth, windowHeight))
 		return 0;
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::GetIO();
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(hWnd);
+	ImGui_ImplDX11_Init(graphics.getDevice().get(), graphics.getDeviceContext().get());
 
 	GraphicsTest graphicsTest(std::make_shared<Graphics>(graphics));
 	if (!graphicsTest.load())
@@ -134,9 +149,17 @@ int WINAPI wWinMain(
 		}
 		else
 		{
+			ImGui_ImplDX11_NewFrame();
+			ImGui_ImplWin32_NewFrame();
+			ImGui::NewFrame();
+
 			// tick
 			{
 				const float tick = 60.0f / static_cast<float>(fpsCount.getAverageFps());
+
+				ImGui::Begin("FPS");
+				ImGui::Text("%.1f fps", fpsCount.getAverageFps());
+				ImGui::End();
 
 				auto keyboardState = keyboard->GetState();
 				auto mouseState = mouse->GetState();
@@ -167,9 +190,17 @@ int WINAPI wWinMain(
 
 			graphicsTest.draw(camera);
 
+			ImGui::EndFrame();
+			ImGui::Render();
+			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
 			graphics.present();
 		}
 	}
+
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 	return 0;
 }
