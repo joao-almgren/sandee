@@ -45,6 +45,11 @@ int WINAPI wWinMain(
 				Mouse::ProcessMessage(message, wParam, lParam);
 				break;
 			case WM_KEYDOWN:
+				if (wParam == VK_ESCAPE)
+				{
+					PostMessage(hWnd, WM_CLOSE, 0, 0);
+					return 0;
+				}
 			case WM_KEYUP:
 			case WM_SYSKEYUP:
 			case WM_SYSKEYDOWN:
@@ -139,8 +144,6 @@ int WINAPI wWinMain(
 				camera.rotate(static_cast<float>(mouseState.y) / 300.0f, static_cast<float>(-mouseState.x) / 300.0f);
 
 				float speed = 0.05f * tick;
-				if (keyboardState.Escape)
-					PostMessage(hWnd, WM_CLOSE, 0, 0);
 				if (keyboardState.D || keyboardState.Right)
 					camera.moveRight(speed);
 				else if (keyboardState.A || keyboardState.Left)

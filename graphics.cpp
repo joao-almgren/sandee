@@ -3,6 +3,9 @@
 #pragma comment(lib, "d3dcompiler.lib")
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "imgui.h"
+#include "backends/imgui_impl_win32.h"
+#include "backends/imgui_impl_dx11.h"
 
 bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int windowHeight)
 {
@@ -130,11 +133,26 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 
 	m_pDeviceContext->RSSetViewports(1, viewport);
 
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(hWnd);
+	ImGui_ImplDX11_Init(m_pDevice.get(), m_pDeviceContext.get());
+
 	return true;
 }
 
 void Graphics::present() const
 {
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	ImGui::Begin("Debug");
+	ImGui::Text("Hello world");
+	ImGui::End();
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
 	m_pSwapChain->Present(1, 0);
 }
 
