@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sandee", "sandee.vcxproj", "{EBDE4654-E57D-41C6-B84C-55819E4AFCD0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sandeeTest", "sandeeTest\sandeeTest.vcxproj", "{DDB452B2-00DC-4AB9-9335-139E3556C2EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{EBDE4654-E57D-41C6-B84C-55819E4AFCD0}.Release|x64.Build.0 = Release|x64
 		{EBDE4654-E57D-41C6-B84C-55819E4AFCD0}.Release|x86.ActiveCfg = Release|Win32
 		{EBDE4654-E57D-41C6-B84C-55819E4AFCD0}.Release|x86.Build.0 = Release|Win32
+		{DDB452B2-00DC-4AB9-9335-139E3556C2EC}.Debug|x64.ActiveCfg = Debug|x64
+		{DDB452B2-00DC-4AB9-9335-139E3556C2EC}.Debug|x64.Build.0 = Debug|x64
+		{DDB452B2-00DC-4AB9-9335-139E3556C2EC}.Debug|x86.ActiveCfg = Debug|Win32
+		{DDB452B2-00DC-4AB9-9335-139E3556C2EC}.Debug|x86.Build.0 = Debug|Win32
+		{DDB452B2-00DC-4AB9-9335-139E3556C2EC}.Release|x64.ActiveCfg = Release|x64
+		{DDB452B2-00DC-4AB9-9335-139E3556C2EC}.Release|x64.Build.0 = Release|x64
+		{DDB452B2-00DC-4AB9-9335-139E3556C2EC}.Release|x86.ActiveCfg = Release|Win32
+		{DDB452B2-00DC-4AB9-9335-139E3556C2EC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
