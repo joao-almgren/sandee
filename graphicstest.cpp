@@ -181,7 +181,7 @@ bool GraphicsTestImpl::load()
 		return false;
 
 	winrt::com_ptr<ID3DBlob> pVertexBlob = nullptr;
-	hr = D3DReadFileToBlob(L"vertextest.cso", pVertexBlob.put());
+	hr = D3DReadFileToBlob(L"res\\vertextest.cso", pVertexBlob.put());
 	if (FAILED(hr))
 		return false;
 
@@ -194,7 +194,7 @@ bool GraphicsTestImpl::load()
 		return false;
 
 	winrt::com_ptr<ID3DBlob> pPixelBlob = nullptr;
-	hr = D3DReadFileToBlob(L"pixeltest.cso", pPixelBlob.put());
+	hr = D3DReadFileToBlob(L"res\\pixeltest.cso", pPixelBlob.put());
 	if (FAILED(hr))
 		return false;
 
@@ -220,7 +220,7 @@ bool GraphicsTestImpl::load()
 	if (FAILED(hr))
 		return false;
 
-	if (!m_pGraphics->loadTexture("cliff_03_v1.tga", m_pTexture.put(), m_pTextureView.put()))
+	if (!m_pGraphics->loadTexture("res\\cliff_03_v1.tga", m_pTexture.put(), m_pTextureView.put()))
 		return false;
 
 	return true;
