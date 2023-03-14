@@ -18,7 +18,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*hPrevInstance*/, _In_ const LPWSTR /*lpCmdLine*/, _In_ const int /*nShowCmd*/)
 {
-	const auto windowTitle = L"D3D11Test";
+	const auto windowTitle = L"sandee";
 
 	const WNDCLASSEX wc
 	{

@@ -10,53 +10,58 @@ class Array
 public:
 	[[nodiscard]] Type* data()
 	{
-		return vec.data();
+		return m_vector.data();
 	}
 
 	[[nodiscard]] size_t size() const
 	{
-		return vec.size();
+		return m_vector.size();
 	}
 
 	[[nodiscard]] Type& operator[](const size_t index)
 	{
-		hash.clear(); // TODO: maybe erase item instead
-		return vec[index];
+		auto value = m_vector[index];
+		auto iterator = m_hash.find(value);
+		if (iterator != m_hash.end())
+			m_hash.erase(iterator);
+
+		return value;
 	}
 
 	void clear()
 	{
-		vec.clear();
-		hash.clear();
+		m_vector.clear();
+		m_hash.clear();
 	}
 
 	size_t append(const Type& value)
 	{
-		const size_t i = vec.size();
-		vec.push_back(value);
-		return i;
+		const size_t index = m_vector.size();
+		m_vector.push_back(value);
+
+		return index;
 	}
 
 	size_t append(const std::initializer_list<Type>& list)
 	{
-		const size_t i = vec.size();
+		const size_t index = m_vector.size();
 		for (const Type& value : list)
-			vec.push_back(value);
+			m_vector.push_back(value);
 
-		return i;
+		return index;
 	}
 
 	[[nodiscard]] std::optional<size_t> find(const Type& value)
 	{
-		auto iter = hash.find(value);
-		if (iter != hash.end())
-			return iter->second;
+		auto iterator = m_hash.find(value);
+		if (iterator != m_hash.end())
+			return iterator->second;
 
-		const size_t s = vec.size();
-		for (size_t i = 0; i < s; i++)
-			if (value == vec[i])
+		const size_t size = m_vector.size();
+		for (size_t i = 0; i < size; i++)
+			if (value == m_vector[i])
 			{
-				hash.insert({ value, i });
+				m_hash.insert({ value, i });
 				return i;
 			}
 
@@ -65,14 +70,14 @@ public:
 
 	size_t appendAbsent(const Type& value)
 	{
-		const std::optional<size_t> i = find(value);
-		if (i.has_value())
-			return i.value();
+		const auto index = find(value);
+		if (index.has_value())
+			return index.value();
 
 		return append(value);
 	}
 
 private:
-	std::vector<Type> vec;
-	std::map<Type, size_t> hash;
+	std::vector<Type> m_vector;
+	std::map<Type, size_t> m_hash;
 };

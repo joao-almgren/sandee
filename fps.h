@@ -12,13 +12,13 @@ public:
 	~FpsCounter();
 
 	void tick();
-	[[nodiscard]] double getFps() const noexcept { return fps; }
-	[[nodiscard]] double getAverageFps() const noexcept { return averageFps; }
-	[[nodiscard]] unsigned int getFrameCount() const noexcept { return frameCount; }
+	[[nodiscard]] double getFps() const noexcept { return m_fps; }
+	[[nodiscard]] double getAverageFps() const noexcept { return m_avgFps; }
+	[[nodiscard]] unsigned int getFrameCount() const noexcept { return m_frameCount; }
 
 private:
-	double fps;
-	double averageFps;
-	unsigned int frameCount;
-	std::unique_ptr<class Timer> timer;
+	double m_fps;
+	double m_avgFps;
+	unsigned int m_frameCount;
+	std::unique_ptr<class Timer> m_timer;
 };

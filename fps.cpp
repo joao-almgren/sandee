@@ -28,10 +28,10 @@ private:
 };
 
 FpsCounter::FpsCounter()
-	: fps{ 60 }
-	, averageFps{ 60 }
-	, frameCount{ 0 }
-	, timer{ std::make_unique<Timer>() }
+	: m_fps{ 60 }
+	, m_avgFps{ 60 }
+	, m_frameCount{ 0 }
+	, m_timer{ std::make_unique<Timer>() }
 {
 }
 
@@ -39,16 +39,16 @@ FpsCounter::~FpsCounter() = default;
 
 void FpsCounter::tick()
 {
-	frameCount++;
+	m_frameCount++;
 
-	if (timer->value() >= 1000000)
+	if (m_timer->value() >= 1000000)
 	{
-		fps = frameCount;
+		m_fps = m_frameCount;
 
 		const double alpha = 0.25; // TODO: consider making this configurable
-		averageFps = alpha * averageFps + (1.0 - alpha) * frameCount;
+		m_avgFps = alpha * m_avgFps + (1.0 - alpha) * m_frameCount;
 
-		frameCount = 0;
-		timer->reset();
+		m_frameCount = 0;
+		m_timer->reset();
 	}
 }
