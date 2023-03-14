@@ -12,9 +12,12 @@ namespace sandeeTest
 		TEST_METHOD(appendAbsent)
 		{
 			Array<int> array;
-			array.appendAbsent(1);
-			array.appendAbsent(1);
-			Assert::AreEqual(static_cast<size_t>(1), array.size());
+			array.appendAbsent(42);
+			array.appendAbsent(42);
+			Assert::AreEqual(1ULL, array.size());
+
+			array[0] = 7;
+			Assert::AreEqual(1ULL, array.size());
 		}
 	};
 }

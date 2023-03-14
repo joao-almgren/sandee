@@ -20,12 +20,11 @@ public:
 
 	[[nodiscard]] Type& operator[](const size_t index)
 	{
-		auto value = m_vector[index];
-		auto iterator = m_hash.find(value);
+		auto iterator = m_hash.find(m_vector[index]);
 		if (iterator != m_hash.end())
 			m_hash.erase(iterator);
 
-		return value;
+		return m_vector[index];
 	}
 
 	void clear()
