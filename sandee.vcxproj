@@ -73,19 +73,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
-    <IncludePath>C:\Dev\stb;C:\Dev\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Dev\rapidobj\include\rapidobj;C:\Dev\stb;C:\Dev\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
-    <IncludePath>C:\Dev\stb;C:\Dev\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Dev\rapidobj\include\rapidobj;C:\Dev\stb;C:\Dev\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
-    <IncludePath>C:\Dev\stb;C:\Dev\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Dev\rapidobj\include\rapidobj;C:\Dev\stb;C:\Dev\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
-    <IncludePath>C:\Dev\stb;C:\Dev\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Dev\rapidobj\include\rapidobj;C:\Dev\stb;C:\Dev\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -163,6 +163,7 @@
     <ClCompile Include="fps.cpp" />
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="graphicstest.cpp" />
+    <ClCompile Include="lwotest.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,12 +172,14 @@
     <ClInclude Include="..\imgui\imconfig.h" />
     <ClInclude Include="..\imgui\imgui.h" />
     <ClInclude Include="..\imgui\imgui_internal.h" />
+    <ClInclude Include="..\rapidobj\include\rapidobj\rapidobj.hpp" />
     <ClInclude Include="..\stb\stb_image.h" />
     <ClInclude Include="array.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="fps.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="graphicstest.h" />
+    <ClInclude Include="lwotest.h" />
     <ClInclude Include="random.h" />
   </ItemGroup>
   <ItemGroup>

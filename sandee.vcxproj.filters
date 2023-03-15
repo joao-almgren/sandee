@@ -18,6 +18,9 @@
     <Filter Include="stb">
       <UniqueIdentifier>{25987a3f-8b66-4d4f-ba77-929d3e5a0195}</UniqueIdentifier>
     </Filter>
+    <Filter Include="rapidobj">
+      <UniqueIdentifier>{07014a99-8e82-40ba-bdfa-589c88eb1e85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -56,6 +59,9 @@
     <ClCompile Include="..\imgui\imgui_demo.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="lwotest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics.h">
@@ -92,6 +98,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rapidobj\include\rapidobj\rapidobj.hpp">
+      <Filter>rapidobj</Filter>
+    </ClInclude>
+    <ClInclude Include="lwotest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

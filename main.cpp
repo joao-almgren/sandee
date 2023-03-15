@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "graphics.h"
 #include "graphicstest.h"
+#include "lwotest.h"
 
 using Mouse = DirectX::Mouse;
 using Keyboard = DirectX::Keyboard;
@@ -75,7 +76,8 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		.hInstance = hInstance,
 		.hIcon = LoadIcon(hInstance, (LPCTSTR)IDI_APPLICATION),
 		.hCursor = LoadCursor(nullptr, IDC_ARROW),
-		.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1),
+		// ReSharper disable once CppCStyleCast
+		.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1), // NOLINT(performance-no-int-to-ptr)
 		.lpszMenuName = nullptr,
 		.lpszClassName = windowTitle,
 		.hIconSm = LoadIcon(hInstance, (LPCTSTR)IDI_APPLICATION),
@@ -128,6 +130,10 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 
 	GraphicsTest graphicsTest(std::make_shared<Graphics>(graphics));
 	if (!graphicsTest.load())
+		return 0;
+
+	LwoTest lwoTest(std::make_shared<Graphics>(graphics));
+	if (!lwoTest.load())
 		return 0;
 
 	Camera camera;
@@ -198,11 +204,13 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 			camera.resetView();
 
 			graphicsTest.update(tick);
+			lwoTest.update(tick);
 
 			graphics.resetRenderTarget();
 			graphics.clearScreen({ 0.5, 0, 0.5, 0 });
 
 			graphicsTest.draw(camera);
+			lwoTest.draw(camera);
 
 			ImGui::EndFrame();
 			ImGui::Render();
