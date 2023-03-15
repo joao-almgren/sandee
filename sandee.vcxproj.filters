@@ -114,6 +114,12 @@
     <FxCompile Include="pixeltest.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
+    <FxCompile Include="pixellwo.hlsl">
+      <Filter>Shader Files</Filter>
+    </FxCompile>
+    <FxCompile Include="vertexlwo.hlsl">
+      <Filter>Shader Files</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

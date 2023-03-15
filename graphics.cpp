@@ -55,7 +55,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 	const D3D11_RASTERIZER_DESC rasterizerDesc
 	{
 		.FillMode = D3D11_FILL_SOLID,
-		.CullMode = D3D11_CULL_BACK,
+		.CullMode = D3D11_CULL_NONE,
 		.FrontCounterClockwise = TRUE,
 		.DepthBias = 0,
 		.DepthBiasClamp = 0.0f,

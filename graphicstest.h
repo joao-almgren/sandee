@@ -14,8 +14,8 @@ public:
 	~GraphicsTest();
 
 	[[nodiscard]] bool load() const;
-	void draw(const Camera & camera) const;
 	void update(float tick) const;
+	void draw(const Camera & camera) const;
 
 private:
 	std::unique_ptr<class GraphicsTestImpl> m_pImpl{ nullptr };

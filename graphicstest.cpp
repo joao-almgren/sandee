@@ -104,8 +104,8 @@ public:
 	~GraphicsTestImpl() = default;
 
 	[[nodiscard]] bool load();
-	void draw(const Camera& camera) const;
 	void update(float tick);
+	void draw(const Camera& camera) const;
 
 private:
 	std::shared_ptr<Graphics> m_pGraphics{ nullptr };
@@ -289,12 +289,12 @@ bool GraphicsTest::load() const
 	return m_pImpl->load();
 }
 
-void GraphicsTest::draw(const Camera& camera) const
-{
-	m_pImpl->draw(camera);
-}
-
 void GraphicsTest::update(const float tick) const
 {
 	m_pImpl->update(tick);
+}
+
+void GraphicsTest::draw(const Camera& camera) const
+{
+	m_pImpl->draw(camera);
 }

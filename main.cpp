@@ -210,7 +210,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 			graphics.resetRenderTarget();
 			graphics.clearScreen({ 0.5, 0, 0.5, 0 });
 
-			graphicsTest.draw(camera);
+			//graphicsTest.draw(camera);
 			lwoTest.draw(camera);
 
 			ImGui::EndFrame();
