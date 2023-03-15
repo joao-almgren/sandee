@@ -1,6 +1,7 @@
 #pragma once
-#include <d3d11.h>
 #include <winrt/base.h>
+#define NOMINMAX
+#include <d3d11.h>
 
 class Graphics
 {

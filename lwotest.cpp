@@ -1,7 +1,8 @@
 #include "lwotest.h"
-#include <winrt/base.h>
-#include <d3d11.h>
 #include "rapidobj.hpp"
+#include <winrt/base.h>
+#define NOMINMAX
+#include <d3d11.h>
 
 namespace
 {

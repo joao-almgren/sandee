@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
 #include <initializer_list>
 #include <optional>
+#include <vector>
 #include <map>
 
 template <typename Type>
