@@ -55,7 +55,7 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 	const D3D11_RASTERIZER_DESC rasterizerDesc
 	{
 		.FillMode = D3D11_FILL_SOLID,
-		.CullMode = D3D11_CULL_NONE,
+		.CullMode = D3D11_CULL_BACK,
 		.FrontCounterClockwise = TRUE,
 		.DepthBias = 0,
 		.DepthBiasClamp = 0.0f,
@@ -142,7 +142,7 @@ void Graphics::present() const
 void Graphics::resetRenderTarget() const
 {
 	ID3D11RenderTargetView * pTargets[]{ m_pRenderTarget.get() };
-	m_pDeviceContext->OMSetRenderTargets(1, pTargets, nullptr);
+	m_pDeviceContext->OMSetRenderTargets(1, pTargets, m_pDepthStencilView.get());
 }
 
 void Graphics::clearScreen(const float (& color)[4]) const

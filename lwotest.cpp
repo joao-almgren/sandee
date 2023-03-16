@@ -72,22 +72,23 @@ bool LwoTestImpl::load()
 	std::unique_ptr<Vertex> vertices(new Vertex[numVertices]);
 
 	Vertex * pVertices = vertices.get();
-	for (size_t i = 0; i < numVertices; i += 3)
+	for (size_t i = 0; i < static_cast<size_t>(numVertices) * 3; i += 3)
 	{
-		const size_t vertexIndex = i / 3;
-		pVertices[vertexIndex].position.x = result.attributes.positions[i];
-		pVertices[vertexIndex].position.y = result.attributes.positions[i + 1];
-		pVertices[vertexIndex].position.z = result.attributes.positions[i + 2];
+		size_t index = i / 3;
+		pVertices[index].position.x = result.attributes.positions[i];
+		pVertices[index].position.y = result.attributes.positions[i + 1];
+		pVertices[index].position.z = result.attributes.positions[i + 2];
 	}
 
 	m_numIndices = static_cast<UINT>(result.shapes[0].mesh.indices.size());
-	std::unique_ptr<WORD> indices(new WORD[m_numIndices]);
+	std::unique_ptr<DWORD> indices(new DWORD[m_numIndices]);
 
-	WORD * pIndices = indices.get();
+	DWORD * pIndices = indices.get();
 	for (size_t i = 0; i < m_numIndices; i++)
 	{
-		pIndices[i] = result.shapes[0].mesh.indices[0].position_index;
-		const size_t normalIndex = result.shapes[0].mesh.indices[0].normal_index * 3;
+		pIndices[i] = result.shapes[0].mesh.indices[i].position_index;
+
+		const size_t normalIndex = result.shapes[0].mesh.indices[i].normal_index * 3;
 		pVertices[pIndices[i]].normal.x = result.attributes.normals[normalIndex];
 		pVertices[pIndices[i]].normal.y = result.attributes.normals[normalIndex + 1];
 		pVertices[pIndices[i]].normal.z = result.attributes.normals[normalIndex + 2];
@@ -97,12 +98,12 @@ bool LwoTestImpl::load()
 
 	const D3D11_BUFFER_DESC vertexBufferDesc
 	{
-		.ByteWidth = sizeof(Vertex) * numVertices,
+		.ByteWidth = static_cast<UINT>(sizeof(Vertex)) * numVertices,
 		.Usage = D3D11_USAGE_DEFAULT,
 		.BindFlags = D3D11_BIND_VERTEX_BUFFER,
 		.CPUAccessFlags = 0,
 		.MiscFlags = 0,
-		.StructureByteStride = sizeof(Vertex),
+		.StructureByteStride = static_cast<UINT>(sizeof(Vertex)),
 	};
 
 	const D3D11_SUBRESOURCE_DATA vertexSubresourceData
@@ -118,12 +119,12 @@ bool LwoTestImpl::load()
 
 	const D3D11_BUFFER_DESC indexBufferDesc
 	{
-		.ByteWidth = sizeof(WORD) * m_numIndices,
+		.ByteWidth = static_cast<UINT>(sizeof(DWORD)) * m_numIndices,
 		.Usage = D3D11_USAGE_DEFAULT,
 		.BindFlags = D3D11_BIND_INDEX_BUFFER,
 		.CPUAccessFlags = 0,
 		.MiscFlags = 0,
-		.StructureByteStride = sizeof(WORD),
+		.StructureByteStride = static_cast<UINT>(sizeof(DWORD)),
 	};
 
 	const D3D11_SUBRESOURCE_DATA indexSubresourceData
@@ -211,7 +212,7 @@ void LwoTestImpl::draw(const Camera& camera) const
 	ID3D11Buffer* const vertexBuffers[numVertexBuffers]{ m_pVertexBuffer.get() };
 	pDeviceContext->IASetVertexBuffers(0, numVertexBuffers, vertexBuffers, vertexStrides, vertexOffsets);
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.get(), DXGI_FORMAT_R16_UINT, 0);
+	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.get(), DXGI_FORMAT_R32_UINT, 0);
 	pDeviceContext->IASetInputLayout(m_pInputLayout.get());
 
 	pDeviceContext->DrawIndexed(m_numIndices, 0, 0);
