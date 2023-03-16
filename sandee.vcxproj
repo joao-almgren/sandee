@@ -176,6 +176,7 @@
     <ClInclude Include="..\stb\stb_image.h" />
     <ClInclude Include="array.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="fps.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="graphicstest.h" />
@@ -280,6 +281,7 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="packages\directxtk_desktop_win10.2023.2.7.1\build\native\directxtk_desktop_win10.targets" Condition="Exists('packages\directxtk_desktop_win10.2023.2.7.1\build\native\directxtk_desktop_win10.targets')" />
     <Import Project="packages\directxtex_desktop_win10.2023.1.31.1\build\native\directxtex_desktop_win10.targets" Condition="Exists('packages\directxtex_desktop_win10.2023.1.31.1\build\native\directxtex_desktop_win10.targets')" />
+    <Import Project="packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets" Condition="Exists('packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -287,5 +289,6 @@
     </PropertyGroup>
     <Error Condition="!Exists('packages\directxtk_desktop_win10.2023.2.7.1\build\native\directxtk_desktop_win10.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_win10.2023.2.7.1\build\native\directxtk_desktop_win10.targets'))" />
     <Error Condition="!Exists('packages\directxtex_desktop_win10.2023.1.31.1\build\native\directxtex_desktop_win10.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtex_desktop_win10.2023.1.31.1\build\native\directxtex_desktop_win10.targets'))" />
+    <Error Condition="!Exists('packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\nlohmann.json.3.11.2\build\native\nlohmann.json.targets'))" />
   </Target>
 </Project>

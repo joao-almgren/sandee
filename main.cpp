@@ -3,15 +3,16 @@
 #include <Windows.h>
 #include <Keyboard.h>
 #include <Mouse.h>
-#include <memory>
 #include "imgui.h"
 #include "backends/imgui_impl_win32.h"
 #include "backends/imgui_impl_dx11.h"
+#include <memory>
 #include "fps.h"
 #include "camera.h"
 #include "graphics.h"
 #include "graphicstest.h"
 #include "lwotest.h"
+#include "config.h"
 
 using Mouse = DirectX::Mouse;
 using Keyboard = DirectX::Keyboard;
@@ -87,8 +88,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 	if (!RegisterClassEx(&wc))
 		return 0;
 
-	const int windowWidth = 800;
-	const int windowHeight = 600;
+	const auto [windowWidth, windowHeight] = readConfig();
 
 	RECT windowRect{ .right = windowWidth, .bottom = windowHeight };
 	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, FALSE, WS_EX_OVERLAPPEDWINDOW);
@@ -138,7 +138,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		return 0;
 
 	Camera camera;
-	camera.setProjection(DirectX::XM_PIDIV2, windowWidth / static_cast<float>(windowHeight), 0.1f, 1000.0f);
+	camera.setProjection(DirectX::XM_PIDIV2, static_cast<float>(windowWidth) / static_cast<float>(windowHeight), 0.1f, 1000.0f);
 	camera.moveForward(-3);
 
 	FpsCounter fpsCounter;
