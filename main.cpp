@@ -88,7 +88,12 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 	if (!RegisterClassEx(&wc))
 		return 0;
 
-	const auto [windowWidth, windowHeight] = readConfig();
+	Config cfg{};
+	if (!cfg.load())
+		return 0;
+
+	const int windowWidth = cfg.width;
+	const int windowHeight = cfg.height;
 
 	RECT windowRect{ .right = windowWidth, .bottom = windowHeight };
 	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, FALSE, WS_EX_OVERLAPPEDWINDOW);
