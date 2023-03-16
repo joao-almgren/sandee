@@ -57,6 +57,7 @@ private:
 	winrt::com_ptr<ID3D11InputLayout> m_pInputLayout{ nullptr };
 	winrt::com_ptr<ID3D11PixelShader> m_pPixelShader{ nullptr };
 	UINT m_numIndices{ 0 };
+	float m_worldAngle{ 0 };
 };
 
 bool LwoTestImpl::load()
@@ -177,15 +178,16 @@ bool LwoTestImpl::load()
 	return true;
 }
 
-void LwoTestImpl::update(const float /*tick*/)
+void LwoTestImpl::update(const float tick)
 {
+	m_worldAngle = (m_worldAngle < 2 * XM_PI) ? m_worldAngle + XM_PI * 0.005f * tick : 0;
 }
 
 void LwoTestImpl::draw(const Camera& camera) const
 {
 	const auto pDeviceContext = m_pGraphics->getDeviceContext();
 	
-	const Matrix world = Matrix::Identity;
+	const Matrix world = Matrix::CreateRotationY(m_worldAngle);
 
 	const ConstantBuffer constantBuffer
 	{

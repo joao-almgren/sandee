@@ -20,14 +20,16 @@ bool Config::load()
 		return false;
 
 	const unique_ptr<char> buffer(new char[numBytes + 1]);
-	if (fread(buffer.get(), sizeof(char), numBytes, infile))
+	char * const pBuffer = buffer.get();
+	const size_t bytesRead = fread(pBuffer, sizeof(char), numBytes, infile);
+	if (!bytesRead)
 		return false;
 
 	if (fclose(infile))
 		return false;
 
-	buffer.get()[numBytes] = 0;
-	json data = json::parse(buffer.get());
+	pBuffer[bytesRead] = 0;
+	json data = json::parse(pBuffer);
 
 	width = data["width"].get<int>();
 	height = data["height"].get<int>();

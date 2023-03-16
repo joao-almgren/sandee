@@ -16,7 +16,7 @@ struct VsInput
 struct VsOutput
 {
 	float4 pos : SV_Position;
-	float3 norm : NORMAL;
+	float4 norm : NORMAL;
 };
 
 VsOutput main(const VsInput input)
@@ -25,6 +25,6 @@ VsOutput main(const VsInput input)
 	output.pos = mul(float4(input.pos.xyz, 1), world);
 	output.pos = mul(output.pos, view);
 	output.pos = mul(output.pos, projection);
-	output.norm = mul(float4(input.norm, 1), world).xyz;
+	output.norm = normalize(mul(float4(input.norm.xyz, 1), world));
 	return output;
 }

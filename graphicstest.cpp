@@ -236,7 +236,7 @@ void GraphicsTestImpl::draw(const Camera & camera) const
 {
 	const auto pDeviceContext = m_pGraphics->getDeviceContext();
 
-	const Matrix world = Matrix::CreateFromYawPitchRoll(0, m_worldAngle, m_worldAngle);
+	const Matrix world = Matrix::CreateScale(0.25f) * Matrix::CreateTranslation(2, 0, 0) * Matrix::CreateFromYawPitchRoll(m_worldAngle, m_worldAngle, m_worldAngle);
 
 	const ConstantBuffer constantBuffer
 	{
