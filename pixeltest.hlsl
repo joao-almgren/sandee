@@ -23,6 +23,5 @@ float4 main(const PsInput input) : SV_Target
 	float light = saturate(dot(input.norm, lightDirection));
 	float4 diffuse = myTexture.Sample(mySampler, input.uv);
 	float3 color = 0.5 * (input.col.xyz + diffuse.xyz) * light;
-	return float4(input.norm.xyz, 1);
 	return float4(color.xyz, 1);
 }

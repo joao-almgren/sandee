@@ -25,6 +25,6 @@ VsOutput main(const VsInput input)
 	output.pos = mul(float4(input.pos.xyz, 1), world);
 	output.pos = mul(output.pos, view);
 	output.pos = mul(output.pos, projection);
-	output.norm = normalize(mul(float4(input.norm.xyz, 1), world));
+	output.norm = normalize(mul(float4(input.norm.xyz, 0), world));
 	return output;
 }
