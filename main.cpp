@@ -76,7 +76,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		.cbClsExtra = 0,
 		.cbWndExtra = 0,
 		.hInstance = hInstance,
-		.hIcon = LoadIcon(hInstance, (LPCTSTR)IDI_APPLICATION),
+		.hIcon = LoadIcon(hInstance, IDI_APPLICATION),
 		.hCursor = LoadCursor(nullptr, IDC_ARROW),
 		// ReSharper disable once CppCStyleCast
 		.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1), // NOLINT(performance-no-int-to-ptr)
@@ -88,12 +88,12 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 	if (!RegisterClassEx(&wc))
 		return 0;
 
-	Config cfg{};
-	if (!cfg.load())
+	Config config{};
+	if (!config.load())
 		return 0;
 
-	const int windowWidth = cfg.width;
-	const int windowHeight = cfg.height;
+	const int windowWidth = config.width;
+	const int windowHeight = config.height;
 
 	RECT windowRect{ .right = windowWidth, .bottom = windowHeight };
 	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, FALSE, WS_EX_OVERLAPPEDWINDOW);

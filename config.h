@@ -7,5 +7,5 @@ public:
 	int height;
 	bool windowed;
 
-	bool load();
+	[[nodiscard]] bool load();
 };
