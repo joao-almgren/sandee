@@ -15,6 +15,6 @@ struct PsInput
 
 float4 main(const PsInput input) : SV_Target
 {
-	float light = saturate(dot(input.norm, lightDirection));
+	float light = saturate(dot(input.norm.xyz, lightDirection));
 	return float4(light, light, light, 1);
 }

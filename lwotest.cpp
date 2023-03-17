@@ -187,7 +187,7 @@ void LwoTestImpl::draw(const Camera& camera) const
 {
 	const auto pDeviceContext = m_pGraphics->getDeviceContext();
 	
-	const Matrix world = Matrix::CreateRotationY(m_worldAngle);
+	const Matrix world = Matrix::CreateScale(3) * Matrix::CreateRotationY(m_worldAngle) * Matrix::CreateTranslation(0, -2, 0);
 
 	const ConstantBuffer constantBuffer
 	{

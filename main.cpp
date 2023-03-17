@@ -144,7 +144,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 
 	Camera camera;
 	camera.setProjection(DirectX::XM_PIDIV2, static_cast<float>(windowWidth) / static_cast<float>(windowHeight), 0.1f, 1000.0f);
-	camera.moveForward(-3);
+	camera.move(0, 0, -8);
 
 	FpsCounter fpsCounter;
 
@@ -190,24 +190,25 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 
 			if (mouseState.positionMode == Mouse::MODE_RELATIVE)
 			{
-				camera.rotate(static_cast<float>(mouseState.y) / 300.0f, static_cast<float>(mouseState.x) / 300.0f);
+				camera.rotate(static_cast<float>(-mouseState.y) / 300.0f, static_cast<float>(-mouseState.x) / 300.0f);
 			}
 
 			float speed = 0.05f * tick;
+			float move[3]{0, 0, 0};
 			if (keyboardState.D || keyboardState.Right)
-				camera.moveRight(speed);
+				move[0] = -speed;
 			else if (keyboardState.A || keyboardState.Left)
-				camera.moveRight(-speed);
+				move[0] = speed;
 			if (keyboardState.W || keyboardState.Up)
-				camera.moveForward(speed);
+				move[2] = speed;
 			else if (keyboardState.S || keyboardState.Down)
-				camera.moveForward(-speed);
+				move[2] = -speed;
 			if (keyboardState.Q)
-				camera.moveUp(speed);
+				move[1] = speed;
 			else if (keyboardState.Z)
-				camera.moveUp(-speed);
+				move[1] = -speed;
 
-			camera.resetView();
+			camera.move(move[0], move[1], move[2]);
 
 			graphicsTest.update(tick);
 			lwoTest.update(tick);

@@ -11,10 +11,9 @@ void Camera::setProjection(const float fov, const float aspectRatio, const float
 void Camera::rotate(const float dPitch, const float dYaw)
 {
 	m_pitch += dPitch;
-	if (m_pitch > XM_PIDIV2)
-		m_pitch = XM_PIDIV2;
-	else if (m_pitch < -XM_PIDIV2)
-		m_pitch = -XM_PIDIV2;
+	const float pitchLimit = XM_PIDIV2 - 0.01f;
+	m_pitch = std::max(-pitchLimit, m_pitch);
+	m_pitch = std::min(+pitchLimit, m_pitch);
 
 	m_yaw += dYaw;
 	if (m_yaw > XM_2PI)
@@ -22,36 +21,19 @@ void Camera::rotate(const float dPitch, const float dYaw)
 	if (m_yaw < 0)
 		m_yaw += XM_2PI;
 
-	const Matrix matY = Matrix::CreateRotationY(m_yaw);
-	const Matrix matX = Matrix::CreateRotationX(m_pitch);
-	const Matrix matRot = matY * matX;
-	m_direction = matRot.Forward();
+	const float y = sinf(m_pitch);
+	const float r = cosf(m_pitch);
+	const float z = r * cosf(m_yaw);
+	const float x = r * sinf(m_yaw);
 
-	resetView();
-
-	m_right = m_view.Right();
-	m_up = m_view.Up();
-	m_direction = m_view.Forward();
+	const Vector3 target = m_position + Vector3(x, y, z);
+	m_view = Matrix::CreateLookAt(m_position, target, Vector3::Up);
 }
 
-void Camera::resetView()
+void Camera::move(const float dX, const float dY, const float dZ)
 {
-	const Vector3 at(m_position + m_direction);
-	const Vector3 up(0, 1, 0);
-	m_view = Matrix::CreateLookAt(m_position, at, up);
-}
-
-void Camera::moveRight(const float scale)
-{
-	m_position += scale * m_right;
-}
-
-void Camera::moveForward(const float scale)
-{
-	m_position += scale * m_direction;
-}
-
-void Camera::moveUp(const float scale)
-{
-	m_position += scale * m_up;
+	const Quaternion q = Quaternion::CreateFromYawPitchRoll(m_yaw, m_pitch, 0);
+	const Vector3 move = Vector3::Transform(Vector3(dX, dY, dZ), q);
+	m_position += move;
+	rotate(0, 0);
 }

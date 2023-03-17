@@ -12,14 +12,17 @@
     <Filter Include="Shader Files">
       <UniqueIdentifier>{5a733f10-a93c-4693-a66f-de79563e4ed4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui">
+    <Filter Include="libs">
+      <UniqueIdentifier>{85b2036b-e19f-4ab2-b6bd-16892f40a316}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\ImGui">
       <UniqueIdentifier>{53250afc-3f87-4817-a1a5-28b70430f1c6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="stb">
-      <UniqueIdentifier>{25987a3f-8b66-4d4f-ba77-929d3e5a0195}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="rapidobj">
+    <Filter Include="libs\rapidobj">
       <UniqueIdentifier>{07014a99-8e82-40ba-bdfa-589c88eb1e85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libs\stb">
+      <UniqueIdentifier>{25987a3f-8b66-4d4f-ba77-929d3e5a0195}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,25 +42,25 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\imgui\imgui.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>libs\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\imgui\imgui_draw.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>libs\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\imgui\imgui_tables.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>libs\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\imgui\imgui_widgets.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>libs\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\imgui\backends\imgui_impl_dx11.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>libs\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\imgui\backends\imgui_impl_win32.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>libs\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\imgui\imgui_demo.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>libs\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="lwotest.cpp">
       <Filter>Source Files</Filter>
@@ -80,22 +83,22 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\imgui\imconfig.h">
-      <Filter>ImGui</Filter>
+      <Filter>libs\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\imgui\imgui.h">
-      <Filter>ImGui</Filter>
+      <Filter>libs\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\imgui\imgui_internal.h">
-      <Filter>ImGui</Filter>
+      <Filter>libs\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\imgui\backends\imgui_impl_dx11.h">
-      <Filter>ImGui</Filter>
+      <Filter>libs\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\imgui\backends\imgui_impl_win32.h">
-      <Filter>ImGui</Filter>
+      <Filter>libs\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\stb\stb_image.h">
-      <Filter>stb</Filter>
+      <Filter>libs\stb</Filter>
     </ClInclude>
     <ClInclude Include="array.h">
       <Filter>Header Files</Filter>
@@ -104,7 +107,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\rapidobj\include\rapidobj\rapidobj.hpp">
-      <Filter>rapidobj</Filter>
+      <Filter>libs\rapidobj</Filter>
     </ClInclude>
     <ClInclude Include="lwotest.h">
       <Filter>Header Files</Filter>

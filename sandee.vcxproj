@@ -73,19 +73,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
-    <IncludePath>C:\Dev\rapidobj\include\rapidobj;C:\Dev\stb;C:\Dev\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>C:\src\rapidobj\include\rapidobj;C:\src\stb;C:\src\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
-    <IncludePath>C:\Dev\rapidobj\include\rapidobj;C:\Dev\stb;C:\Dev\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>C:\src\rapidobj\include\rapidobj;C:\src\stb;C:\src\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
-    <IncludePath>C:\Dev\rapidobj\include\rapidobj;C:\Dev\stb;C:\Dev\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>C:\src\rapidobj\include\rapidobj;C:\src\stb;C:\src\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
-    <IncludePath>C:\Dev\rapidobj\include\rapidobj;C:\Dev\stb;C:\Dev\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>C:\src\rapidobj\include\rapidobj;C:\src\stb;C:\src\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
