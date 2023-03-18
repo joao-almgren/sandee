@@ -194,7 +194,7 @@ void LwoTestImpl::draw(const Camera& camera) const
 		.world = world.Transpose(),
 		.view = camera.getView().Transpose(),
 		.projection = camera.getProjection().Transpose(),
-		.lightDirection = { -0.577f, 0.577f, 0.577f },
+		.lightDirection = { 0.577f, 0.577f, -0.577f },
 	};
 
 	pDeviceContext->UpdateSubresource(m_pConstantBuffer.get(), 0, nullptr, &constantBuffer, 0, 0);

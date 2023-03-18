@@ -190,25 +190,25 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 
 			if (mouseState.positionMode == Mouse::MODE_RELATIVE)
 			{
-				camera.rotate(static_cast<float>(-mouseState.y) / 300.0f, static_cast<float>(-mouseState.x) / 300.0f);
+				camera.rotate(static_cast<float>(-mouseState.y) / 300.0f, static_cast<float>(mouseState.x) / 300.0f);
 			}
 
 			float speed = 0.05f * tick;
-			float move[3]{0, 0, 0};
+			float dX = 0, dY = 0, dZ = 0;
 			if (keyboardState.D || keyboardState.Right)
-				move[0] = -speed;
+				dX = speed;
 			else if (keyboardState.A || keyboardState.Left)
-				move[0] = speed;
+				dX = -speed;
 			if (keyboardState.W || keyboardState.Up)
-				move[2] = speed;
+				dZ = speed;
 			else if (keyboardState.S || keyboardState.Down)
-				move[2] = -speed;
+				dZ = -speed;
 			if (keyboardState.Q)
-				move[1] = speed;
+				dY = speed;
 			else if (keyboardState.Z)
-				move[1] = -speed;
+				dY = -speed;
 
-			camera.move(move[0], move[1], move[2]);
+			camera.move(dX, dY, dZ);
 
 			graphicsTest.update(tick);
 			lwoTest.update(tick);

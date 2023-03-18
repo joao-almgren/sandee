@@ -21,19 +21,29 @@ void Camera::rotate(const float dPitch, const float dYaw)
 	if (m_yaw < 0)
 		m_yaw += XM_2PI;
 
-	const float y = sinf(m_pitch);
-	const float r = cosf(m_pitch);
-	const float z = r * cosf(m_yaw);
-	const float x = r * sinf(m_yaw);
-
-	const Vector3 target = m_position + Vector3(x, y, z);
-	m_view = Matrix::CreateLookAt(m_position, target, Vector3::Up);
+	updateView();
 }
 
 void Camera::move(const float dX, const float dY, const float dZ)
 {
-	const Quaternion q = Quaternion::CreateFromYawPitchRoll(m_yaw, m_pitch, 0);
-	const Vector3 move = Vector3::Transform(Vector3(dX, dY, dZ), q);
-	m_position += move;
-	rotate(0, 0);
+	m_position += dZ * m_forward;
+	m_position += dX * m_right;
+	m_position += dY * m_up;
+
+	updateView();
+}
+
+void Camera::updateView()
+{
+	m_forward.x = cosf(m_yaw) * cosf(m_pitch);
+	m_forward.y = sinf(m_pitch);
+	m_forward.z = sinf(m_yaw) * cosf(m_pitch);
+	m_forward.Normalize();
+
+	m_forward.Cross(Vector3::Up, m_right);
+	m_right.Normalize();
+	m_right.Cross(m_forward, m_up);
+	m_up.Normalize();
+
+	m_view = Matrix::CreateLookAt(m_position, m_position + m_forward, m_up);
 }
