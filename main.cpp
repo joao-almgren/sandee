@@ -7,12 +7,13 @@
 #include "backends/imgui_impl_win32.h"
 #include "backends/imgui_impl_dx11.h"
 #include <memory>
-#include "fps.h"
-#include "camera.h"
+#include "config.h"
 #include "graphics.h"
+#include "camera.h"
+#include "fps.h"
 #include "graphicstest.h"
 #include "lwotest.h"
-#include "config.h"
+#include "skybox.h"
 
 using Mouse = DirectX::Mouse;
 using Keyboard = DirectX::Keyboard;
@@ -21,8 +22,11 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*hPrevInstance*/, _In_ const LPWSTR /*lpCmdLine*/, _In_ const int /*nShowCmd*/)
 {
-	const auto windowTitle = L"sandee";
+	HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+	if (FAILED(hr))
+		return 0;
 
+	const auto windowTitle = L"sandee";
 	const WNDCLASSEX wc
 	{
 		.cbSize = sizeof(WNDCLASSEX),
@@ -94,10 +98,8 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 
 	const int windowWidth = config.width;
 	const int windowHeight = config.height;
-
 	RECT windowRect{ .right = windowWidth, .bottom = windowHeight };
 	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, FALSE, WS_EX_OVERLAPPEDWINDOW);
-
 	const auto adjustedWindowWidth = windowRect.right - windowRect.left;
 	const auto adjustedWindowHeight = windowRect.bottom - windowRect.top;
 	const auto windowOriginLeft = (GetSystemMetrics(SM_CXSCREEN) - adjustedWindowWidth) / 2;
@@ -142,6 +144,10 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 	if (!lwoTest.load())
 		return 0;
 
+	Skybox skybox(std::make_shared<Graphics>(graphics));
+	if (!skybox.load())
+		return 0;
+
 	Camera camera;
 	camera.setProjection(DirectX::XM_PIDIV2, static_cast<float>(windowWidth) / static_cast<float>(windowHeight), 0.1f, 1000.0f);
 	camera.move(0, 0, -8);
@@ -164,66 +170,75 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		}
 		else
 		{
-			fpsCounter.tick();
-			const float tick = 60.0f / static_cast<float>(fpsCounter.getAverageFps());
-
-			ImGui_ImplDX11_NewFrame();
-			ImGui_ImplWin32_NewFrame();
-			ImGui::NewFrame();
-
-			ImGui::Begin("FPS");
-			ImGui::Text("%.1f fps", fpsCounter.getAverageFps());
-			ImGui::End();
-
-			auto keyboardState = keyboard->GetState();
-			keyboardTracker.Update(keyboardState);
-			auto mouseState = mouse->GetState();
-			mouseTracker.Update(mouseState);
-
-			if (mouseTracker.rightButton == Mouse::ButtonStateTracker::ButtonState::RELEASED)
+			// tick
 			{
+				fpsCounter.tick();
+				const float tick = 60.0f / static_cast<float>(fpsCounter.getAverageFps());
+
+				auto keyboardState = keyboard->GetState();
+				keyboardTracker.Update(keyboardState);
+
+				float speed = 0.05f * tick;
+				float dX = 0, dY = 0, dZ = 0;
+				if (keyboardState.D || keyboardState.Right)
+					dX = speed;
+				else if (keyboardState.A || keyboardState.Left)
+					dX = -speed;
+				if (keyboardState.W || keyboardState.Up)
+					dZ = speed;
+				else if (keyboardState.S || keyboardState.Down)
+					dZ = -speed;
+				if (keyboardState.Q)
+					dY = speed;
+				else if (keyboardState.Z)
+					dY = -speed;
+
+				camera.move(dX, dY, dZ);
+
+				auto mouseState = mouse->GetState();
+				mouseTracker.Update(mouseState);
+
+				if (mouseTracker.rightButton == Mouse::ButtonStateTracker::ButtonState::RELEASED)
+				{
+					if (mouseState.positionMode == Mouse::MODE_RELATIVE)
+						mouse->SetMode(Mouse::MODE_ABSOLUTE);
+					else
+						mouse->SetMode(Mouse::MODE_RELATIVE);
+				}
+
 				if (mouseState.positionMode == Mouse::MODE_RELATIVE)
-					mouse->SetMode(Mouse::MODE_ABSOLUTE);
-				else
-					mouse->SetMode(Mouse::MODE_RELATIVE);
+				{
+					camera.rotate(static_cast<float>(-mouseState.y) / 300.0f, static_cast<float>(mouseState.x) / 300.0f);
+				}
+
+				skybox.update(tick);
+				graphicsTest.update(tick);
+				lwoTest.update(tick);
 			}
 
-			if (mouseState.positionMode == Mouse::MODE_RELATIVE)
+			// draw
 			{
-				camera.rotate(static_cast<float>(-mouseState.y) / 300.0f, static_cast<float>(mouseState.x) / 300.0f);
+				ImGui_ImplDX11_NewFrame();
+				ImGui_ImplWin32_NewFrame();
+				ImGui::NewFrame();
+
+				ImGui::Begin("FPS");
+				ImGui::Text("%.1f fps", fpsCounter.getAverageFps());
+				ImGui::End();
+
+				graphics.resetRenderTarget();
+				graphics.clearScreen({ 0.5, 0, 0.5, 0 });
+
+				skybox.draw(camera);
+				graphicsTest.draw(camera);
+				lwoTest.draw(camera);
+
+				ImGui::EndFrame();
+				ImGui::Render();
+				ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+				graphics.present();
 			}
-
-			float speed = 0.05f * tick;
-			float dX = 0, dY = 0, dZ = 0;
-			if (keyboardState.D || keyboardState.Right)
-				dX = speed;
-			else if (keyboardState.A || keyboardState.Left)
-				dX = -speed;
-			if (keyboardState.W || keyboardState.Up)
-				dZ = speed;
-			else if (keyboardState.S || keyboardState.Down)
-				dZ = -speed;
-			if (keyboardState.Q)
-				dY = speed;
-			else if (keyboardState.Z)
-				dY = -speed;
-
-			camera.move(dX, dY, dZ);
-
-			graphicsTest.update(tick);
-			lwoTest.update(tick);
-
-			graphics.resetRenderTarget();
-			graphics.clearScreen({ 0.5, 0, 0.5, 0 });
-
-			graphicsTest.draw(camera);
-			lwoTest.draw(camera);
-
-			ImGui::EndFrame();
-			ImGui::Render();
-			ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-			graphics.present();
 		}
 	}
 

@@ -14,6 +14,7 @@ public:
 	~Graphics() = default;
 
 	[[nodiscard]] bool initialize(HWND hWnd, int windowWidth, int windowHeight);
+	void resetRasterizer() const;
 	void present() const;
 	void resetRenderTarget() const;
 	void clearScreen(const float (& color)[4] = { 0, 0, 0, 0 }) const;
@@ -21,7 +22,9 @@ public:
 	[[nodiscard]] winrt::com_ptr<ID3D11Device> getDevice() const noexcept { return m_pDevice; }
 	[[nodiscard]] winrt::com_ptr<ID3D11DeviceContext> getDeviceContext() const noexcept { return m_pDeviceContext; }
 
-	bool loadTexture(const char * filename, ID3D11Texture2D ** pTexture, ID3D11ShaderResourceView ** pTextureView) const;
+	[[nodiscard]] bool loadTexture(const char * filename, ID3D11ShaderResourceView ** pTextureView) const;
+	[[nodiscard]] bool loadDDSTexture(const wchar_t* filename, ID3D11ShaderResourceView** pTextureView) const;
+	[[nodiscard]] bool loadWICTexture(const wchar_t* filename, ID3D11ShaderResourceView** pTextureView) const;
 
 private:
 	winrt::com_ptr<ID3D11Device> m_pDevice{ nullptr };
@@ -30,4 +33,5 @@ private:
 	winrt::com_ptr<ID3D11RenderTargetView> m_pRenderTarget{ nullptr };
 	winrt::com_ptr<ID3D11Texture2D> m_pDepthStencil{ nullptr };
 	winrt::com_ptr<ID3D11DepthStencilView> m_pDepthStencilView{ nullptr };
+	winrt::com_ptr<ID3D11RasterizerState> m_pDefaultRasterizerState{ nullptr };
 };

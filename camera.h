@@ -14,6 +14,7 @@ public:
 
 	[[nodiscard]] DirectX::SimpleMath::Matrix getProjection() const noexcept { return m_projection; }
 	[[nodiscard]] DirectX::SimpleMath::Matrix getView() const noexcept { return m_view; }
+	[[nodiscard]] DirectX::SimpleMath::Vector3 getPosition() const noexcept { return m_position; }
 
 	void setProjection(float fov, float aspectRatio, float nearZ, float farZ);
 

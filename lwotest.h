@@ -1,12 +1,10 @@
 #pragma once
 #include <memory>
-#include "graphics.h"
-#include "camera.h"
 
 class LwoTest
 {
 public:
-	explicit LwoTest(std::shared_ptr<Graphics> pGraphics);
+	explicit LwoTest(std::shared_ptr<class Graphics> pGraphics);
 	LwoTest(const LwoTest&) = delete;
 	LwoTest(LwoTest&&) = delete;
 	LwoTest& operator=(const LwoTest&) = delete;
@@ -14,7 +12,7 @@ public:
 	~LwoTest();
 
 	[[nodiscard]] bool load() const;
-	void draw(const Camera& camera) const;
+	void draw(const class Camera& camera) const;
 	void update(float tick) const;
 
 private:

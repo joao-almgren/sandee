@@ -4,6 +4,8 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <SimpleMath.h>
+#include "graphics.h"
+#include "camera.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -116,7 +118,6 @@ private:
 	winrt::com_ptr<ID3D11InputLayout> m_pInputLayout{ nullptr };
 	winrt::com_ptr<ID3D11PixelShader> m_pPixelShader{ nullptr };
 	winrt::com_ptr<ID3D11SamplerState> m_pSamplerState{ nullptr };
-	winrt::com_ptr<ID3D11Texture2D> m_pTexture{ nullptr };
 	winrt::com_ptr<ID3D11ShaderResourceView> m_pTextureView{ nullptr };
 	float m_worldAngle{ 0 };
 };
@@ -221,7 +222,7 @@ bool GraphicsTestImpl::load()
 	if (FAILED(hr))
 		return false;
 
-	if (!m_pGraphics->loadTexture("res\\cliff_03_v1.tga", m_pTexture.put(), m_pTextureView.put()))
+	if (!m_pGraphics->loadTexture("res\\cliff_03_v1.tga", m_pTextureView.put()))
 		return false;
 
 	return true;
@@ -263,7 +264,7 @@ void GraphicsTestImpl::draw(const Camera & camera) const
 
 	const UINT numTextureViews = 1;
 	ID3D11ShaderResourceView* const textureViews[numTextureViews]{ m_pTextureView.get() };
-	pDeviceContext->PSSetShaderResources(0, 1, textureViews);
+	pDeviceContext->PSSetShaderResources(0, numTextureViews, textureViews);
 
 	const UINT numVertexBuffers = 1;
 	const UINT vertexOffsets[numVertexBuffers]{ 0 };

@@ -1,6 +1,8 @@
 #include "graphics.h"
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
+#include "DDSTextureLoader.h"
+#include "WICTextureLoader.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -66,12 +68,11 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 		.AntialiasedLineEnable = FALSE,
 	};
 
-	winrt::com_ptr<ID3D11RasterizerState> pRasterizerState;
-	hr = m_pDevice->CreateRasterizerState(&rasterizerDesc, pRasterizerState.put());
+	hr = m_pDevice->CreateRasterizerState(&rasterizerDesc, m_pDefaultRasterizerState.put());
 	if (FAILED(hr))
 		return false;
 
-	m_pDeviceContext->RSSetState(pRasterizerState.get());
+	m_pDeviceContext->RSSetState(m_pDefaultRasterizerState.get());
 
 	winrt::com_ptr<ID3D11Resource> pBackBuffer;
 	hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), pBackBuffer.put_void());
@@ -134,6 +135,11 @@ bool Graphics::initialize(const HWND hWnd, const int windowWidth, const int wind
 	return true;
 }
 
+void Graphics::resetRasterizer() const
+{
+	m_pDeviceContext->RSSetState(m_pDefaultRasterizerState.get());
+}
+
 void Graphics::present() const
 {
 	m_pSwapChain->Present(1, 0);
@@ -151,7 +157,25 @@ void Graphics::clearScreen(const float (& color)[4]) const
 	m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView.get(), D3D11_CLEAR_DEPTH, 1, 0);
 }
 
-bool Graphics::loadTexture(const char * const filename, ID3D11Texture2D ** pTexture, ID3D11ShaderResourceView ** pTextureView) const
+bool Graphics::loadDDSTexture(const wchar_t * filename, ID3D11ShaderResourceView ** pTextureView) const
+{
+	HRESULT hr = DirectX::CreateDDSTextureFromFile(m_pDevice.get(), filename, nullptr, pTextureView);
+	if (FAILED(hr))
+		return false;
+
+	return true;
+}
+
+bool Graphics::loadWICTexture(const wchar_t* filename, ID3D11ShaderResourceView** pTextureView) const
+{
+	HRESULT hr = DirectX::CreateWICTextureFromFile(m_pDevice.get(), filename, nullptr, pTextureView);
+	if (FAILED(hr))
+		return false;
+
+	return true;
+}
+
+bool Graphics::loadTexture(const char * const filename, ID3D11ShaderResourceView ** pTextureView) const
 {
 	int texWidth, texHeight, texNumChannels;
 	unsigned char * textureBytes = stbi_load(filename, &texWidth, &texHeight, &texNumChannels, 4);
@@ -182,17 +206,15 @@ bool Graphics::loadTexture(const char * const filename, ID3D11Texture2D ** pText
 		.SysMemSlicePitch = 0,
 	};
 
-	HRESULT hr = m_pDevice->CreateTexture2D(&textureDesc, &textureSubresourceData, pTexture);
+	winrt::com_ptr<ID3D11Texture2D> pTexture{ nullptr };
+	HRESULT hr = m_pDevice->CreateTexture2D(&textureDesc, &textureSubresourceData, pTexture.put());
 	free(textureBytes);
 	if (FAILED(hr))
 		return false;
 
-	hr = m_pDevice->CreateShaderResourceView(*pTexture, nullptr, pTextureView);
+	hr = m_pDevice->CreateShaderResourceView(pTexture.get(), nullptr, pTextureView);
 	if (FAILED(hr))
-	{
-		(*pTexture)->Release();
 		return false;
-	}
 
 	return true;
 }

@@ -1,12 +1,10 @@
 #pragma once
 #include <memory>
-#include "graphics.h"
-#include "camera.h"
 
 class GraphicsTest
 {
 public:
-	explicit GraphicsTest(std::shared_ptr<Graphics> pGraphics);
+	explicit GraphicsTest(std::shared_ptr<class Graphics> pGraphics);
 	GraphicsTest(const GraphicsTest&) = delete;
 	GraphicsTest(GraphicsTest&&) = delete;
 	GraphicsTest& operator=(const GraphicsTest&) = delete;
@@ -15,7 +13,7 @@ public:
 
 	[[nodiscard]] bool load() const;
 	void update(float tick) const;
-	void draw(const Camera & camera) const;
+	void draw(const class Camera & camera) const;
 
 private:
 	std::unique_ptr<class GraphicsTestImpl> m_pImpl{ nullptr };
