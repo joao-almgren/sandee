@@ -92,12 +92,11 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 	if (!RegisterClassEx(&wc))
 		return 0;
 
-	Config config{};
-	if (!config.load())
+	if (!Config::load())
 		return 0;
 
-	const int windowWidth = config.width;
-	const int windowHeight = config.height;
+	const int windowWidth = Config::width;
+	const int windowHeight = Config::height;
 	RECT windowRect{ .right = windowWidth, .bottom = windowHeight };
 	AdjustWindowRectEx(&windowRect, WS_OVERLAPPEDWINDOW, FALSE, WS_EX_OVERLAPPEDWINDOW);
 	const auto adjustedWindowWidth = windowRect.right - windowRect.left;
@@ -149,7 +148,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 		return 0;
 
 	Camera camera;
-	camera.setProjection(DirectX::XM_PIDIV2, static_cast<float>(windowWidth) / static_cast<float>(windowHeight), 0.1f, 1000.0f);
+	camera.setProjection(DirectX::XM_PIDIV2, static_cast<float>(windowWidth) / static_cast<float>(windowHeight), Config::nearPlane, Config::farPlane);
 	camera.move(0, 0, -8);
 
 	FpsCounter fpsCounter;

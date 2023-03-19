@@ -1,5 +1,7 @@
 {
 	"width": 800,
 	"height": 600,
-	"windowed": true
+	"windowed": true,
+	"nearPlane": 0.1,
+	"farPlane": 1000
 }

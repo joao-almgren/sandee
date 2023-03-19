@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <SimpleMath.h>
+#include "config.h"
 #include "graphics.h"
 #include "camera.h"
 
@@ -206,7 +207,7 @@ void SkyboxImpl::draw(const Camera& camera) const
 	const auto pDeviceContext = m_pGraphics->getDeviceContext();
 	pDeviceContext->RSSetState(m_pRasterizerState.get());
 
-	const Matrix world = Matrix::CreateScale(100, 100, 100) * Matrix::CreateTranslation(camera.getPosition());
+	const Matrix world = Matrix::CreateScale(Config::farPlane, Config::farPlane, Config::farPlane) * Matrix::CreateTranslation(camera.getPosition());
 
 	const ConstantBuffer constantBuffer
 	{

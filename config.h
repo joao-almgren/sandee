@@ -1,11 +1,12 @@
 #pragma once
 
-class Config
+namespace Config
 {
-public:
-	int width;
-	int height;
-	bool windowed;
+	extern int width;
+	extern int height;
+	extern bool windowed;
+	extern float nearPlane;
+	extern float farPlane;
 
 	[[nodiscard]] bool load();
-};
+}

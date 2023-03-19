@@ -6,34 +6,45 @@
 using namespace std;
 using json = nlohmann::json;
 
-bool Config::load()
+namespace Config
 {
-	FILE* infile;
-	if (fopen_s(&infile, "config.json", "rt"))
-		return false;
+	int width = 800;
+	int height = 600;
+	bool windowed = true;
+	float nearPlane = 0.1f;
+	float farPlane = 1000;
 
-	if (fseek(infile, 0, SEEK_END))
-		return false;
+	bool load()
+	{
+		FILE* infile;
+		if (fopen_s(&infile, "config.json", "rt"))
+			return false;
 
-	const long numBytes = ftell(infile);
-	if (fseek(infile, 0, SEEK_SET))
-		return false;
+		if (fseek(infile, 0, SEEK_END))
+			return false;
 
-	const unique_ptr<char> buffer(new char[numBytes + 1]);
-	char * const pBuffer = buffer.get();
-	const size_t bytesRead = fread(pBuffer, sizeof(char), numBytes, infile);
-	if (!bytesRead)
-		return false;
+		const long numBytes = ftell(infile);
+		if (fseek(infile, 0, SEEK_SET))
+			return false;
 
-	if (fclose(infile))
-		return false;
+		const unique_ptr<char> buffer(new char[numBytes + 1]);
+		char* const pBuffer = buffer.get();
+		const size_t bytesRead = fread(pBuffer, sizeof(char), numBytes, infile);
+		if (!bytesRead)
+			return false;
 
-	pBuffer[bytesRead] = 0;
-	json data = json::parse(pBuffer);
+		if (fclose(infile))
+			return false;
 
-	width = data["width"].get<int>();
-	height = data["height"].get<int>();
-	windowed = data["windowed"].get<bool>();
+		pBuffer[bytesRead] = 0;
+		json data = json::parse(pBuffer);
 
-	return true;
+		width = data["width"].get<int>();
+		height = data["height"].get<int>();
+		windowed = data["windowed"].get<bool>();
+		nearPlane = data["nearPlane"].get<float>();
+		farPlane = data["farPlane"].get<float>();
+
+		return true;
+	}
 }
