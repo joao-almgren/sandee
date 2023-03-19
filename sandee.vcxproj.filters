@@ -123,22 +123,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="vertextest.hlsl">
+    <FxCompile Include="graphicstest_vs.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
-    <FxCompile Include="pixeltest.hlsl">
+    <FxCompile Include="graphicstest_ps.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
-    <FxCompile Include="pixellwo.hlsl">
+    <FxCompile Include="lwotest_ps.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
-    <FxCompile Include="vertexlwo.hlsl">
+    <FxCompile Include="lwotest_vs.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
-    <FxCompile Include="pixelskybox.hlsl">
+    <FxCompile Include="skybox_ps.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
-    <FxCompile Include="vertexskybox.hlsl">
+    <FxCompile Include="skybox_vs.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
   </ItemGroup>

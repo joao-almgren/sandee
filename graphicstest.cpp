@@ -183,7 +183,7 @@ bool GraphicsTestImpl::load()
 		return false;
 
 	winrt::com_ptr<ID3DBlob> pVertexBlob = nullptr;
-	hr = D3DReadFileToBlob(L"res\\vertextest.cso", pVertexBlob.put());
+	hr = D3DReadFileToBlob(L"res\\graphicstest_vs.cso", pVertexBlob.put());
 	if (FAILED(hr))
 		return false;
 
@@ -196,7 +196,7 @@ bool GraphicsTestImpl::load()
 		return false;
 
 	winrt::com_ptr<ID3DBlob> pPixelBlob = nullptr;
-	hr = D3DReadFileToBlob(L"res\\pixeltest.cso", pPixelBlob.put());
+	hr = D3DReadFileToBlob(L"res\\graphicstest_ps.cso", pPixelBlob.put());
 	if (FAILED(hr))
 		return false;
 

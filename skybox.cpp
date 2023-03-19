@@ -149,7 +149,7 @@ bool SkyboxImpl::load()
 		return false;
 
 	winrt::com_ptr<ID3DBlob> pVertexBlob = nullptr;
-	hr = D3DReadFileToBlob(L"res\\vertexskybox.cso", pVertexBlob.put());
+	hr = D3DReadFileToBlob(L"res\\skybox_vs.cso", pVertexBlob.put());
 	if (FAILED(hr))
 		return false;
 
@@ -162,7 +162,7 @@ bool SkyboxImpl::load()
 		return false;
 
 	winrt::com_ptr<ID3DBlob> pPixelBlob = nullptr;
-	hr = D3DReadFileToBlob(L"res\\pixelskybox.cso", pPixelBlob.put());
+	hr = D3DReadFileToBlob(L"res\\skybox_ps.cso", pPixelBlob.put());
 	if (FAILED(hr))
 		return false;
 

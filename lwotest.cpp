@@ -156,7 +156,7 @@ bool LwoTestImpl::load()
 		return false;
 
 	winrt::com_ptr<ID3DBlob> pVertexBlob = nullptr;
-	hr = D3DReadFileToBlob(L"res\\vertexlwo.cso", pVertexBlob.put());
+	hr = D3DReadFileToBlob(L"res\\lwotest_vs.cso", pVertexBlob.put());
 	if (FAILED(hr))
 		return false;
 
@@ -169,7 +169,7 @@ bool LwoTestImpl::load()
 		return false;
 
 	winrt::com_ptr<ID3DBlob> pPixelBlob = nullptr;
-	hr = D3DReadFileToBlob(L"res\\pixellwo.cso", pPixelBlob.put());
+	hr = D3DReadFileToBlob(L"res\\lwotest_ps.cso", pPixelBlob.put());
 	if (FAILED(hr))
 		return false;
 
