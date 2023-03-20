@@ -1,6 +1,7 @@
 #include "graphics.h"
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
+#include <d3dcompiler.h>
 #include "DDSTextureLoader.h"
 #include "WICTextureLoader.h"
 #define STB_IMAGE_IMPLEMENTATION
@@ -175,7 +176,7 @@ bool Graphics::loadWICTexture(const wchar_t* filename, ID3D11ShaderResourceView*
 	return true;
 }
 
-bool Graphics::loadTexture(const char * const filename, ID3D11ShaderResourceView ** pTextureView) const
+bool Graphics::loadTexture(const char* const filename, ID3D11ShaderResourceView** pTextureView) const
 {
 	int texWidth, texHeight, texNumChannels;
 	unsigned char * textureBytes = stbi_load(filename, &texWidth, &texHeight, &texNumChannels, 4);
@@ -213,6 +214,109 @@ bool Graphics::loadTexture(const char * const filename, ID3D11ShaderResourceView
 		return false;
 
 	hr = m_pDevice->CreateShaderResourceView(pTexture.get(), nullptr, pTextureView);
+	if (FAILED(hr))
+		return false;
+
+	return true;
+}
+
+bool Graphics::loadVertexBuffer(const void* pVertices, const UINT numVertices, const UINT vertexSize, ID3D11Buffer** pBuffer) const
+{
+	const D3D11_BUFFER_DESC vertexBufferDesc
+	{
+		.ByteWidth = numVertices * vertexSize,
+		.Usage = D3D11_USAGE_DEFAULT,
+		.BindFlags = D3D11_BIND_VERTEX_BUFFER,
+		.CPUAccessFlags = 0,
+		.MiscFlags = 0,
+		.StructureByteStride = vertexSize,
+	};
+
+	const D3D11_SUBRESOURCE_DATA vertexSubresourceData
+	{
+		.pSysMem = pVertices,
+		.SysMemPitch = 0,
+		.SysMemSlicePitch = 0,
+	};
+
+	HRESULT hr = m_pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, pBuffer);
+	if (FAILED(hr))
+		return false;
+
+	return true;
+}
+
+bool Graphics::loadIndexBuffer(const void* pIndices, const UINT numIndices, const UINT indexSize, ID3D11Buffer** pBuffer) const
+{
+	const D3D11_BUFFER_DESC indexBufferDesc
+	{
+		.ByteWidth = numIndices * indexSize,
+		.Usage = D3D11_USAGE_DEFAULT,
+		.BindFlags = D3D11_BIND_INDEX_BUFFER,
+		.CPUAccessFlags = 0,
+		.MiscFlags = 0,
+		.StructureByteStride = indexSize,
+	};
+
+	const D3D11_SUBRESOURCE_DATA indexSubresourceData
+	{
+		.pSysMem = pIndices,
+		.SysMemPitch = 0,
+		.SysMemSlicePitch = 0,
+	};
+
+	HRESULT hr = m_pDevice->CreateBuffer(&indexBufferDesc, &indexSubresourceData, pBuffer);
+	if (FAILED(hr))
+		return false;
+
+	return true;
+}
+
+bool Graphics::createConstantBuffer(const UINT constantSize, ID3D11Buffer** pBuffer) const
+{
+	const D3D11_BUFFER_DESC constantBufferDesc
+	{
+		.ByteWidth = constantSize,
+		.Usage = D3D11_USAGE_DEFAULT,
+		.BindFlags = D3D11_BIND_CONSTANT_BUFFER,
+		.CPUAccessFlags = 0,
+		.MiscFlags = 0,
+		.StructureByteStride = 0,
+	};
+
+	HRESULT hr = m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, pBuffer);
+	if (FAILED(hr))
+		return false;
+
+	return true;
+}
+
+bool Graphics::loadVertexShader(const wchar_t* const filename, ID3D11VertexShader** pShader, const D3D11_INPUT_ELEMENT_DESC* pLayout, const UINT numElements, ID3D11InputLayout** pInput) const
+{
+	winrt::com_ptr<ID3DBlob> pBlob;
+	HRESULT hr = D3DReadFileToBlob(filename, pBlob.put());
+	if (FAILED(hr))
+		return false;
+
+	hr = m_pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, pShader);
+	if (FAILED(hr))
+		return false;
+
+	hr = m_pDevice->CreateInputLayout(pLayout, numElements, pBlob->GetBufferPointer(), pBlob->GetBufferSize(), pInput);
+	if (FAILED(hr))
+		return false;
+
+	return true;
+}
+
+bool Graphics::loadPixelShader(const wchar_t* const filename, ID3D11PixelShader** pBuffer) const
+{
+	winrt::com_ptr<ID3DBlob> pBlob;
+	HRESULT hr = D3DReadFileToBlob(filename, pBlob.put());
+	if (FAILED(hr))
+		return false;
+
+	hr = m_pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, pBuffer);
 	if (FAILED(hr))
 		return false;
 
