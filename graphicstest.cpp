@@ -2,7 +2,6 @@
 #include <winrt/base.h>
 #define NOMINMAX
 #include <d3d11.h>
-#include <d3dcompiler.h>
 #include <SimpleMath.h>
 #include "graphics.h"
 #include "camera.h"
@@ -129,7 +128,7 @@ bool GraphicsTestImpl::load()
 	if (!m_pGraphics->loadVertexBuffer(g_vertices, static_cast<UINT>(std::size(g_vertices)), sizeof(Vertex), m_pVertexBuffer.put()))
 		return false;
 
-	if (!m_pGraphics->loadIndexBuffer(g_indices, static_cast<UINT>(std::size(g_indices)), sizeof(WORD), m_pIndexBuffer.put()))
+	if (!m_pGraphics->loadIndexBuffer(g_indices, g_numIndices, sizeof(WORD), m_pIndexBuffer.put()))
 		return false;
 
 	if (!m_pGraphics->createConstantBuffer(sizeof(ConstantBuffer), m_pConstantBuffer.put()))

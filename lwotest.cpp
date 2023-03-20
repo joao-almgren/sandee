@@ -3,7 +3,6 @@
 #include <winrt/base.h>
 #define NOMINMAX
 #include <d3d11.h>
-#include <d3dcompiler.h>
 #include <SimpleMath.h>
 #include "graphics.h"
 #include "camera.h"
@@ -97,84 +96,19 @@ bool LwoTestImpl::load()
 		pVertices[pIndices[i]].normal.z = result.attributes.normals[normalIndex + 2];
 	}
 
-	const auto pDevice = m_pGraphics->getDevice();
-
-	const D3D11_BUFFER_DESC vertexBufferDesc
-	{
-		.ByteWidth = static_cast<UINT>(sizeof(Vertex)) * numVertices,
-		.Usage = D3D11_USAGE_DEFAULT,
-		.BindFlags = D3D11_BIND_VERTEX_BUFFER,
-		.CPUAccessFlags = 0,
-		.MiscFlags = 0,
-		.StructureByteStride = static_cast<UINT>(sizeof(Vertex)),
-	};
-
-	const D3D11_SUBRESOURCE_DATA vertexSubresourceData
-	{
-		.pSysMem = vertices.get(),
-		.SysMemPitch = 0,
-		.SysMemSlicePitch = 0,
-	};
-
-	HRESULT hr = pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, m_pVertexBuffer.put());
-	if (FAILED(hr))
+	if (!m_pGraphics->loadVertexBuffer(vertices.get(), numVertices, sizeof(Vertex), m_pVertexBuffer.put()))
 		return false;
 
-	const D3D11_BUFFER_DESC indexBufferDesc
-	{
-		.ByteWidth = static_cast<UINT>(sizeof(DWORD)) * m_numIndices,
-		.Usage = D3D11_USAGE_DEFAULT,
-		.BindFlags = D3D11_BIND_INDEX_BUFFER,
-		.CPUAccessFlags = 0,
-		.MiscFlags = 0,
-		.StructureByteStride = static_cast<UINT>(sizeof(DWORD)),
-	};
-
-	const D3D11_SUBRESOURCE_DATA indexSubresourceData
-	{
-		.pSysMem = indices.get(),
-		.SysMemPitch = 0,
-		.SysMemSlicePitch = 0,
-	};
-
-	hr = pDevice->CreateBuffer(&indexBufferDesc, &indexSubresourceData, m_pIndexBuffer.put());
-	if (FAILED(hr))
+	if (!m_pGraphics->loadIndexBuffer(indices.get(), m_numIndices, sizeof(DWORD), m_pIndexBuffer.put()))
 		return false;
 
-	const D3D11_BUFFER_DESC constantBufferDesc
-	{
-		.ByteWidth = sizeof(ConstantBuffer),
-		.Usage = D3D11_USAGE_DEFAULT,
-		.BindFlags = D3D11_BIND_CONSTANT_BUFFER,
-		.CPUAccessFlags = 0,
-		.MiscFlags = 0,
-		.StructureByteStride = sizeof(ConstantBuffer),
-	};
-
-	hr = pDevice->CreateBuffer(&constantBufferDesc, nullptr, m_pConstantBuffer.put());
-	if (FAILED(hr))
+	if (!m_pGraphics->createConstantBuffer(sizeof(ConstantBuffer), m_pConstantBuffer.put()))
 		return false;
 
-	winrt::com_ptr<ID3DBlob> pVertexBlob = nullptr;
-	hr = D3DReadFileToBlob(L"res\\lwotest_vs.cso", pVertexBlob.put());
-	if (FAILED(hr))
+	if (!m_pGraphics->loadVertexShader(L"res\\lwotest_vs.cso", m_pVertexShader.put(), g_inputElementDesc, g_numInputElements, m_pInputLayout.put()))
 		return false;
 
-	hr = pDevice->CreateVertexShader(pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), nullptr, m_pVertexShader.put());
-	if (FAILED(hr))
-		return false;
-
-	hr = pDevice->CreateInputLayout(g_inputElementDesc, g_numInputElements, pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), m_pInputLayout.put());
-	if (FAILED(hr))
-		return false;
-
-	winrt::com_ptr<ID3DBlob> pPixelBlob = nullptr;
-	hr = D3DReadFileToBlob(L"res\\lwotest_ps.cso", pPixelBlob.put());
-	if (FAILED(hr))
-		return false;
-
-	hr = pDevice->CreatePixelShader(pPixelBlob->GetBufferPointer(), pPixelBlob->GetBufferSize(), nullptr, m_pPixelShader.put());
-	if (FAILED(hr))
+	if (!m_pGraphics->loadPixelShader(L"res\\lwotest_ps.cso", m_pPixelShader.put()))
 		return false;
 
 	return true;

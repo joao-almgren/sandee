@@ -2,7 +2,6 @@
 #include <winrt/base.h>
 #define NOMINMAX
 #include <d3d11.h>
-#include <d3dcompiler.h>
 #include <SimpleMath.h>
 #include "config.h"
 #include "graphics.h"
@@ -113,61 +112,16 @@ bool SkyboxImpl::load()
 	if (FAILED(hr))
 		return false;
 
-	const D3D11_BUFFER_DESC vertexBufferDesc
-	{
-		.ByteWidth = sizeof(g_vertices),
-		.Usage = D3D11_USAGE_DEFAULT,
-		.BindFlags = D3D11_BIND_VERTEX_BUFFER,
-		.CPUAccessFlags = 0,
-		.MiscFlags = 0,
-		.StructureByteStride = sizeof(Vertex),
-	};
-
-	const D3D11_SUBRESOURCE_DATA vertexSubresourceData
-	{
-		.pSysMem = g_vertices,
-		.SysMemPitch = 0,
-		.SysMemSlicePitch = 0,
-	};
-
-	hr = pDevice->CreateBuffer(&vertexBufferDesc, &vertexSubresourceData, m_pVertexBuffer.put());
-	if (FAILED(hr))
+	if (!m_pGraphics->loadVertexBuffer(g_vertices, g_numVertices, sizeof(Vertex), m_pVertexBuffer.put()))
 		return false;
 
-	const D3D11_BUFFER_DESC constantBufferDesc
-	{
-		.ByteWidth = sizeof(ConstantBuffer),
-		.Usage = D3D11_USAGE_DEFAULT,
-		.BindFlags = D3D11_BIND_CONSTANT_BUFFER,
-		.CPUAccessFlags = 0,
-		.MiscFlags = 0,
-		.StructureByteStride = sizeof(ConstantBuffer),
-	};
-
-	hr = pDevice->CreateBuffer(&constantBufferDesc, nullptr, m_pConstantBuffer.put());
-	if (FAILED(hr))
+	if (!m_pGraphics->createConstantBuffer(sizeof(ConstantBuffer), m_pConstantBuffer.put()))
 		return false;
 
-	winrt::com_ptr<ID3DBlob> pVertexBlob = nullptr;
-	hr = D3DReadFileToBlob(L"res\\skybox_vs.cso", pVertexBlob.put());
-	if (FAILED(hr))
+	if (!m_pGraphics->loadVertexShader(L"res\\skybox_vs.cso", m_pVertexShader.put(), g_inputElementDesc, g_numInputElements, m_pInputLayout.put()))
 		return false;
 
-	hr = pDevice->CreateVertexShader(pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), nullptr, m_pVertexShader.put());
-	if (FAILED(hr))
-		return false;
-
-	hr = pDevice->CreateInputLayout(g_inputElementDesc, g_numInputElements, pVertexBlob->GetBufferPointer(), pVertexBlob->GetBufferSize(), m_pInputLayout.put());
-	if (FAILED(hr))
-		return false;
-
-	winrt::com_ptr<ID3DBlob> pPixelBlob = nullptr;
-	hr = D3DReadFileToBlob(L"res\\skybox_ps.cso", pPixelBlob.put());
-	if (FAILED(hr))
-		return false;
-
-	hr = pDevice->CreatePixelShader(pPixelBlob->GetBufferPointer(), pPixelBlob->GetBufferSize(), nullptr, m_pPixelShader.put());
-	if (FAILED(hr))
+	if (!m_pGraphics->loadPixelShader(L"res\\skybox_ps.cso", m_pPixelShader.put()))
 		return false;
 
 	const D3D11_SAMPLER_DESC samplerDesc
