@@ -226,7 +226,7 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 				ImGui::End();
 
 				graphics.resetRenderTarget();
-				graphics.clearScreen({ 0.5, 0, 0.5, 0 });
+				graphics.clearScreen();
 
 				skybox.draw(camera);
 				graphicsTest.draw(camera);

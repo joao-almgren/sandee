@@ -73,19 +73,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
-    <IncludePath>..\rapidobj\include\rapidobj;..\stb;..\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>..\fast_float\include\fast_float;..\rapidobj\include\rapidobj;..\stb;..\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
-    <IncludePath>..\rapidobj\include\rapidobj;..\stb;..\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>..\fast_float\include\fast_float;..\rapidobj\include\rapidobj;..\stb;..\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
-    <IncludePath>..\rapidobj\include\rapidobj;..\stb;..\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>..\fast_float\include\fast_float;..\rapidobj\include\rapidobj;..\stb;..\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
-    <IncludePath>..\rapidobj\include\rapidobj;..\stb;..\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>..\fast_float\include\fast_float;..\rapidobj\include\rapidobj;..\stb;..\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -155,7 +155,6 @@
     <ClCompile Include="..\imgui\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\imgui\backends\imgui_impl_win32.cpp" />
     <ClCompile Include="..\imgui\imgui.cpp" />
-    <ClCompile Include="..\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\imgui\imgui_widgets.cpp" />
@@ -167,15 +166,9 @@
     <ClCompile Include="lwotest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="skybox.cpp" />
+    <ClCompile Include="wavefront.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\imgui\backends\imgui_impl_dx11.h" />
-    <ClInclude Include="..\imgui\backends\imgui_impl_win32.h" />
-    <ClInclude Include="..\imgui\imconfig.h" />
-    <ClInclude Include="..\imgui\imgui.h" />
-    <ClInclude Include="..\imgui\imgui_internal.h" />
-    <ClInclude Include="..\rapidobj\include\rapidobj\rapidobj.hpp" />
-    <ClInclude Include="..\stb\stb_image.h" />
     <ClInclude Include="array.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="config.h" />
@@ -185,6 +178,7 @@
     <ClInclude Include="lwotest.h" />
     <ClInclude Include="random.h" />
     <ClInclude Include="skybox.h" />
+    <ClInclude Include="wavefront.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="lwotest_ps.hlsl">

@@ -6,6 +6,7 @@
 #include <SimpleMath.h>
 #include "graphics.h"
 #include "camera.h"
+#include "wavefront.h"
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -16,6 +17,9 @@ namespace
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	const UINT g_numInputElements = static_cast<unsigned>(std::size(g_inputElementDesc));
@@ -24,6 +28,9 @@ namespace
 	{
 		[[maybe_unused]] XMFLOAT3 position{};
 		[[maybe_unused]] XMFLOAT3 normal{};
+		[[maybe_unused]] XMFLOAT3 tangent{};
+		[[maybe_unused]] XMFLOAT3 bitangent{};
+		[[maybe_unused]] XMFLOAT2 texcoord{};
 	};
 
 	struct ConstantBuffer
@@ -63,43 +70,50 @@ private:
 
 bool LwoTestImpl::load()
 {
-	rapidobj::Result result = rapidobj::ParseFile("res\\bunny.obj");
-	if (result.error)
+	std::vector<TbnVertex> vertices;
+	std::vector<DWORD> indices;
+	DirectX::SimpleMath::Vector4 sphere;
+	if (!loadTbnObject("res\\bunny.obj", vertices, indices, sphere))
 		return false;
 
-	if (!rapidobj::Triangulate(result))
+	//rapidobj::Result result = rapidobj::ParseFile("res\\bunny.obj");
+	//if (result.error)
+	//	return false;
+
+	//if (!rapidobj::Triangulate(result))
+	//	return false;
+
+	//const UINT numVertices = static_cast<UINT>(result.attributes.positions.size() / 3);
+	//std::unique_ptr<Vertex> vertices(new Vertex[numVertices]);
+
+	//Vertex * pVertices = vertices.get();
+	//for (size_t i = 0; i < static_cast<size_t>(numVertices) * 3; i += 3)
+	//{
+	//	size_t index = i / 3;
+	//	pVertices[index].position.x = result.attributes.positions[i];
+	//	pVertices[index].position.y = result.attributes.positions[i + 1];
+	//	pVertices[index].position.z = result.attributes.positions[i + 2];
+	//}
+
+	//m_numIndices = static_cast<UINT>(result.shapes[0].mesh.indices.size());
+	//std::unique_ptr<DWORD> indices(new DWORD[m_numIndices]);
+
+	//DWORD * pIndices = indices.get();
+	//for (size_t i = 0; i < m_numIndices; i++)
+	//{
+	//	pIndices[i] = result.shapes[0].mesh.indices[i].position_index;
+
+	//	const size_t normalIndex = result.shapes[0].mesh.indices[i].normal_index * 3;
+	//	pVertices[pIndices[i]].normal.x = result.attributes.normals[normalIndex];
+	//	pVertices[pIndices[i]].normal.y = result.attributes.normals[normalIndex + 1];
+	//	pVertices[pIndices[i]].normal.z = result.attributes.normals[normalIndex + 2];
+	//}
+
+	if (!m_pGraphics->loadVertexBuffer(&vertices[0], vertices.size(), sizeof(Vertex), m_pVertexBuffer.put()))
 		return false;
 
-	const UINT numVertices = static_cast<UINT>(result.attributes.positions.size() / 3);
-	std::unique_ptr<Vertex> vertices(new Vertex[numVertices]);
-
-	Vertex * pVertices = vertices.get();
-	for (size_t i = 0; i < static_cast<size_t>(numVertices) * 3; i += 3)
-	{
-		size_t index = i / 3;
-		pVertices[index].position.x = result.attributes.positions[i];
-		pVertices[index].position.y = result.attributes.positions[i + 1];
-		pVertices[index].position.z = result.attributes.positions[i + 2];
-	}
-
-	m_numIndices = static_cast<UINT>(result.shapes[0].mesh.indices.size());
-	std::unique_ptr<DWORD> indices(new DWORD[m_numIndices]);
-
-	DWORD * pIndices = indices.get();
-	for (size_t i = 0; i < m_numIndices; i++)
-	{
-		pIndices[i] = result.shapes[0].mesh.indices[i].position_index;
-
-		const size_t normalIndex = result.shapes[0].mesh.indices[i].normal_index * 3;
-		pVertices[pIndices[i]].normal.x = result.attributes.normals[normalIndex];
-		pVertices[pIndices[i]].normal.y = result.attributes.normals[normalIndex + 1];
-		pVertices[pIndices[i]].normal.z = result.attributes.normals[normalIndex + 2];
-	}
-
-	if (!m_pGraphics->loadVertexBuffer(vertices.get(), numVertices, sizeof(Vertex), m_pVertexBuffer.put()))
-		return false;
-
-	if (!m_pGraphics->loadIndexBuffer(indices.get(), m_numIndices, sizeof(DWORD), m_pIndexBuffer.put()))
+	m_numIndices = indices.size();
+	if (!m_pGraphics->loadIndexBuffer(&indices[0], m_numIndices, sizeof(DWORD), m_pIndexBuffer.put()))
 		return false;
 
 	if (!m_pGraphics->createConstantBuffer(sizeof(ConstantBuffer), m_pConstantBuffer.put()))

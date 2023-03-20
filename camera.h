@@ -26,10 +26,10 @@ private:
 
 	DirectX::SimpleMath::Matrix m_projection{};
 	DirectX::SimpleMath::Matrix m_view{};
-	DirectX::SimpleMath::Vector3 m_position{ 0, 0, 0 };
-	DirectX::SimpleMath::Vector3 m_forward{ 0, 0, -1 };
-	DirectX::SimpleMath::Vector3 m_right{ 1, 0, 0 };
-	DirectX::SimpleMath::Vector3 m_up{ 0, 1, 0 };
+	DirectX::SimpleMath::Vector3 m_position{ DirectX::SimpleMath::Vector3::Zero };
+	DirectX::SimpleMath::Vector3 m_forward{ DirectX::SimpleMath::Vector3::Forward };
+	DirectX::SimpleMath::Vector3 m_right{ DirectX::SimpleMath::Vector3::Right };
+	DirectX::SimpleMath::Vector3 m_up{ DirectX::SimpleMath::Vector3::Up };
 	float m_pitch{ 0 };
 	float m_yaw{ DirectX::XM_PI };
 };

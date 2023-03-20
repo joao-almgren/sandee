@@ -11,6 +11,9 @@ struct VsInput
 {
 	float3 pos : POSITION;
 	float3 norm : NORMAL;
+	float3 tangent : TANGENT;
+	float3 bitangent : BITANGENT;
+	float3 uv : TEXCOORD;
 };
 
 struct VsOutput
