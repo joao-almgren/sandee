@@ -4,17 +4,17 @@
 #include <type_traits>
 
 template <class T>
-class fast_vector
+class FastVector
 {
 public:
     using size_type = std::size_t;
 
-    fast_vector() = default;
-    fast_vector(const fast_vector&) = delete;
-    fast_vector(fast_vector&&) = delete;
-    fast_vector& operator=(const fast_vector&) = delete;
-    fast_vector& operator=(fast_vector&&) = delete;
-    ~fast_vector() { std::free(m_data); }
+    FastVector() = default;
+    FastVector(const FastVector&) = delete;
+    FastVector(FastVector&&) = delete;
+    FastVector& operator=(const FastVector&) = delete;
+    FastVector& operator=(FastVector&&) = delete;
+    ~FastVector() { std::free(m_data); }
 
     // Element access
 
@@ -54,14 +54,14 @@ private:
 };
 
 template <class T>
-T& fast_vector<T>::operator[](size_type pos)
+T& FastVector<T>::operator[](size_type pos)
 {
     assert(pos < m_size && "Position is out of range");
     return m_data[pos];
 }
 
 template <class T>
-const T& fast_vector<T>::operator[](size_type pos) const
+const T& FastVector<T>::operator[](size_type pos) const
 {
     assert(pos < m_size && "Position is out of range");
     return m_data[pos];
@@ -79,7 +79,7 @@ inline void copy_range(T* begin, T* end, T* dest)
 }
 
 template <class T>
-void fast_vector<T>::reserve(const size_type new_cap)
+void FastVector<T>::reserve(const size_type new_cap)
 {
     assert(new_cap > m_capacity && "Capacity is already equal to or greater than the passed value");
 
@@ -102,20 +102,20 @@ void fast_vector<T>::reserve(const size_type new_cap)
 }
 
 template <class T>
-void fast_vector<T>::push_back(const T& value)
+void FastVector<T>::push_back(const T& value)
 {
     if (m_size == m_capacity)
-        reserve(m_capacity * fast_vector::grow_factor + 1);
+        reserve(m_capacity * FastVector::grow_factor + 1);
 
     m_data[m_size] = value;
     m_size++;
 }
 
 template <class T>
-void fast_vector<T>::push_back(T&& value)
+void FastVector<T>::push_back(T&& value)
 {
     if (m_size == m_capacity)
-        reserve(m_capacity * fast_vector::grow_factor + 1);
+        reserve(m_capacity * FastVector::grow_factor + 1);
 
 	m_data[m_size] = value;
 	m_size++;
@@ -123,10 +123,10 @@ void fast_vector<T>::push_back(T&& value)
 
 template <class T>
 template <class... Args>
-void fast_vector<T>::emplace_back(Args&&... args)
+void FastVector<T>::emplace_back(Args&&... args)
 {
     if (m_size == m_capacity)
-        reserve(m_capacity * fast_vector::grow_factor + 1);
+        reserve(m_capacity * FastVector::grow_factor + 1);
 
     m_data[m_size] = T(std::forward<Args>(args)...);
     m_size++;

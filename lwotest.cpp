@@ -124,8 +124,8 @@ bool LwoTestImpl::loadRapid()
 
 bool LwoTestImpl::loadWfo()
 {
-	fast_vector<TbnVertex> vertices;
-	fast_vector<DWORD> indices;
+	FastVector<TbnVertex> vertices;
+	FastVector<DWORD> indices;
 	Vector4 sphere;
 	if (!loadTbnObject("res\\bunny.obj", vertices, indices, sphere))
 		return false;

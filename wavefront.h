@@ -1,7 +1,7 @@
 #pragma once
 #define NOMINMAX
 #include <SimpleMath.h>
-#include "fast_vector.h"
+#include "fastvector.h"
 
 struct TbnVertex
 {
@@ -14,7 +14,7 @@ struct TbnVertex
 
 bool loadTbnObject(
 	const char* filename,
-	fast_vector<TbnVertex>& vertices,
-	fast_vector<DWORD>& indices,
+	FastVector<TbnVertex>& vertices,
+	FastVector<DWORD>& indices,
 	DirectX::SimpleMath::Vector4& sphere
 );

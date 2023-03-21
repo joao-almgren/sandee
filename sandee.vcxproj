@@ -174,7 +174,7 @@
     <ClInclude Include="absencearray.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="config.h" />
-    <ClInclude Include="fast_vector.h" />
+    <ClInclude Include="fastvector.h" />
     <ClInclude Include="fps.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="graphicstest.h" />
