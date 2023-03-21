@@ -6,6 +6,17 @@
 
 using namespace DirectX::SimpleMath;
 
+unsigned long fast_atoi(const char* str)
+{
+	unsigned long val = 0;
+	while (*str)
+	{
+		val = (val << 1) + (val << 3) + (*str - '0');
+		str++;
+	}
+	return val;
+}
+
 bool readFile(const char * const filename, char*& buffer, size_t& buffersize)
 {
 	FILE* f = nullptr;
@@ -40,7 +51,7 @@ bool readFile(const char * const filename, char*& buffer, size_t& buffersize)
 	return true;
 }
 
-size_t getToken(const char* buffer, const size_t size, const size_t start, char* token, const char separator = 0)
+size_t getToken(const char* const buffer, const size_t size, const size_t start, char* token, const char separator = 0)
 {
 	size_t stop = start;
 	while (stop < size)
@@ -56,7 +67,7 @@ size_t getToken(const char* buffer, const size_t size, const size_t start, char*
 	return stop - start;
 }
 
-size_t seekEndLine(const char* buffer, const size_t size, const size_t start)
+size_t seekEndLine(const char* const buffer, const size_t size, const size_t start)
 {
 	size_t stop = start;
 	while (stop < size)
@@ -70,7 +81,7 @@ size_t seekEndLine(const char* buffer, const size_t size, const size_t start)
 	return stop;
 }
 
-void calcBoundingSphere(const std::vector<Vector3>& points, Vector4& sphere)
+void calculateBoundingSphere(const std::vector<Vector3>& points, Vector4& sphere)
 {
 	Vector3 center{ 0, 0, 0 };
 	for (const auto& point : points)
@@ -93,18 +104,58 @@ void calcBoundingSphere(const std::vector<Vector3>& points, Vector4& sphere)
 	sphere.w = radius;
 }
 
-unsigned long fast_atoi(const char* str)
+void calculateTangents(TbnVertex& a, TbnVertex& b, TbnVertex& c)
 {
-	unsigned long val = 0;
-	while (*str)
+	const Vector3 v = b.position - a.position;
+	const Vector3 w = c.position - a.position;
+	float sx = b.texcoord.x - a.texcoord.x, sy = b.texcoord.y - a.texcoord.y;
+	float tx = c.texcoord.x - a.texcoord.x, ty = c.texcoord.y - a.texcoord.y;
+
+	const float direction = sy * tx - sx * ty;
+	const float dirCorrection = std::signbit(direction) ? -1.0f : 1.0f;
+
+	if (fabs(sx * ty - sy * tx) > 0)
 	{
-		val = (val << 1) + (val << 3) + (*str - '0');
-		str++;
+		sx = 0.0;
+		sy = 1.0;
+		tx = 1.0;
+		ty = 0.0;
 	}
-	return val;
+
+	const Vector3 tangent
+	{
+		(w.x * sy - v.x * ty) * dirCorrection,
+		(w.y * sy - v.y * ty) * dirCorrection,
+		(w.z * sy - v.z * ty) * dirCorrection
+	};
+
+	const Vector3 bitangent
+	{
+		(w.x * sx - v.x * tx) * dirCorrection,
+		(w.y * sx - v.y * tx) * dirCorrection,
+		(w.z * sx - v.z * tx) * dirCorrection
+	};
+
+	a.tangent = tangent - a.normal * tangent.Dot(a.normal);
+	a.bitangent = bitangent - a.normal * bitangent.Dot(a.normal);
+
+	a.tangent.Normalize();
+	a.bitangent.Normalize();
+
+	b.tangent = tangent - b.normal * tangent.Dot(b.normal);
+	b.bitangent = bitangent - b.normal * bitangent.Dot(b.normal);
+
+	b.tangent.Normalize();
+	b.bitangent.Normalize();
+
+	c.tangent = tangent - c.normal * tangent.Dot(c.normal);
+	c.bitangent = bitangent - c.normal * bitangent.Dot(c.normal);
+
+	c.tangent.Normalize();
+	c.bitangent.Normalize();
 }
 
-bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::vector<DWORD>& indices, Vector4& sphere)
+bool loadTbnObject(const char* const filename, std::vector<TbnVertex>& vertices, std::vector<DWORD>& indices, Vector4& sphere)
 {
 	std::vector<Vector3> position;
 	std::vector<Vector3> normal;
@@ -217,66 +268,7 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 		bufferIndex = seekEndLine(buffer, size, bufferIndex);
 	}
 
-	calcBoundingSphere(position, sphere);
-
-	return true;
-}
-
-void calculateTangents(TbnVertex& a, TbnVertex& b, TbnVertex& c)
-{
-	const Vector3 v = b.position - a.position;
-	const Vector3 w = c.position - a.position;
-	float sx = b.texcoord.x - a.texcoord.x, sy = b.texcoord.y - a.texcoord.y;
-	float tx = c.texcoord.x - a.texcoord.x, ty = c.texcoord.y - a.texcoord.y;
-
-	const float direction = sy * tx - sx * ty;
-	const float dirCorrection = std::signbit(direction) ? -1.0f : 1.0f;
-
-	if (fabs(sx * ty - sy * tx) > 0)
-	{
-		sx = 0.0;
-		sy = 1.0;
-		tx = 1.0;
-		ty = 0.0;
-	}
-
-	const Vector3 tangent
-	{
-		(w.x * sy - v.x * ty) * dirCorrection,
-		(w.y * sy - v.y * ty) * dirCorrection,
-		(w.z * sy - v.z * ty) * dirCorrection
-	};
-
-	const Vector3 bitangent
-	{
-		(w.x * sx - v.x * tx) * dirCorrection,
-		(w.y * sx - v.y * tx) * dirCorrection,
-		(w.z * sx - v.z * tx) * dirCorrection
-	};
-
-	a.tangent = tangent - a.normal * tangent.Dot(a.normal);
-	a.bitangent = bitangent - a.normal * bitangent.Dot(a.normal);
-
-	a.tangent.Normalize();
-	a.bitangent.Normalize();
-
-	b.tangent = tangent - b.normal * tangent.Dot(b.normal);
-	b.bitangent = bitangent - b.normal * bitangent.Dot(b.normal);
-
-	b.tangent.Normalize();
-	b.bitangent.Normalize();
-
-	c.tangent = tangent - c.normal * tangent.Dot(c.normal);
-	c.bitangent = bitangent - c.normal * bitangent.Dot(c.normal);
-
-	c.tangent.Normalize();
-	c.bitangent.Normalize();
-}
-
-bool loadTbnObject(const char* filename, std::vector<TbnVertex>& vertices, std::vector<DWORD>& indices, Vector4& sphere)
-{
-	if (!loadWfObject(filename, vertices, indices, sphere))
-		return false;
+	calculateBoundingSphere(position, sphere);
 
 	for (size_t i = 0; i < indices.size() - 2; i += 3)
 	{

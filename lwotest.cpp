@@ -126,7 +126,7 @@ bool LwoTestImpl::loadWfo()
 {
 	std::vector<TbnVertex> vertices;
 	std::vector<DWORD> indices;
-	DirectX::SimpleMath::Vector4 sphere;
+	Vector4 sphere;
 	if (!loadTbnObject("res\\bunny.obj", vertices, indices, sphere))
 		return false;
 
