@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
+#include "fast_vector.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -81,7 +82,7 @@ size_t seekEndLine(const char* const buffer, const size_t size, const size_t sta
 	return stop;
 }
 
-void calculateBoundingSphere(const std::vector<Vector3>& points, Vector4& sphere)
+void calculateBoundingSphere(const fast_vector<Vector3>& points, Vector4& sphere)
 {
 	Vector3 center{ 0, 0, 0 };
 	for (const auto& point : points)
@@ -155,11 +156,11 @@ void calculateTangents(TbnVertex& a, TbnVertex& b, TbnVertex& c)
 	c.bitangent.Normalize();
 }
 
-bool loadTbnObject(const char* const filename, std::vector<TbnVertex>& vertices, std::vector<DWORD>& indices, Vector4& sphere)
+bool loadTbnObject(const char* const filename, fast_vector<TbnVertex>& vertices, fast_vector<DWORD>& indices, Vector4& sphere)
 {
-	std::vector<Vector3> position;
-	std::vector<Vector3> normal;
-	std::vector<Vector2> texcoord;
+	fast_vector<Vector3> position;
+	fast_vector<Vector3> normal;
+	fast_vector<Vector2> texcoord;
 
 	char* buffer;
 	size_t size;

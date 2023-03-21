@@ -1,5 +1,5 @@
 #include "CppUnitTest.h"
-#include "../array.h"
+#include "../absencearray.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -11,7 +11,7 @@ namespace sandeeTest
 		
 		TEST_METHOD(appendAbsent)
 		{
-			Array<int> array;
+			AbsenceArray<int> array;
 			array.appendAbsent(42);
 			array.appendAbsent(42);
 			Assert::AreEqual(1ULL, array.size());

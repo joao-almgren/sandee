@@ -5,7 +5,7 @@
 #include <map>
 
 template <typename Type>
-class Array
+class AbsenceArray
 {
 public:
 	[[nodiscard]] Type* data()

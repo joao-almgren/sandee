@@ -171,9 +171,10 @@
     <ClCompile Include="wavefront.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="array.h" />
+    <ClInclude Include="absencearray.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="fast_vector.h" />
     <ClInclude Include="fps.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="graphicstest.h" />

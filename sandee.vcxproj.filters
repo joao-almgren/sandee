@@ -76,7 +76,7 @@
     <ClInclude Include="fps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="array.h">
+    <ClInclude Include="absencearray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="random.h">
@@ -95,6 +95,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fast_vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -124,17 +124,17 @@ bool LwoTestImpl::loadRapid()
 
 bool LwoTestImpl::loadWfo()
 {
-	std::vector<TbnVertex> vertices;
-	std::vector<DWORD> indices;
+	fast_vector<TbnVertex> vertices;
+	fast_vector<DWORD> indices;
 	Vector4 sphere;
 	if (!loadTbnObject("res\\bunny.obj", vertices, indices, sphere))
 		return false;
 
-	if (!m_pGraphics->loadVertexBuffer(&vertices[0], static_cast<UINT>(vertices.size()), static_cast<UINT>(sizeof(Vertex)), m_pVertexBuffer.put()))
+	if (!m_pGraphics->loadVertexBuffer(vertices.data(), static_cast<UINT>(vertices.size()), static_cast<UINT>(sizeof(Vertex)), m_pVertexBuffer.put()))
 		return false;
 
 	m_numIndices = static_cast<UINT>(indices.size());
-	if (!m_pGraphics->loadIndexBuffer(&indices[0], m_numIndices, static_cast<UINT>(sizeof(DWORD)), m_pIndexBuffer.put()))
+	if (!m_pGraphics->loadIndexBuffer(indices.data(), m_numIndices, static_cast<UINT>(sizeof(DWORD)), m_pIndexBuffer.put()))
 		return false;
 
 	if (!m_pGraphics->createConstantBuffer(sizeof(ConstantBuffer), m_pConstantBuffer.put()))
