@@ -7,9 +7,6 @@
 #include "graphics.h"
 #include "camera.h"
 #include "wavefront.h"
-#include "timer.h"
-#include <fstream>
-using namespace std;
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -55,8 +52,8 @@ public:
 	LwoTestImpl& operator=(LwoTestImpl&&) = delete;
 	~LwoTestImpl() = default;
 
-	[[nodiscard]] bool load();
-	[[nodiscard]] bool load2();
+	[[nodiscard]] bool loadRapid();
+	[[nodiscard]] bool loadWfo();
 	void update(float tick);
 	void draw(const Camera& camera) const;
 
@@ -72,10 +69,8 @@ private:
 	float m_worldAngle{ 0 };
 };
 
-bool LwoTestImpl::load()
+bool LwoTestImpl::loadRapid()
 {
-	Timer timer;
-
 	rapidobj::Result result = rapidobj::ParseFile("res\\bunny.obj");
 	if (result.error)
 		return false;
@@ -103,16 +98,11 @@ bool LwoTestImpl::load()
 	{
 		pIndices[i] = result.shapes[0].mesh.indices[i].position_index;
 
-		const size_t normalIndex = result.shapes[0].mesh.indices[i].normal_index * 3;
+		const size_t normalIndex = 3 * static_cast<size_t>(result.shapes[0].mesh.indices[i].normal_index);
 		pVertices[pIndices[i]].normal.x = result.attributes.normals[normalIndex];
 		pVertices[pIndices[i]].normal.y = result.attributes.normals[normalIndex + 1];
 		pVertices[pIndices[i]].normal.z = result.attributes.normals[normalIndex + 2];
 	}
-
-	auto stop = timer.value();
-	ofstream flog("rapidlog.txt", std::ios_base::app);
-	flog << stop << endl;
-	flog.close();
 
 	if (!m_pGraphics->loadVertexBuffer(vertices.get(), numVertices, static_cast<UINT>(sizeof(Vertex)), m_pVertexBuffer.put()))
 		return false;
@@ -132,7 +122,7 @@ bool LwoTestImpl::load()
 	return true;
 }
 
-bool LwoTestImpl::load2()
+bool LwoTestImpl::loadWfo()
 {
 	std::vector<TbnVertex> vertices;
 	std::vector<DWORD> indices;
@@ -210,7 +200,7 @@ LwoTest::~LwoTest() = default;
 
 bool LwoTest::load() const
 {
-	return m_pImpl->load2();
+	return m_pImpl->loadWfo();
 }
 
 void LwoTest::update(const float tick) const

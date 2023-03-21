@@ -3,9 +3,6 @@
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
-#include "timer.h"
-#include <fstream>
-using namespace std;
 
 using namespace DirectX::SimpleMath;
 
@@ -118,8 +115,6 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 	if (!readFile(filename, buffer, size))
 		return false;
 
-	Timer timer;
-
 	for (size_t bufferIndex = 0; bufferIndex < size; bufferIndex++)
 	{
 		char token[32]; // max token size observed: 11
@@ -130,12 +125,12 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 			if (token[0] == 'f')
 			{
 				size_t offset = bufferIndex + len + 1;
-				std::vector<TbnVertex> ngon;
-				ngon.reserve(3);
+				auto vertexCount = static_cast<DWORD>(vertices.size());
 
-				while (offset < size && buffer[offset] != '\r' && buffer[offset] != '\n')
+				for (int n = 0; n < 3; n++)
 				{
-					size_t pointIndices[3]{ 0, 0, 0 };
+					assert(offset < size && buffer[offset] != '\r' && buffer[offset] != '\n');
+					size_t pointIndices[3];
 
 					for (size_t& index : pointIndices)
 					{
@@ -147,32 +142,18 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 						index = i - 1;
 					}
 
-					if (pointIndices[0] > position.size() || pointIndices[1] > texcoord.size() || pointIndices[2] > normal.size())
-						return false;
-
-					ngon.emplace_back(position[pointIndices[0]], normal[pointIndices[2]], Vector3::Zero, Vector3::Zero, texcoord[pointIndices[1]]);
+					assert(pointIndices[0] < position.size() && pointIndices[1] < texcoord.size() && pointIndices[2] < normal.size());
+					vertices.emplace_back(position[pointIndices[0]], normal[pointIndices[2]], Vector3::Zero, Vector3::Zero, texcoord[pointIndices[1]]);
 				}
 
-				// triangulate ngon into 0-2-1, 0-3-2, 0-4-3, ...
-				for (size_t i = 1; i < ngon.size() - 1; i++)
-				{
-					auto index = static_cast<DWORD>(vertices.size());
-					vertices.push_back(ngon[0]);
-					indices.push_back(index);
-
-					index = static_cast<DWORD>(vertices.size());
-					vertices.push_back(ngon[i + 1]);
-					indices.push_back(index);
-
-					index = static_cast<DWORD>(vertices.size());
-					vertices.push_back(ngon[i]);
-					indices.push_back(index);
-				}
+				indices.push_back(vertexCount);
+				indices.push_back(vertexCount + 2);
+				indices.push_back(vertexCount + 1);
 			}
 			else if (token[0] == 'v')
 			{
 				size_t offset = bufferIndex + len + 1;
-				float components[3]{ 0, 0, 0 };
+				float components[3];
 
 				for (float& component : components)
 				{
@@ -192,7 +173,7 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 			if (token[1] == 't')
 			{
 				size_t offset = bufferIndex + len + 1;
-				float components[2]{ 0, 0 };
+				float components[2];
 
 				for (float& component : components)
 				{
@@ -236,14 +217,6 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 		bufferIndex = seekEndLine(buffer, size, bufferIndex);
 	}
 
-	auto stop = timer.value();
-	ofstream flog("wfolog.txt", std::ios_base::app);
-	flog << stop << endl;
-	flog.close();
-
-	if (vertices.empty() || indices.empty())
-		return false;
-
 	calcBoundingSphere(position, sphere);
 
 	return true;
@@ -251,11 +224,13 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 
 void calculateTangents(TbnVertex& a, TbnVertex& b, TbnVertex& c)
 {
-	const Vector3 v = b.position - a.position, w = c.position - a.position;
+	const Vector3 v = b.position - a.position;
+	const Vector3 w = c.position - a.position;
 	float sx = b.texcoord.x - a.texcoord.x, sy = b.texcoord.y - a.texcoord.y;
 	float tx = c.texcoord.x - a.texcoord.x, ty = c.texcoord.y - a.texcoord.y;
 
-	const float dirCorrection = (tx * sy - ty * sx) < 0.0f ? -1.0f : 1.0f;
+	const float direction = sy * tx - sx * ty;
+	const float dirCorrection = std::signbit(direction) ? -1.0f : 1.0f;
 
 	if (fabs(sx * ty - sy * tx) > 0)
 	{
@@ -265,40 +240,37 @@ void calculateTangents(TbnVertex& a, TbnVertex& b, TbnVertex& c)
 		ty = 0.0;
 	}
 
-	Vector3 tangent, bitangent;
-	tangent.x = (w.x * sy - v.x * ty) * dirCorrection;
-	tangent.y = (w.y * sy - v.y * ty) * dirCorrection;
-	tangent.z = (w.z * sy - v.z * ty) * dirCorrection;
-	bitangent.x = (w.x * sx - v.x * tx) * dirCorrection;
-	bitangent.y = (w.y * sx - v.y * tx) * dirCorrection;
-	bitangent.z = (w.z * sx - v.z * tx) * dirCorrection;
+	const Vector3 tangent
+	{
+		(w.x * sy - v.x * ty) * dirCorrection,
+		(w.y * sy - v.y * ty) * dirCorrection,
+		(w.z * sy - v.z * ty) * dirCorrection
+	};
 
-	Vector3 localTangent = tangent - a.normal * tangent.Dot(a.normal);
-	Vector3 localBitangent = bitangent - a.normal * bitangent.Dot(a.normal);
+	const Vector3 bitangent
+	{
+		(w.x * sx - v.x * tx) * dirCorrection,
+		(w.y * sx - v.y * tx) * dirCorrection,
+		(w.z * sx - v.z * tx) * dirCorrection
+	};
 
-	localTangent.Normalize();
-	localBitangent.Normalize();
+	a.tangent = tangent - a.normal * tangent.Dot(a.normal);
+	a.bitangent = bitangent - a.normal * bitangent.Dot(a.normal);
 
-	a.tangent = localTangent;
-	a.bitangent = localBitangent;
+	a.tangent.Normalize();
+	a.bitangent.Normalize();
 
-	localTangent = tangent - b.normal * tangent.Dot(b.normal);
-	localBitangent = bitangent - b.normal * bitangent.Dot(b.normal);
+	b.tangent = tangent - b.normal * tangent.Dot(b.normal);
+	b.bitangent = bitangent - b.normal * bitangent.Dot(b.normal);
 
-	localTangent.Normalize();
-	localBitangent.Normalize();
+	b.tangent.Normalize();
+	b.bitangent.Normalize();
 
-	b.tangent = localTangent;
-	b.bitangent = localBitangent;
+	c.tangent = tangent - c.normal * tangent.Dot(c.normal);
+	c.bitangent = bitangent - c.normal * bitangent.Dot(c.normal);
 
-	localTangent = tangent - c.normal * tangent.Dot(c.normal);
-	localBitangent = bitangent - c.normal * bitangent.Dot(c.normal);
-
-	localTangent.Normalize();
-	localBitangent.Normalize();
-
-	c.tangent = localTangent;
-	c.bitangent = localBitangent;
+	c.tangent.Normalize();
+	c.bitangent.Normalize();
 }
 
 bool loadTbnObject(const char* filename, std::vector<TbnVertex>& vertices, std::vector<DWORD>& indices, Vector4& sphere)
