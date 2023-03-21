@@ -5,11 +5,11 @@
 
 struct TbnVertex
 {
-	DirectX::SimpleMath::Vector3 position{ DirectX::SimpleMath::Vector3::Zero };
-	DirectX::SimpleMath::Vector3 normal{ DirectX::SimpleMath::Vector3::Zero };
-	DirectX::SimpleMath::Vector3 tangent{ DirectX::SimpleMath::Vector3::Zero };
-	DirectX::SimpleMath::Vector3 bitangent{ DirectX::SimpleMath::Vector3::Zero };
-	DirectX::SimpleMath::Vector2 texcoord{ DirectX::SimpleMath::Vector2::Zero };
+	DirectX::SimpleMath::Vector3 position;
+	DirectX::SimpleMath::Vector3 normal;
+	DirectX::SimpleMath::Vector3 tangent;
+	DirectX::SimpleMath::Vector3 bitangent;
+	DirectX::SimpleMath::Vector2 texcoord;
 };
 
 bool loadTbnObject(

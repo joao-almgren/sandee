@@ -7,6 +7,9 @@
 #include "graphics.h"
 #include "camera.h"
 #include "wavefront.h"
+#include "timer.h"
+#include <fstream>
+using namespace std;
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -53,6 +56,7 @@ public:
 	~LwoTestImpl() = default;
 
 	[[nodiscard]] bool load();
+	[[nodiscard]] bool load2();
 	void update(float tick);
 	void draw(const Camera& camera) const;
 
@@ -70,50 +74,77 @@ private:
 
 bool LwoTestImpl::load()
 {
+	Timer timer;
+
+	rapidobj::Result result = rapidobj::ParseFile("res\\bunny.obj");
+	if (result.error)
+		return false;
+
+	if (!rapidobj::Triangulate(result))
+		return false;
+
+	const UINT numVertices = static_cast<UINT>(result.attributes.positions.size() / 3);
+	const std::unique_ptr<Vertex> vertices(new Vertex[numVertices]);
+
+	Vertex * pVertices = vertices.get();
+	for (size_t i = 0; i < static_cast<size_t>(numVertices) * 3; i += 3)
+	{
+		const size_t index = i / 3;
+		pVertices[index].position.x = result.attributes.positions[i];
+		pVertices[index].position.y = result.attributes.positions[i + 1];
+		pVertices[index].position.z = result.attributes.positions[i + 2];
+	}
+
+	m_numIndices = static_cast<UINT>(result.shapes[0].mesh.indices.size());
+	const std::unique_ptr<DWORD> indices(new DWORD[m_numIndices]);
+
+	DWORD * pIndices = indices.get();
+	for (size_t i = 0; i < m_numIndices; i++)
+	{
+		pIndices[i] = result.shapes[0].mesh.indices[i].position_index;
+
+		const size_t normalIndex = result.shapes[0].mesh.indices[i].normal_index * 3;
+		pVertices[pIndices[i]].normal.x = result.attributes.normals[normalIndex];
+		pVertices[pIndices[i]].normal.y = result.attributes.normals[normalIndex + 1];
+		pVertices[pIndices[i]].normal.z = result.attributes.normals[normalIndex + 2];
+	}
+
+	auto stop = timer.value();
+	ofstream flog("rapidlog.txt", std::ios_base::app);
+	flog << stop << endl;
+	flog.close();
+
+	if (!m_pGraphics->loadVertexBuffer(vertices.get(), numVertices, static_cast<UINT>(sizeof(Vertex)), m_pVertexBuffer.put()))
+		return false;
+
+	if (!m_pGraphics->loadIndexBuffer(indices.get(), m_numIndices, static_cast<UINT>(sizeof(DWORD)), m_pIndexBuffer.put()))
+		return false;
+
+	if (!m_pGraphics->createConstantBuffer(sizeof(ConstantBuffer), m_pConstantBuffer.put()))
+		return false;
+
+	if (!m_pGraphics->loadVertexShader(L"res\\lwotest_vs.cso", m_pVertexShader.put(), g_inputElementDesc, g_numInputElements, m_pInputLayout.put()))
+		return false;
+
+	if (!m_pGraphics->loadPixelShader(L"res\\lwotest_ps.cso", m_pPixelShader.put()))
+		return false;
+
+	return true;
+}
+
+bool LwoTestImpl::load2()
+{
 	std::vector<TbnVertex> vertices;
 	std::vector<DWORD> indices;
 	DirectX::SimpleMath::Vector4 sphere;
 	if (!loadTbnObject("res\\bunny.obj", vertices, indices, sphere))
 		return false;
 
-	//rapidobj::Result result = rapidobj::ParseFile("res\\bunny.obj");
-	//if (result.error)
-	//	return false;
-
-	//if (!rapidobj::Triangulate(result))
-	//	return false;
-
-	//const UINT numVertices = static_cast<UINT>(result.attributes.positions.size() / 3);
-	//std::unique_ptr<Vertex> vertices(new Vertex[numVertices]);
-
-	//Vertex * pVertices = vertices.get();
-	//for (size_t i = 0; i < static_cast<size_t>(numVertices) * 3; i += 3)
-	//{
-	//	size_t index = i / 3;
-	//	pVertices[index].position.x = result.attributes.positions[i];
-	//	pVertices[index].position.y = result.attributes.positions[i + 1];
-	//	pVertices[index].position.z = result.attributes.positions[i + 2];
-	//}
-
-	//m_numIndices = static_cast<UINT>(result.shapes[0].mesh.indices.size());
-	//std::unique_ptr<DWORD> indices(new DWORD[m_numIndices]);
-
-	//DWORD * pIndices = indices.get();
-	//for (size_t i = 0; i < m_numIndices; i++)
-	//{
-	//	pIndices[i] = result.shapes[0].mesh.indices[i].position_index;
-
-	//	const size_t normalIndex = result.shapes[0].mesh.indices[i].normal_index * 3;
-	//	pVertices[pIndices[i]].normal.x = result.attributes.normals[normalIndex];
-	//	pVertices[pIndices[i]].normal.y = result.attributes.normals[normalIndex + 1];
-	//	pVertices[pIndices[i]].normal.z = result.attributes.normals[normalIndex + 2];
-	//}
-
-	if (!m_pGraphics->loadVertexBuffer(&vertices[0], vertices.size(), sizeof(Vertex), m_pVertexBuffer.put()))
+	if (!m_pGraphics->loadVertexBuffer(&vertices[0], static_cast<UINT>(vertices.size()), static_cast<UINT>(sizeof(Vertex)), m_pVertexBuffer.put()))
 		return false;
 
-	m_numIndices = indices.size();
-	if (!m_pGraphics->loadIndexBuffer(&indices[0], m_numIndices, sizeof(DWORD), m_pIndexBuffer.put()))
+	m_numIndices = static_cast<UINT>(indices.size());
+	if (!m_pGraphics->loadIndexBuffer(&indices[0], m_numIndices, static_cast<UINT>(sizeof(DWORD)), m_pIndexBuffer.put()))
 		return false;
 
 	if (!m_pGraphics->createConstantBuffer(sizeof(ConstantBuffer), m_pConstantBuffer.put()))
@@ -179,7 +210,7 @@ LwoTest::~LwoTest() = default;
 
 bool LwoTest::load() const
 {
-	return m_pImpl->load();
+	return m_pImpl->load2();
 }
 
 void LwoTest::update(const float tick) const

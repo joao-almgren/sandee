@@ -1,31 +1,5 @@
 #include "fps.h"
-#include <chrono>
-
-using namespace std::chrono;
-
-class Timer
-{
-public:
-	Timer() : start{ steady_clock::now() } {}
-	Timer(const Timer&) = delete;
-	Timer(Timer&&) = delete;
-	Timer& operator=(const Timer&) = delete;
-	Timer& operator=(Timer&&) = delete;
-	~Timer() = default;
-
-	[[nodiscard]] auto value() const
-	{
-		return duration_cast<microseconds>(steady_clock::now() - start).count();
-	}
-
-	void reset()
-	{
-		start = steady_clock::now();
-	}
-
-private:
-	steady_clock::time_point start;
-};
+#include "timer.h"
 
 FpsCounter::FpsCounter()
 	: m_fps{ 60 }

@@ -3,23 +3,30 @@
 #include <cassert>
 #include <cstdio>
 #include <cstdlib>
+#include "timer.h"
+#include <fstream>
+using namespace std;
 
 using namespace DirectX::SimpleMath;
 
 bool readFile(const char * const filename, char*& buffer, size_t& buffersize)
 {
-	FILE* f{ nullptr };
+	FILE* f = nullptr;
 	if (fopen_s(&f, filename, "rb") || !f)
 		return false;
 
-	fseek(f, 0, SEEK_END);
+	if (fseek(f, 0, SEEK_END))
+	{
+		fclose(f); // NOLINT(cert-err33-c)
+		return false;
+	}
 	buffersize = ftell(f);
 	rewind(f);
 
 	buffer = new char[buffersize];
 	if (!buffer)
 	{
-		fclose(f);
+		fclose(f); // NOLINT(cert-err33-c)
 		return false;
 	}
 
@@ -28,11 +35,11 @@ bool readFile(const char * const filename, char*& buffer, size_t& buffersize)
 		delete[] buffer;
 		buffer = nullptr;
 		buffersize = 0;
-		fclose(f);
+		fclose(f); // NOLINT(cert-err33-c)
 		return false;
 	}
 
-	fclose(f);
+	fclose(f); // NOLINT(cert-err33-c)
 	return true;
 }
 
@@ -89,6 +96,17 @@ void calcBoundingSphere(const std::vector<Vector3>& points, Vector4& sphere)
 	sphere.w = radius;
 }
 
+unsigned long fast_atoi(const char* str)
+{
+	unsigned long val = 0;
+	while (*str)
+	{
+		val = (val << 1) + (val << 3) + (*str - '0');
+		str++;
+	}
+	return val;
+}
+
 bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::vector<DWORD>& indices, Vector4& sphere)
 {
 	std::vector<Vector3> position;
@@ -99,6 +117,8 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 	size_t size;
 	if (!readFile(filename, buffer, size))
 		return false;
+
+	Timer timer;
 
 	for (size_t bufferIndex = 0; bufferIndex < size; bufferIndex++)
 	{
@@ -111,6 +131,7 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 			{
 				size_t offset = bufferIndex + len + 1;
 				std::vector<TbnVertex> ngon;
+				ngon.reserve(3);
 
 				while (offset < size && buffer[offset] != '\r' && buffer[offset] != '\n')
 				{
@@ -122,7 +143,7 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 						assert(toklen != 0);
 						offset += toklen + 1;
 
-						const size_t i = std::atoll(token); // NOLINT(cert-err34-c)
+						const size_t i = fast_atoi(token);
 						index = i - 1;
 					}
 
@@ -131,9 +152,6 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 
 					ngon.emplace_back(position[pointIndices[0]], normal[pointIndices[2]], Vector3::Zero, Vector3::Zero, texcoord[pointIndices[1]]);
 				}
-
-				if (ngon.size() < 3)
-					return false;
 
 				// triangulate ngon into 0-2-1, 0-3-2, 0-4-3, ...
 				for (size_t i = 1; i < ngon.size() - 1; i++)
@@ -162,8 +180,8 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 					assert(toklen != 0);
 					offset += toklen + 1;
 
-					const auto [ptr, ec] = fast_float::from_chars(token, token + toklen, component);
-					assert(ec == std::errc());
+					const auto result = fast_float::from_chars(token, token + toklen, component);
+					assert(result.ec == std::errc());
 				}
 
 				position.emplace_back(-components[0], components[1], components[2]);
@@ -182,8 +200,8 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 					assert(toklen != 0);
 					offset += toklen + 1;
 
-					const auto [ptr, ec] = fast_float::from_chars(token, token + toklen, component);
-					assert(ec == std::errc());
+					const auto result = fast_float::from_chars(token, token + toklen, component);
+					assert(result.ec == std::errc());
 				}
 
 				texcoord.emplace_back(components[0], 1 - components[1]);
@@ -199,8 +217,8 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 					assert(toklen != 0);
 					offset += toklen + 1;
 
-					const auto [ptr, ec] = fast_float::from_chars(token, token + toklen, component);
-					assert(ec == std::errc());
+					const auto result = fast_float::from_chars(token, token + toklen, component);
+					assert(result.ec == std::errc());
 				}
 
 				Vector3 n =
@@ -217,6 +235,11 @@ bool loadWfObject(const char* filename, std::vector<TbnVertex>& vertices, std::v
 
 		bufferIndex = seekEndLine(buffer, size, bufferIndex);
 	}
+
+	auto stop = timer.value();
+	ofstream flog("wfolog.txt", std::ios_base::app);
+	flog << stop << endl;
+	flog.close();
 
 	if (vertices.empty() || indices.empty())
 		return false;
