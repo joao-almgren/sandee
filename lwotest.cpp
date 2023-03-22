@@ -66,6 +66,8 @@ private:
 	winrt::com_ptr<ID3D11VertexShader> m_pVertexShader{ nullptr };
 	winrt::com_ptr<ID3D11InputLayout> m_pInputLayout{ nullptr };
 	winrt::com_ptr<ID3D11PixelShader> m_pPixelShader{ nullptr };
+	winrt::com_ptr<ID3D11SamplerState> m_pSamplerState{ nullptr };
+	winrt::com_ptr<ID3D11ShaderResourceView> m_pTextureView{ nullptr };
 	UINT m_numIndices{ 0 };
 	float m_worldAngle{ 0 };
 };
@@ -147,6 +149,27 @@ bool LwoTestImpl::loadWfo()
 	if (!m_pGraphics->loadPixelShader(L"res\\lwotest_ps.cso", m_pPixelShader.put()))
 		return false;
 
+	const D3D11_SAMPLER_DESC samplerDesc
+	{
+		.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT,
+		.AddressU = D3D11_TEXTURE_ADDRESS_BORDER,
+		.AddressV = D3D11_TEXTURE_ADDRESS_BORDER,
+		.AddressW = D3D11_TEXTURE_ADDRESS_BORDER,
+		.MipLODBias = 0,
+		.MaxAnisotropy = 0,
+		.ComparisonFunc = D3D11_COMPARISON_NEVER,
+		.BorderColor = { 0, 0, 0, 0 },
+		.MinLOD = 0,
+		.MaxLOD = 0,
+	};
+
+	HRESULT hr = m_pGraphics->getDevice()->CreateSamplerState(&samplerDesc, m_pSamplerState.put());
+	if (FAILED(hr))
+		return false;
+
+	if (!m_pGraphics->loadTexture("res\\terracotta.jpg", m_pTextureView.put()))
+		return false;
+
 	return true;
 }
 
@@ -180,6 +203,14 @@ void LwoTestImpl::draw(const Camera& camera) const
 
 	pDeviceContext->PSSetConstantBuffers(0, numConstantBuffers, constantBuffers);
 	pDeviceContext->PSSetShader(m_pPixelShader.get(), nullptr, 0);
+
+	const UINT numSamplerStates = 1;
+	ID3D11SamplerState* const samplerStates[numSamplerStates]{ m_pSamplerState.get() };
+	pDeviceContext->PSSetSamplers(0, 1, samplerStates);
+
+	const UINT numTextureViews = 1;
+	ID3D11ShaderResourceView* const textureViews[numTextureViews]{ m_pTextureView.get() };
+	pDeviceContext->PSSetShaderResources(0, numTextureViews, textureViews);
 
 	const UINT numVertexBuffers = 1;
 	const UINT vertexOffsets[numVertexBuffers]{ 0 };

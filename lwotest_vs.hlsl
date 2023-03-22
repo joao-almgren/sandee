@@ -14,7 +14,7 @@ struct VsInput
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
 	float3 bitangent : BITANGENT;
-	float3 uv : TEXCOORD;
+	float2 uv : TEXCOORD;
 };
 
 struct VsOutput
@@ -22,6 +22,7 @@ struct VsOutput
 	float4 position : SV_Position;
 	float4 worldPosition : POSITION;
 	float4 normal : NORMAL;
+	float2 uv : TEXCOORD;
 };
 
 VsOutput main(const VsInput input)
@@ -31,5 +32,6 @@ VsOutput main(const VsInput input)
 	output.position = mul(output.worldPosition, view);
 	output.position = mul(output.position, projection);
 	output.normal = normalize(mul(float4(input.normal.xyz, 0), world));
+	output.uv = input.uv;
 	return output;
 }

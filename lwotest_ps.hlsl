@@ -8,11 +8,15 @@ cbuffer ConstantBuffer : register(b0)
 	float3 cameraPosition;
 }
 
+SamplerState mySampler : register(s0);
+Texture2D myTexture : register(t0);
+
 struct PsInput
 {
 	float4 position : SV_Position;
 	float4 worldPosition : POSITION;
 	float4 normal : NORMAL;
+	float2 uv : TEXCOORD;
 };
 
 static const float4 specularColor = { 0.25, 0.25, 0.2, 1 };
@@ -27,7 +31,8 @@ float4 main(const PsInput input) : SV_Target
 
 	float diffuse = saturate(dot(lightDirection, normalize(input.normal.xyz)));
 
-	float4 color = float4(1, 1, 1, 1);
+	float4 color = myTexture.Sample(mySampler, input.uv);
+
 	color = diffuse * color + specular;
 
 	return color;
