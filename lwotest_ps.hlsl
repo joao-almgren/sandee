@@ -5,16 +5,30 @@ cbuffer ConstantBuffer : register(b0)
 	matrix view;
 	matrix projection;
 	float3 lightDirection;
+	float3 cameraPosition;
 }
 
 struct PsInput
 {
-	float4 pos : SV_Position;
-	float4 norm : NORMAL;
+	float4 position : SV_Position;
+	float4 worldPosition : POSITION;
+	float4 normal : NORMAL;
 };
+
+static const float4 specularColor = { 0.25, 0.25, 0.2, 1 };
+static const float specularPower = 20;
 
 float4 main(const PsInput input) : SV_Target
 {
-	float light = saturate(dot(input.norm.xyz, lightDirection));
-	return float4(light, light, light, 1);
+	float3 viewDir = normalize(input.worldPosition.xyz - cameraPosition);
+	float3 reflectLightDir = reflect(lightDirection, input.normal.xyz);
+
+	float4 specular = pow(max(dot(reflectLightDir, viewDir), 0), specularPower) * specularColor;
+
+	float diffuse = saturate(dot(lightDirection, normalize(input.normal.xyz)));
+
+	float4 color = float4(1, 1, 1, 1);
+	color = diffuse * color + specular;
+
+	return color;
 }

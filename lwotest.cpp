@@ -39,6 +39,7 @@ namespace
 		[[maybe_unused]] XMMATRIX view{};
 		[[maybe_unused]] XMMATRIX projection{};
 		[[maybe_unused]] XMFLOAT3 lightDirection{};
+		[[maybe_unused]] XMFLOAT3 cameraPosition{};
 	};
 }
 
@@ -166,6 +167,7 @@ void LwoTestImpl::draw(const Camera& camera) const
 		.view = camera.getView().Transpose(),
 		.projection = camera.getProjection().Transpose(),
 		.lightDirection = { 0.577f, 0.577f, -0.577f },
+		.cameraPosition = camera.getPosition(),
 	};
 
 	pDeviceContext->UpdateSubresource(m_pConstantBuffer.get(), 0, nullptr, &constantBuffer, 0, 0);
