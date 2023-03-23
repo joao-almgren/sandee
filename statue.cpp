@@ -131,7 +131,7 @@ void StatueImpl::draw(const Camera& camera) const
 {
 	const auto pDeviceContext = m_pGraphics->getDeviceContext();
 	
-	const Matrix world = Matrix::CreateScale(0.2f) * Matrix::CreateRotationY(m_worldAngle) * Matrix::CreateTranslation(0, -10, 0);
+	const Matrix world = Matrix::CreateScale(0.2f) * Matrix::CreateRotationY(m_worldAngle) * Matrix::CreateTranslation(0, -10, 5);
 
 	const ConstantBuffer constantBuffer
 	{

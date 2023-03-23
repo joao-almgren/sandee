@@ -235,9 +235,9 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 				graphics.clearScreen();
 
 				skybox.draw(camera);
-				//cube.draw(camera);
+				cube.draw(camera);
 				statue.draw(camera);
-				//bunny.draw(camera);
+				bunny.draw(camera);
 
 				ImGui::EndFrame();
 				ImGui::Render();

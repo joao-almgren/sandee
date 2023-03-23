@@ -173,7 +173,7 @@ void CubeImpl::draw(const Camera & camera) const
 {
 	const auto pDeviceContext = m_pGraphics->getDeviceContext();
 
-	const Matrix world = Matrix::CreateTranslation(5, 0, 0) * Matrix::CreateFromYawPitchRoll(m_worldAngle, m_worldAngle, m_worldAngle);
+	const Matrix world = Matrix::CreateTranslation(5, 0, 5) * Matrix::CreateFromYawPitchRoll(m_worldAngle, m_worldAngle, m_worldAngle);
 
 	const ConstantBuffer constantBuffer
 	{
