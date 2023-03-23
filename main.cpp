@@ -11,9 +11,10 @@
 #include "graphics.h"
 #include "camera.h"
 #include "fps.h"
-#include "graphicstest.h"
-#include "lwotest.h"
+#include "cube.h"
+#include "bunny.h"
 #include "skybox.h"
+#include "statue.h"
 
 using Mouse = DirectX::Mouse;
 using Keyboard = DirectX::Keyboard;
@@ -135,16 +136,20 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 	if (!graphics.initialize(hWnd, windowWidth, windowHeight))
 		return 0;
 
-	GraphicsTest graphicsTest(std::make_shared<Graphics>(graphics));
-	if (!graphicsTest.load())
-		return 0;
-
-	LwoTest lwoTest(std::make_shared<Graphics>(graphics));
-	if (!lwoTest.load())
-		return 0;
-
 	Skybox skybox(std::make_shared<Graphics>(graphics));
 	if (!skybox.load())
+		return 0;
+
+	Cube cube(std::make_shared<Graphics>(graphics));
+	if (!cube.load())
+		return 0;
+
+	Statue statue(std::make_shared<Graphics>(graphics));
+	if (!statue.load())
+		return 0;
+
+	Bunny bunny(std::make_shared<Graphics>(graphics));
+	if (!bunny.load())
 		return 0;
 
 	Camera camera;
@@ -211,8 +216,9 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 				}
 
 				skybox.update(tick);
-				graphicsTest.update(tick);
-				lwoTest.update(tick);
+				cube.update(tick);
+				statue.update(tick);
+				bunny.update(tick);
 			}
 
 			// draw
@@ -229,8 +235,9 @@ int WINAPI wWinMain(_In_ const HINSTANCE hInstance, _In_opt_ const HINSTANCE /*h
 				graphics.clearScreen();
 
 				skybox.draw(camera);
-				graphicsTest.draw(camera);
-				lwoTest.draw(camera);
+				//cube.draw(camera);
+				statue.draw(camera);
+				//bunny.draw(camera);
 
 				ImGui::EndFrame();
 				ImGui::Render();

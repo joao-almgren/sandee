@@ -23,7 +23,7 @@
     <ClCompile Include="graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="graphicstest.cpp">
+    <ClCompile Include="cube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
@@ -32,7 +32,7 @@
     <ClCompile Include="fps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="lwotest.cpp">
+    <ClCompile Include="bunny.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="config.cpp">
@@ -62,12 +62,15 @@
     <ClCompile Include="..\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="statue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="graphicstest.h">
+    <ClInclude Include="cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
@@ -82,7 +85,7 @@
     <ClInclude Include="random.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lwotest.h">
+    <ClInclude Include="bunny.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="config.h">
@@ -100,24 +103,33 @@
     <ClInclude Include="fastvector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="statue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="graphicstest_vs.hlsl">
+    <FxCompile Include="cube_vs.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
-    <FxCompile Include="graphicstest_ps.hlsl">
+    <FxCompile Include="cube_ps.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
-    <FxCompile Include="lwotest_ps.hlsl">
+    <FxCompile Include="bunny_ps.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
-    <FxCompile Include="lwotest_vs.hlsl">
+    <FxCompile Include="bunny_vs.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
     <FxCompile Include="skybox_ps.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
     <FxCompile Include="skybox_vs.hlsl">
+      <Filter>Shader Files</Filter>
+    </FxCompile>
+    <FxCompile Include="statue_ps.hlsl">
+      <Filter>Shader Files</Filter>
+    </FxCompile>
+    <FxCompile Include="statue_vs.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
   </ItemGroup>

@@ -112,10 +112,9 @@ void calculateTangents(TbnVertex& a, TbnVertex& b, TbnVertex& c)
 	float sx = b.texcoord.x - a.texcoord.x, sy = b.texcoord.y - a.texcoord.y;
 	float tx = c.texcoord.x - a.texcoord.x, ty = c.texcoord.y - a.texcoord.y;
 
-	const float direction = sy * tx - sx * ty;
-	const float dirCorrection = std::signbit(direction) ? -1.0f : 1.0f;
+	const float dirCorrection = (tx * sy - ty * sx) < 0.0f ? -1.0f : 1.0f;
 
-	if (fabs(sx * ty - sy * tx) > 0)
+	if (sx * ty == sy * tx) // NOLINT(clang-diagnostic-float-equal)
 	{
 		sx = 0.0;
 		sy = 1.0;
