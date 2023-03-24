@@ -12,9 +12,26 @@ struct TbnVertex
 	DirectX::SimpleMath::Vector2 texcoord;
 };
 
+template <class T>
 bool loadTbnObject(
 	const char* filename,
 	FastVector<TbnVertex>& vertices,
+	FastVector<T>& indices,
+	DirectX::SimpleMath::Vector4& sphere
+);
+
+template
+bool loadTbnObject<DWORD>(
+	const char* filename,
+	FastVector<TbnVertex>& vertices,
 	FastVector<DWORD>& indices,
+	DirectX::SimpleMath::Vector4& sphere
+);
+
+template
+bool loadTbnObject<WORD>(
+	const char* filename,
+	FastVector<TbnVertex>& vertices,
+	FastVector<WORD>& indices,
 	DirectX::SimpleMath::Vector4& sphere
 );

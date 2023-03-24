@@ -155,7 +155,8 @@ void calculateTangents(TbnVertex& a, TbnVertex& b, TbnVertex& c)
 	c.bitangent.Normalize();
 }
 
-bool loadTbnObject(const char* const filename, FastVector<TbnVertex>& vertices, FastVector<DWORD>& indices, Vector4& sphere)
+template <class T>
+bool loadTbnObject(const char* const filename, FastVector<TbnVertex>& vertices, FastVector<T>& indices, Vector4& sphere)
 {
 	FastVector<Vector3> position;
 	FastVector<Vector3> normal;
@@ -176,7 +177,7 @@ bool loadTbnObject(const char* const filename, FastVector<TbnVertex>& vertices, 
 			if (token[0] == 'f')
 			{
 				size_t offset = bufferIndex + len + 1;
-				auto vertexCount = static_cast<DWORD>(vertices.size());
+				auto vertexCount = static_cast<T>(vertices.size());
 
 				for (int n = 0; n < 3; n++)
 				{

@@ -74,16 +74,16 @@ private:
 bool StatueImpl::loadWfo()
 {
 	FastVector<TbnVertex> vertices;
-	FastVector<DWORD> indices;
+	FastVector<WORD> indices;
 	Vector4 sphere;
-	if (!loadTbnObject("res\\statue\\statue.obj", vertices, indices, sphere))
+	if (!loadTbnObject<WORD>("res\\statue\\statue.obj", vertices, indices, sphere))
 		return false;
 
 	if (!m_pGraphics->loadVertexBuffer(vertices.data(), static_cast<UINT>(vertices.size()), static_cast<UINT>(sizeof(Vertex)), m_pVertexBuffer.put()))
 		return false;
 
 	m_numIndices = static_cast<UINT>(indices.size());
-	if (!m_pGraphics->loadIndexBuffer(indices.data(), m_numIndices, static_cast<UINT>(sizeof(DWORD)), m_pIndexBuffer.put()))
+	if (!m_pGraphics->loadIndexBuffer(indices.data(), m_numIndices, static_cast<UINT>(sizeof(WORD)), m_pIndexBuffer.put()))
 		return false;
 
 	if (!m_pGraphics->createConstantBuffer(sizeof(ConstantBuffer), m_pConstantBuffer.put()))
@@ -167,7 +167,7 @@ void StatueImpl::draw(const Camera& camera) const
 	ID3D11Buffer* const vertexBuffers[numVertexBuffers]{ m_pVertexBuffer.get() };
 	pDeviceContext->IASetVertexBuffers(0, numVertexBuffers, vertexBuffers, vertexStrides, vertexOffsets);
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.get(), DXGI_FORMAT_R32_UINT, 0);
+	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer.get(), DXGI_FORMAT_R16_UINT, 0);
 	pDeviceContext->IASetInputLayout(m_pInputLayout.get());
 
 	pDeviceContext->DrawIndexed(m_numIndices, 0, 0);

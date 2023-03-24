@@ -151,7 +151,7 @@ bool BunnyImpl::loadWfo()
 	FastVector<TbnVertex> vertices;
 	FastVector<DWORD> indices;
 	Vector4 sphere;
-	if (!loadTbnObject("res\\bunny.obj", vertices, indices, sphere))
+	if (!loadTbnObject<DWORD>("res\\bunny.obj", vertices, indices, sphere))
 		return false;
 
 	if (!m_pGraphics->loadVertexBuffer(vertices.data(), static_cast<UINT>(vertices.size()), static_cast<UINT>(sizeof(Vertex)), m_pVertexBuffer.put()))
