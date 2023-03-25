@@ -1,48 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Shader Files">
-      <UniqueIdentifier>{5a733f10-a93c-4693-a66f-de79563e4ed4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="imgui">
       <UniqueIdentifier>{1decb4f6-c5ce-443c-a327-0f31137639c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{0fa8a663-1015-4f73-b8eb-31f8b6bb5ae4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{5a733f10-a93c-4693-a66f-de79563e4ed4}</UniqueIdentifier>
+	  <Extensions>hlsl;ps;vs</Extensions>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{ed883ef0-ca5d-4e8c-9186-4f4b936158b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Bunny">
+      <UniqueIdentifier>{c5a9f7d6-44e0-4c48-8660-0be4f97dbb63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Cube">
+      <UniqueIdentifier>{656b9cba-f544-4958-b5ed-81eddd0a1d6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Skybox">
+      <UniqueIdentifier>{ed10640a-6705-42ce-b678-e6f20adfd655}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Statue">
+      <UniqueIdentifier>{bc77dcbb-4b2d-4fc0-9d1f-d14030532a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;h;hpp</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="graphics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cube.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="fps.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bunny.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="config.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="skybox.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="wavefront.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\imgui\backends\imgui_impl_dx11.cpp">
       <Filter>imgui</Filter>
@@ -62,75 +68,84 @@
     <ClCompile Include="..\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="bunny.cpp">
+      <Filter>Assets\Bunny</Filter>
+    </ClCompile>
+    <ClCompile Include="cube.cpp">
+      <Filter>Assets\Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="skybox.cpp">
+      <Filter>Assets\Skybox</Filter>
+    </ClCompile>
     <ClCompile Include="statue.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Assets\Statue</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="graphics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fps.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="absencearray.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="random.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="bunny.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="skybox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wavefront.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="timer.h">
-      <Filter>Header Files</Filter>
+      <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="fastvector.h">
-      <Filter>Header Files</Filter>
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="random.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="bunny.h">
+      <Filter>Assets\Bunny</Filter>
+    </ClInclude>
+    <ClInclude Include="cube.h">
+      <Filter>Assets\Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="skybox.h">
+      <Filter>Assets\Skybox</Filter>
     </ClInclude>
     <ClInclude Include="statue.h">
-      <Filter>Header Files</Filter>
+      <Filter>Assets\Statue</Filter>
+    </ClInclude>
+    <ClInclude Include="wavefront.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="fps.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics.h">
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="cube_vs.hlsl">
-      <Filter>Shader Files</Filter>
-    </FxCompile>
-    <FxCompile Include="cube_ps.hlsl">
-      <Filter>Shader Files</Filter>
-    </FxCompile>
     <FxCompile Include="bunny_ps.hlsl">
-      <Filter>Shader Files</Filter>
+      <Filter>Assets\Bunny</Filter>
     </FxCompile>
     <FxCompile Include="bunny_vs.hlsl">
-      <Filter>Shader Files</Filter>
+      <Filter>Assets\Bunny</Filter>
+    </FxCompile>
+    <FxCompile Include="cube_ps.hlsl">
+      <Filter>Assets\Cube</Filter>
+    </FxCompile>
+    <FxCompile Include="cube_vs.hlsl">
+      <Filter>Assets\Cube</Filter>
     </FxCompile>
     <FxCompile Include="skybox_ps.hlsl">
-      <Filter>Shader Files</Filter>
+      <Filter>Assets\Skybox</Filter>
     </FxCompile>
     <FxCompile Include="skybox_vs.hlsl">
-      <Filter>Shader Files</Filter>
+      <Filter>Assets\Skybox</Filter>
     </FxCompile>
     <FxCompile Include="statue_ps.hlsl">
-      <Filter>Shader Files</Filter>
+      <Filter>Assets\Statue</Filter>
     </FxCompile>
     <FxCompile Include="statue_vs.hlsl">
-      <Filter>Shader Files</Filter>
+      <Filter>Assets\Statue</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
