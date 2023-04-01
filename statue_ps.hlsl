@@ -35,7 +35,7 @@ float4 main(const PsInput input) : SV_Target
 
 	float3x3 TBN = float3x3(T, B, N);
 	normal = mul(normal, TBN);
-	normal = mul(float4(normal.xyz, 1), world).xyz; // 1 or 0?
+	normal = mul(float4(normal.xyz, 0), world).xyz;
 	normal = normalize(normal);
 
 	float diffuse = dot(lightDirection, normal) * 0.5 + 0.5;
